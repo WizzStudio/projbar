@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>projbarLogin</title>
+        
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/layui/css/layui.css" rel="stylesheet">
+    <link href="/static/common/css/common.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+    <form action="{:url('doLogin')}" method="post">
+      <div class="form-group">
+        <label for="account">Email/Username</label>
+        <input type="text" class="form-control" name="account" id="account" placeholder="Email/Username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" name="password" id="password" placeholder="password">
+      </div>
+      <!-- <div class="form-group">
+          <label for="verify_code">VerifyCode</label>
+          <input type="text" class="form-control" name="verify_code" id="verify_code" placeholder="verify_code">
+      </div> -->
+      
+      <div class="form-group">
+          <label for="captcha">Captcha</label>
+          <input type="text" class="form-control" name="captcha" id="captcha" placeholder="captcha">
+          <div class="code-img">
+            <img src="{:captcha_src()}" alt="点击更换" title="点击更换" onclick="this.src='{:captcha_src()}?time='+Math.random()" class="captcha" name="codeimage" id="codeimage" border="0"/>
+          </div>
+      </div>
+      <button type="submit" class="btn btn-default">Login</button>
+    </form>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/layui/layui.js"></script>
+  </body>
+</html>   

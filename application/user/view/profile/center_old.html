@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>my projbar</title>
+    <link href="/static/layui/css/layui.css" rel="stylesheet"> 
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/css/common.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1 align="center">Welcome to projbar.cn</h1>
+    <a href="{:url('project/new')}">New A Project</a>
+    <form action="{:url('index/project/search')}" method="get">
+      <input type="text" class="form-control" name="key" placeholder="Key words">
+      <button type="submit" class="btn btn-default">Search</button>
+    </form>
+    <!-- test-->
+    <p>ID:{$user.id}</p>
+    <p>用户名：{$user.username}</p>
+    <p>手机：{$user.mobile}</p>
+    <p>邮箱：{$user.email}</p>
+    <p>性别：{$user.sex}</p>
+    <p>生日：{$user.birthday}</p>
+    <p>昵称：{$user.nickname}</p>
+    <p>个性签名：{$user.signature}</p>
+    <p>额外信息：{$user.extra}</p>
+    <a href="{:url('edit')}">Edit Base Info</a>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/layui/layui.js"></script>
+  </body>
+</html> 

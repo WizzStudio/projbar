@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>my projbar</title>
+    <link href="/static/layui/css/layui.css" rel="stylesheet"> 
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/common/css/common.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1 align="center">Welcome to projbar.cn</h1>
+    <a href="{:url('project/new')}">New A Project</a>
+    <form action="{:url('search')" method="get">
+      <input type="text" class="form-control" name="key" placeholder="Key words">
+      <button type="submit" class="btn btn-default">Search</button>
+    </form>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/bootstrap/js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/layui/layui.js"></script>
+  </body>
+</html>    
