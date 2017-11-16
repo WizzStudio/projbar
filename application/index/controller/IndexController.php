@@ -10,4 +10,11 @@ class IndexController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 测试
+     */
+    public function test()
+    {
+        return $this->fetch('./templates/test.html');
+    }
 }
