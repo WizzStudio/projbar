@@ -11,6 +11,8 @@
 use think\Db;
 use think\Url;
 use think\Route;
+use think\Request;
+
 // 应用公共文件
 
 //设置插件入口路由
@@ -208,4 +210,15 @@ function get_client_ip($type = 0, $adv = false)
 function bar_compare_password($passInput, $passReal)
 {   
     return bar_password($passInput) == $passReal;
+}
+
+/**
+ * 获取网站根目录
+ * @return string 网站根目录
+ */
+function bar_get_root()
+{
+    $request = Request::instance();
+    $root    = $request->root();
+    return $root;
 }
