@@ -20,12 +20,20 @@ class ProfileController extends BaseController
     }
 
     /**
-     * 个人资料编辑
+     * 个人基础资料编辑
      */
     public function edit_base()
     {
         $user = bar_get_current_user();
         $this->assign('user',$user);
+        return $this->fetch();
+    }
+
+    /**
+     * 个人角色信息编辑
+     */
+    public function edit_role()
+    {
         return $this->fetch();
     }
 
