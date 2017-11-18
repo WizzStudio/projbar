@@ -16,7 +16,7 @@ class PublicController extends BaseController
         if(bar_is_user_login()){
             return redirect($this->request->root().'/');
         }else{
-            return $this->fetch('./templates/user/public/register.html');
+            return $this->fetch();
         }
     }
 
@@ -85,13 +85,13 @@ class PublicController extends BaseController
     /**
      * 用户登录页面
      */
-    public function index()
+    public function login()
     {   
         if(bar_is_user_login()){
             return redirect($this->request->root().'/');
             // return $this->fetch();
         }else{
-            return $this->fetch('./templates/user/public/login.html');
+            return $this->fetch();
         }
     }
 

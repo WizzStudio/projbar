@@ -12,7 +12,7 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/common/css/common.css" rel="stylesheet">
   </head>
-  <body style="margin-top:50px;">
+  <body style="margin-top:60px;">
     {block name="navbar"}
     <!-- Fixed navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -36,8 +36,8 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li><a href="{:url('user/profile/center')}">Personal Center</a></li>                
-              <li><a href="{:url('user/login/index')}">Login</a></li>
-              <li><a href="{:url('user/register/index')}">Register</a></li>
+              <li><a href="{:url('user/public/login')}">Login</a></li>
+              <li><a href="{:url('user/public/register')}">Register</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -45,7 +45,7 @@
     {/block}
     {block name="cascade"}
     <!--联动选择框 -->
-    <div class="container-fluid">
+    <!-- <div class="container-fluid"> -->
         <form class="layui-form layui-form-pane" action="">
         <div class="layui-row">
             <div class="layui-input-inline layui-col-xs4">
@@ -79,7 +79,7 @@
             </div>
         </div>
         </form>
-    </div>
+    <!-- </div> -->
     {/block}
     {block name="main"}
     <h1 align="center">Base Main Templates</h1>
