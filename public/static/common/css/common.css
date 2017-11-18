@@ -1,7 +1,11 @@
 .dark{
-    background-color: #23262E;
+    /* background-color: #23262E; */
+    background-color: #222;
 }
 .grey{
     background-color: #111;
     border: 1px;
+}
+.p-footer{
+    text-align: center;
 }

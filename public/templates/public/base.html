@@ -1,0 +1,100 @@
+<!DOCTYPE>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" href="../../favicon.ico">
+    <title>wxj Front</title>
+    
+    <link href="__STATIC__/layui/css/layui.css" rel="stylesheet"> 
+    <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__STATIC__/common/css/common.css" rel="stylesheet">
+  </head>
+  <body style="margin-top:50px;">
+    {block name="navbar"}
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">项慕吧 projbar.cn&emsp;&emsp;</a>
+            <span class="navbar-brand glyphicon glyphicon-search" onclick="ale()"></span>
+            <a class="navbar-brand"><span class="glyphicon glyphicon-plus"></span></a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#project">Project</a></li>
+              <li><a href="#contact">Partner</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="{:url('user/profile/center')}">Personal Center</a></li>                
+              <li><a href="{:url('user/login/index')}">Login</a></li>
+              <li><a href="{:url('user/register/index')}">Register</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+    {/block}
+    {block name="cascade"}
+    <!--联动选择框 -->
+    <div class="container-fluid">
+        <form class="layui-form layui-form-pane" action="">
+        <div class="layui-row">
+            <div class="layui-input-inline layui-col-xs4">
+            <select name="quiz1">
+                <option value="">项目性质</option>
+                <option value="比赛" selected="">比赛</option>
+                <option value="研究">研究</option>
+                <option value="外包">外包</option>
+                <option value="练手">练手</option>
+            </select>
+            </div>
+            <div class="layui-input-inline layui-col-xs4">
+            <select name="quiz2">
+                <option value="">项目分类</option>
+                <option value="国创">国创</option>
+                <option value="挑战杯">挑战杯</option>
+                <option value="互联网+">互联网+</option>
+                <option value="电赛">电赛</option>
+                <option value="数模">数模</option>
+                <option value="其他">其他</option>
+            </select>
+            </div>
+            <div class="layui-input-inline layui-col-xs4">
+            <select name="quiz3">
+                <option value="">角色</option>
+                <option value="开发">开发</option>
+                <option value="产品">产品</option>
+                <option value="运营">运营</option>
+                <option value="设计">设计</option>
+            </select>
+            </div>
+        </div>
+        </form>
+    </div>
+    {/block}
+    {block name="main"}
+    <h1 align="center">Base Main Templates</h1>
+    {/block}
+    <footer class="footer dark p-footer">
+      <div class="container">
+        <p class="text-muted">Place sticky footer content here.</p>
+        <p class="text-muted">create by <b>wxjackie</b></p>
+      </div>
+    </footer>
+    <!-- Bootstrap core JavaScript -->
+    <script src="__STATIC__/bootstrap/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/layui/layui.all.js"></script> 
+    {block name="free_js"}{/block}
+  </body>
+</html>
