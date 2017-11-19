@@ -3,8 +3,9 @@
 {block name="main"}
 <h1 align="center">Edit Role Info</h1>
 <div class="container">
-    <button onclick="appendRole()" class="btn btn-primary">添加角色</button>        
-    <form action="{:url('editRole')}" role="form" id="role_form">
+    <button onclick="appendRole()" class="btn btn-primary">添加角色</button> 
+    <div><br /></div>
+    <form action="{:url('editRole')}" method="post" role="form" id="role_form" class="form-horizontal">
         <div class="form-group">
             <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
             <div class="col-md-9 col-xs-9 column">
@@ -25,9 +26,9 @@
             </div>
             <div class="col-md-6 col-xs-6 column">
             <select class="form-control">
-            <option>入门</option>
-            <option>熟练</option>
-            <option>精通</option>
+            <option value="1">入门</option>
+            <option value="2">熟练</option>
+            <option value="3">精通</option>
             </select>
             </div>
         </div>
