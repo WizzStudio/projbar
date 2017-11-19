@@ -40,7 +40,7 @@ class ProfileController extends BaseController
     /**
      * 编辑个人资料提交修改
      */
-    public function editPost()
+    public function editBase()
     {   
         if($this->request->isPost()){
             $rules = [
@@ -74,6 +74,14 @@ class ProfileController extends BaseController
         }else{
             $this->error('请求方式错误');
         }
+    }
+
+    /**
+     * 编辑个人角色信息
+     */
+    public function editRole()
+    {
+        
     }
 
     /**

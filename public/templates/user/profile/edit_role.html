@@ -3,7 +3,8 @@
 {block name="main"}
 <h1 align="center">Edit Role Info</h1>
 <div class="container">
-    <form role="form" id="role_form">
+    <button onclick="appendRole()" class="btn btn-primary">添加角色</button>        
+    <form action="{:url('editRole')}" role="form" id="role_form">
         <div class="form-group">
             <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
             <div class="col-md-9 col-xs-9 column">
@@ -59,10 +60,9 @@
                 <option>精通</option>
                 </select>
             </div>
-        </div>
-        
+        </div>     
+        <button id="submit" type="submit" class="btn btn-primary">确认提交</button>        
     </form>
-    <button onclick="appendRole()" class="btn btn-primary">添加角色</button>
 </div>
 <br />
 {/block}
@@ -128,7 +128,7 @@
                 </select>
             </div>
         </div>`;
-        $("#role_form").append(txt);
+        $("#submit").before(txt);
     }
 </script>
 {/block}
