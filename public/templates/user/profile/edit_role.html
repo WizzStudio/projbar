@@ -1,0 +1,134 @@
+{extend name="templates/public/base.html" /}
+{block name="cascade"}{/block}
+{block name="main"}
+<h1 align="center">Edit Role Info</h1>
+<div class="container">
+    <form role="form" id="role_form">
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
+            <div class="col-md-9 col-xs-9 column">
+            <select class="form-control">
+            <option>开发&测试</option>
+            <option>产品&文案</option>
+            <option>设计&美工</option>
+            <option>运营&市场</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+            <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+            <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+            <select class="form-control">
+            <option>入门</option>
+            <option>熟练</option>
+            <option>精通</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+                <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+                <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+                <select class="form-control">
+                <option>入门</option>
+                <option>熟练</option>
+                <option>精通</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+                <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+                <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+                <select class="form-control">
+                <option>入门</option>
+                <option>熟练</option>
+                <option>精通</option>
+                </select>
+            </div>
+        </div>
+        
+    </form>
+    <button onclick="appendRole()" class="btn btn-primary">添加角色</button>
+</div>
+<br />
+{/block}
+{block name="free_js"}
+<script>
+    function appendRole()
+    {
+        var txt=`
+            <div><h1>---------------------</h1></div>
+            <div class="form-group">
+            <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
+            <div class="col-md-9 col-xs-9 column">
+            <select class="form-control">
+            <option>开发&测试</option>
+            <option>产品&文案</option>
+            <option>设计&美工</option>
+            <option>运营&市场</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+            <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+            <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+            <select class="form-control">
+            <option>入门</option>
+            <option>熟练</option>
+            <option>精通</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+                <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+                <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+                <select class="form-control">
+                <option>入门</option>
+                <option>熟练</option>
+                <option>精通</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-3 col-xs-3 column">
+                <label>技能</label>
+            </div>
+            <div class="col-md-3 col-xs-3 column">
+                <input type="text" class="form-control" placeholder="Skill Name" />
+            </div>
+            <div class="col-md-6 col-xs-6 column">
+                <select class="form-control">
+                <option>入门</option>
+                <option>熟练</option>
+                <option>精通</option>
+                </select>
+            </div>
+        </div>`;
+        $("#role_form").append(txt);
+    }
+</script>
+{/block}

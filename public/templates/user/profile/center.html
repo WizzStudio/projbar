@@ -1,0 +1,37 @@
+{extend name="templates/public/base.html" /}
+{block name="cascade"}{/block}
+{block name="main"}
+<h1 align="center">Personal Center</h1>
+<div class="container">
+    <div class="jumbotron">
+        <h2 class="text-info" align="center">User Base Info</h2>
+        <p>Username: {$user['username']}</p>
+        <p>Mobile: {$user['mobile']}</p>
+        <p>Email: {$user['email']}</p>
+        <p>Sex: {$user['sex']}</p>
+        <p>Birthday: {$user['birthday']}</p>
+        <p>Nickname: {$user['nickname']}</p>
+        <p>Signature: {$user['signature']}</p>
+        <p>Extra: {$user['extra']}</p>
+        <p><a class="btn btn-primary" href="{:url('edit_base')}">Edit Base Info</a></p>
+    </div>
+</div>
+  
+<div class="container">
+    <div class="jumbotron">
+    <h2 class="text-info" align="center">Roles Info</h2>            
+    <h3>Role:</h3>
+    <p>Skill-1:</p>
+    <p>Skill-2:</p>
+    <p>Skill-3:</p>
+    <p>Exp:</p>
+    <h3>Role:</h3>
+    <p>Skill-1:</p>
+    <p>Skill-2:</p>
+    <p>Skill-3:</p>
+    <p>Exp:</p>
+    <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
+    </div>
+</div>
+{/block}
+  
