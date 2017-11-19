@@ -61,7 +61,28 @@
                 <option>精通</option>
                 </select>
             </div>
-        </div>     
+        </div>  
+        <div class="form-group" id="tag">
+          <h3>个人标签</h3>    
+          <div class="col-md-12 col-xs-12 column">
+            <input type="checkbox" name="tags" value="" /> web
+            <input type="checkbox" name="tags" value="" /> 后端
+            <input type="checkbox" name="tags" value="" /> 前端
+            <input type="checkbox" name="tags" value="" /> UI
+            <input type="checkbox" name="tags" value="" /> 嵌入式
+            <input type="checkbox" name="tags" value="" /> 通信
+            <input type="checkbox" name="tags" value="" /> iOS
+            <input type="checkbox" name="tags" value="" /> Android
+            <input type="checkbox" name="tags" value="" /> 产品
+            <input type="checkbox" name="tags" value="" /> 运营
+            <input type="checkbox" name="tags" value="" /> 云计算
+            <input type="checkbox" name="tags" value="" /> 大数据
+            <input type="checkbox" name="tags" value="" /> 游戏开发
+            <input type="checkbox" name="tags" value="" /> 算法
+            <input type="checkbox" name="tags" value="" /> 机器学习
+            <input type="checkbox" name="tags" value="" /> 运维
+          </div>
+        </div>   
         <button id="submit" type="submit" class="btn btn-primary">确认提交</button>        
     </form>
 </div>
@@ -129,7 +150,7 @@
                 </select>
             </div>
         </div>`;
-        $("#submit").before(txt);
+        $("#tag").before(txt);
     }
 </script>
 {/block}
