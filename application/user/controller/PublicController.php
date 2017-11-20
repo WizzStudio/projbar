@@ -88,8 +88,8 @@ class PublicController extends BaseController
     public function login()
     {   
         if(bar_is_user_login()){
-            return redirect($this->request->root().'/');
-            // return $this->fetch();
+            $this->success('您已登录:)','user/profile/center');
+            // return redirect($this->request->root());
         }else{
             return $this->fetch();
         }
@@ -101,7 +101,7 @@ class PublicController extends BaseController
     public function doLogin()
     {
         if(!$this->request->isPost()){
-            $this->error('请求方式错误');
+            $this->error('请求方式错误','user/public/login');
         }
 
         $rules = [
@@ -136,7 +136,7 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                $this->success('登录成功，欢迎您！','/');
+                $this->success('登录成功，欢迎您！',$this->request->root());
                 break;
             case 1:
                 $this->error('您的账户尚未注册', 'user/register/index');
