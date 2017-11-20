@@ -99,7 +99,7 @@ class User extends Model
      */
     public function doBaseEdit($user)
     {
-        $userId = bar_get_current_user_id();
+        $userId = bar_get_user_id();
         $data['mobile'] = $user['mobile'];
         $data['nickname'] = $user['nickname'];
         $data['sex'] = $user['sex'];

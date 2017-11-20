@@ -21,7 +21,9 @@
           <li><a href="#contact">Partner</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{:url('user/profile/center')}">Personal Center</a></li>                
+           <!-- 变化部分直接渲染php变量进来 -->
+          <li><a href="{:url('user/public/login')}">Login</a></li>
+          <li><a href="{:url('user/public/register')}">Register</a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>

@@ -3,11 +3,12 @@
 namespace app\user\controller;
 
 use think\Validate;
-use app\common\controller\BaseController;
+use app\common\controller\UserBaseController;
 use think\Request;
 use app\common\model\User;
+use app\common\model\UserSkill;
 
-class ProfileController extends BaseController
+class ProfileController extends UserBaseController
 {
     /**
      * 个人信息首页
@@ -80,8 +81,34 @@ class ProfileController extends BaseController
      * 编辑个人角色信息
      */
     public function editRole()
-    {
-        
+    {      
+        $post = $this->request->post();
+        $roleNumber = count($post['role']);
+        foreach($post['role'] as $roleId){
+            
+        }
+        for($i=0;$i<$roleNumber;$i++){
+            $roleId = $post['role'][$i];
+            $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
+            $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
+            $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
+        }
+        $tags = $post['tags'];
+        $userSkillModel =  new UserSkill();
+        $log = $userSkillModel->doUserSkillEdit($data,$tags,$roleNumber);
+        switch($log){
+            case 0:
+                $this->success('角色信息添加成功！','user/profile/center');
+                break;
+            case 1:
+                $this->error('技能信息添加失败！');
+                break;
+            case 2:
+                $this->error('标签信息添加失败！');
+                break;
+            default:
+                $this->error('未受理的请求');
+        }
     }
 
     /**
@@ -98,5 +125,13 @@ class ProfileController extends BaseController
     public function message()
     {
         
+    }
+
+    /**
+     * 测试
+     */
+    public function test()
+    {
+        return ;
     }
 }

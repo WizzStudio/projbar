@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no" />
 
     <link rel="icon" href="../../favicon.ico">
-    <title>wxj Front</title>
+    <title>项慕吧ProjBar</title>
     
     <link href="__STATIC__/layui/css/layui.css" rel="stylesheet"> 
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -24,7 +24,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">项慕吧 projbar</a>
+            <a class="navbar-brand" href="/__ROOT__">项慕吧 projbar</a>
             <span class="navbar-brand glyphicon glyphicon-search" onclick="ale()"></span>
             <a class="navbar-brand"><span class="glyphicon glyphicon-plus"></span></a>
           </div>
@@ -35,9 +35,10 @@
               <li><a href="#contact">Partner</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="{:url('user/profile/center')}">Personal Center</a></li>                
+             {$navRight}
+              <!-- <li><a href="{:url('user/profile/center')}">Personal Center</a></li>                
               <li><a href="{:url('user/public/login')}">Login</a></li>
-              <li><a href="{:url('user/public/register')}">Register</a></li>
+              <li><a href="{:url('user/public/register')}">Register</a></li> -->
             </ul>
           </div><!--/.nav-collapse -->
         </div>

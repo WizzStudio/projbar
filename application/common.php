@@ -53,7 +53,7 @@ function bar_update_current_user($user)
  * 获取当前登录的用户id
  * @return int
  */
-function bar_get_current_user_id()
+function bar_get_user_id()
 {
     $sessionUserId = session('user.id');
     if (empty($sessionUserId)) {
