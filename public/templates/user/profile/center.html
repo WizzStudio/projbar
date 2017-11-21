@@ -16,15 +16,30 @@
         <p><a class="btn btn-primary" href="{:url('edit_base')}">Edit Base Info</a></p>
     </div>
 </div>
-  
 <div class="container">
     <div class="jumbotron">
-    <h2 class="text-info" align="center">Roles Info</h2>    
-    {volist name="roleInfoList" id="roleInfo"}
-        <h3>Role_id:{$key}</h3>
+    <h2 class="text-info" align="center">Roles Info</h2>
+    <hr />    
+    {volist name="roleInfoList" id="roleInfo" key="k"}
+        <h3>角色{$k}: 
+          {switch name="key"}
+            {case value="1"}开发&测试{/case}
+            {case value="2"}产品&文案{/case}
+            {case value="3"}设计&美工{/case}
+            {case value="4"}运营&市场{/case}
+            {default /}暂无
+          {/switch}
+        </h3>
         {volist name="roleInfo" id="skill"}        
-        <p>Skill-Name:{$key}&emsp;Skill-Level:{$skill}</p>
+        <p>技能: {$key}&emsp;等级:
+            {switch name="skill"}
+                {case value="1"}入门{/case}
+                {case value="2"}熟练{/case}
+                {case value="3"}精通{/case}
+            {/switch}
+        </p>
         {/volist}
+        <hr />
     {/volist}
     <p>Exp:</p>
     <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
