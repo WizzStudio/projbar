@@ -23,7 +23,7 @@ class PublicController extends BaseController
     /**
      * 用户注册表单提交
      */
-    public function doRegister()
+    public function doRegister(Request $request)
     {
         if(!$this->request->isPost()){
             $this->error('请求方式错误！');
@@ -98,12 +98,12 @@ class PublicController extends BaseController
     /**
      * 用户登录处理
      */
-    public function doLogin()
+    public function dologin()
     {
-        // if(!$this->request->isPost()){
-        //     $this->error('请求方式错误','user/public/login');
-        // }
-
+        if(!$this->request->isPost()){
+            $this->error('请求方式错误','user/public/login');
+        }
+        $postData = $this->request->post();
         $rules = [
             'account' => 'require',
             'password' => 'require|min:6|max:32',
@@ -121,7 +121,6 @@ class PublicController extends BaseController
             'captcha.captcha' => '验证码不正确'
         ]);
 
-        $postData = $this->request->post();
         if(!$validate->check($postData)){
             $this->error($validate->getError());
         }

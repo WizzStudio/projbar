@@ -23,21 +23,23 @@ class ProfileController extends UserBaseController
         $tagQuery = Db::name("tag");
 
         $userSkillList = $userSkillQuery->where('user_id', $user['id'])->select();      
-
-        foreach($userSkillList as $skill){
-            $roleIds[] = $skill['role_id'];
-        }
-
-        $roleIds = array_unique($roleIds);
-        foreach($roleIds as $roleId){
+        if(!empty($userSkillList)){
             foreach($userSkillList as $skill){
-                if($skill['role_id'] == $roleId){
-                    $roleInfo[$roleId]['name'][] = $skill['name'];
-                    $roleInfo[$roleId]['level'][] = $skill['level'];
-                }
+                $roleIds[] = $skill['role_id'];
             }
-            $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
+
+            $roleIds = array_unique($roleIds);
+            foreach($roleIds as $roleId){
+                foreach($userSkillList as $skill){
+                    if($skill['role_id'] == $roleId){
+                        $roleInfo[$roleId]['name'][] = $skill['name'];
+                        $roleInfo[$roleId]['level'][] = $skill['level'];
+                    }
+                }
+                $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
+            }
         }
+        $roleInfo = [];
 
         $this->assign('roleInfoList', $roleInfo);
         $this->assign('user', $user);
@@ -157,5 +159,14 @@ class ProfileController extends UserBaseController
     public function test()
     {
         return ;
+    }
+
+    /**
+     * 用户注销
+     */
+    public function logout()
+    {
+        session("user",null);
+        return redirect($this->request->root()."/");
     }
 }
