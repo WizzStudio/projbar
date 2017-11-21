@@ -19,16 +19,13 @@
   
 <div class="container">
     <div class="jumbotron">
-    <h2 class="text-info" align="center">Roles Info</h2>            
-    <h3>Role:</h3>
-    <p>Skill-1:</p>
-    <p>Skill-2:</p>
-    <p>Skill-3:</p>
-    <p>Exp:</p>
-    <h3>Role:</h3>
-    <p>Skill-1:</p>
-    <p>Skill-2:</p>
-    <p>Skill-3:</p>
+    <h2 class="text-info" align="center">Roles Info</h2>    
+    {volist name="roleInfoList" id="roleInfo"}
+        <h3>Role_id:{$key}</h3>
+        {volist name="roleInfo" id="skill"}        
+        <p>Skill-Name:{$key}&emsp;Skill-Level:{$skill}</p>
+        {/volist}
+    {/volist}
     <p>Exp:</p>
     <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
     </div>

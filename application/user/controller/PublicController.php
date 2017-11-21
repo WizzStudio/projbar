@@ -100,9 +100,9 @@ class PublicController extends BaseController
      */
     public function doLogin()
     {
-        if(!$this->request->isPost()){
-            $this->error('请求方式错误','user/public/login');
-        }
+        // if(!$this->request->isPost()){
+        //     $this->error('请求方式错误','user/public/login');
+        // }
 
         $rules = [
             'account' => 'require',

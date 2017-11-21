@@ -3,10 +3,12 @@
 namespace app\user\controller;
 
 use think\Validate;
+use think\Db;
 use app\common\controller\UserBaseController;
 use think\Request;
 use app\common\model\User;
 use app\common\model\UserSkill;
+use app\common\model\Tag;
 
 class ProfileController extends UserBaseController
 {
@@ -16,6 +18,28 @@ class ProfileController extends UserBaseController
     public function center()
     {
         $user = bar_get_current_user();
+
+        $userSkillQuery = Db::name("user_skill");
+        $tagQuery = Db::name("tag");
+
+        $userSkillList = $userSkillQuery->where('user_id', $user['id'])->select();      
+
+        foreach($userSkillList as $skill){
+            $roleIds[] = $skill['role_id'];
+        }
+
+        $roleIds = array_unique($roleIds);
+        foreach($roleIds as $roleId){
+            foreach($userSkillList as $skill){
+                if($skill['role_id'] == $roleId){
+                    $roleInfo[$roleId]['name'][] = $skill['name'];
+                    $roleInfo[$roleId]['level'][] = $skill['level'];
+                }
+            }
+            $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
+        }
+
+        $this->assign('roleInfoList', $roleInfo);
         $this->assign('user', $user);
         return $this->fetch();
     }
