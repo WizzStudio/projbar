@@ -31,8 +31,8 @@
           {/switch}
         </h3>
         {volist name="roleInfo" id="skill"}        
-        <p>技能: {$key}&emsp;等级:
-            {switch name="skill"}
+        <p>技能: {$skill['name']}&emsp;等级:
+            {switch name="skill['level']"}
                 {case value="1"}入门{/case}
                 {case value="2"}熟练{/case}
                 {case value="3"}精通{/case}
@@ -41,7 +41,15 @@
         {/volist}
         <hr />
     {/volist}
-    <p>Exp:</p>
+    <h3>Tags:</h3>
+    <p>
+    {volist name="tags" id="tag"}
+    {$tag['name']}&nbsp;/
+    {/volist}
+    </p>
+    <h3>Exp:</h3>
+    <p>{$exp}</p>
+    <br />
     <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
     </div>
 </div>

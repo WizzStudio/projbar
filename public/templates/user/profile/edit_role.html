@@ -6,6 +6,7 @@
     <button onclick="appendRole()" class="btn btn-primary">添加角色</button> 
     <div><br /></div>
     <form action="{:url('editRole')}" method="post" role="form" id="role_form" class="form-horizontal">
+        <div id="arole">
         <div class="form-group">
             <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
             <div class="col-md-9 col-xs-9 column">
@@ -61,7 +62,8 @@
                 <option value="3">精通</option>
                 </select>
             </div>
-        </div>  
+        </div> 
+        </div><!--role--> 
         <div class="form-group" id="tag">
           <h3>个人标签</h3>    
           <div class="col-md-12 col-xs-12 column">
@@ -82,6 +84,12 @@
             <input type="checkbox" name="tags[]" value="15" /> 机器学习
             <input type="checkbox" name="tags[]" value="16" /> 运维
           </div>
+        </div>
+        <div class="form-group" id="exp">
+          <h3>项目经历</h3>
+          <div class="col-md-12 col-xs-12 column">
+            <textarea class="form-control"></textarea>    
+          </div>    
         </div>   
         <button id="submit" type="submit" class="btn btn-primary">确认提交</button>        
     </form>

@@ -135,7 +135,7 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                $this->success('登录成功，欢迎您！',$this->request->root());
+                $this->success('登录成功，欢迎您！',$this->request->root()."/");
                 break;
             case 1:
                 $this->error('您的账户尚未注册', 'user/register/index');

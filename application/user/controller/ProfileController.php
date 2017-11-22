@@ -18,11 +18,13 @@ class ProfileController extends UserBaseController
     public function center()
     {
         $user = bar_get_current_user();
-
+        $userId = $user['id'];
         $userSkillQuery = Db::name("user_skill");
-        $tagQuery = Db::name("tag");
-
-        $userSkillList = $userSkillQuery->where('user_id', $user['id'])->select();      
+        $userTagQuery = Db::name("user_tag");
+        $expQuery = Db::name("exp");
+        $roleInfo = [];
+        $exp = '';
+        $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
         if(!empty($userSkillList)){
             foreach($userSkillList as $skill){
                 $roleIds[] = $skill['role_id'];
@@ -32,17 +34,23 @@ class ProfileController extends UserBaseController
             foreach($roleIds as $roleId){
                 foreach($userSkillList as $skill){
                     if($skill['role_id'] == $roleId){
-                        $roleInfo[$roleId]['name'][] = $skill['name'];
-                        $roleInfo[$roleId]['level'][] = $skill['level'];
+                        $roleInfo[$roleId][] = $skill;
                     }
                 }
-                $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
             }
         }
-        $roleInfo = [];
+        $tags = $userTagQuery
+            ->alias('a')
+            ->field('b.*')
+            ->where(['user_id' => $userId])
+            ->join('__TAG__ b','a.tag_id=b.id')
+            ->select();
+        $exp = $expQuery->where('user_id',$userId)->find();
 
         $this->assign('roleInfoList', $roleInfo);
         $this->assign('user', $user);
+        $this->assign('tags',$tags);
+        $this->assign('exp',$exp);
         return $this->fetch();
     }
 
@@ -60,7 +68,37 @@ class ProfileController extends UserBaseController
      * 个人角色信息编辑
      */
     public function edit_role()
-    {
+    {   
+        $userId = bar_get_user_id();
+        $userSkillQuery = Db::name("user_skill");
+        $userTagQuery = Db::name("user_tag");
+        $roleInfo = [];
+        $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
+        if(!empty($userSkillList)){
+            foreach($userSkillList as $skill){
+                $roleIds[] = $skill['role_id'];
+            }
+
+            $roleIds = array_unique($roleIds);
+            foreach($roleIds as $roleId){
+                foreach($userSkillList as $skill){
+                    if($skill['role_id'] == $roleId){
+                        $roleInfo[$roleId]['name'][] = $skill['name'];
+                        $roleInfo[$roleId]['level'][] = $skill['level'];
+                    }
+                }
+                $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
+            }
+        }
+        $tags = $userTagQuery
+            ->alias('a')
+            ->field('b.*')
+            ->where(['user_id' => $userId])
+            ->join('__TAG__ b','a.tag_id=b.id')
+            ->select();
+
+        $this->assign('roleInfoList', $roleInfo);
+        $this->assign('tags',$tags);
         return $this->fetch();
     }
 
