@@ -14,8 +14,18 @@ class UserSkill extends Model
         $userSkillQuery = Db::name("user_skill");
         $userTagQuery = Db::name("user_tag");
         $userId = bar_get_user_id();
+
+        $skillFind = $userSkillQuery->where('user_id',$userId)->find();
+        $tagFind = $userTagQuery->where('user_id',$userId)->find();
+        if(!empty($skillFind)){
+            $skillDelete = $userSkillQuery->where('user_id',$userId)->delete();
+        }
+        if(!empty($tagFind)){
+            $tagDelete = $userTagQuery->where('user_id',$userId)->delete();
+        }
+
         foreach($data as $roleId => $skillData)
-        {
+        {   
             foreach($skillData as $skillName => $skillLevel){
                 $insertSkill = [
                     'user_id' => $userId,
@@ -29,11 +39,14 @@ class UserSkill extends Model
                 }
             }
         }
+
         foreach($tags as $tag){
-            $tagResult = $userTagQuery->insert([
-                'user_id' => $userId,
-                'tag_id' => $tag
-            ]);
+            if(empty($tagFindResult)){
+                $tagResult = $userTagQuery->insert([
+                    'user_id' => $userId,
+                    'tag_id' => $tag
+                ]);
+            }
             if(!$tagResult){
                 return 2;
             }

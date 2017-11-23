@@ -83,11 +83,9 @@ class ProfileController extends UserBaseController
             foreach($roleIds as $roleId){
                 foreach($userSkillList as $skill){
                     if($skill['role_id'] == $roleId){
-                        $roleInfo[$roleId]['name'][] = $skill['name'];
-                        $roleInfo[$roleId]['level'][] = $skill['level'];
+                        $roleInfo[$roleId][] = $skill;
                     }
                 }
-                $roleInfo[$roleId] = array_combine($roleInfo[$roleId]['name'], $roleInfo[$roleId]['level']);
             }
         }
         $tags = $userTagQuery
@@ -144,13 +142,11 @@ class ProfileController extends UserBaseController
     /**
      * 编辑个人角色信息
      */
-    public function editRole()
+    public function edit_role_handle()
     {      
         $post = $this->request->post();
         $roleNumber = count($post['role']);
-        foreach($post['role'] as $roleId){
-            
-        }
+        $userId = bar_get_user_id();
         for($i=0;$i<$roleNumber;$i++){
             $roleId = $post['role'][$i];
             $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
@@ -159,13 +155,14 @@ class ProfileController extends UserBaseController
         }
         $tags = $post['tags'];
         $userSkillModel =  new UserSkill();
+        
         $log = $userSkillModel->doUserSkillEdit($data,$tags,$roleNumber);
         switch($log){
             case 0:
                 $this->success('角色信息添加成功！','user/profile/center');
                 break;
             case 1:
-                $this->error('技能信息添加失败！');
+                $this->error('没有修改任何信息，技能更新失败');
                 break;
             case 2:
                 $this->error('标签信息添加失败！');
