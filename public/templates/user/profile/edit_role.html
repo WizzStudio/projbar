@@ -1,15 +1,15 @@
 {extend name="templates/public/base.html" /}
-{block name="cascade"}{/block}
 {block name="main"}
 <h1 align="center">Edit Role Info</h1>
 <div class="container">
     <button onclick="appendRole()" class="btn btn-primary">添加角色</button> 
     <div><br /></div>
-    <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="form-horizontal">
+    <h3>角色信息</h3>
+    <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="layui-form form-horizontal">
         {volist name="roleInfoList" id="roleInfo" key="k"}
         <div id="arole">
         <div class="form-group">
-            <div class="col-md-3 col-xs-3 column"><b>角色{$k}</b></div>
+            <label class="col-md-3 col-xs-3 control-label">角色{$k}</label>
             <div class="col-md-9 col-xs-9 column">
             <select name="role[]" class="form-control">
                     <option value="1" {eq name="key" value="1"}selected="selected"{/eq}>开发&测试</option>
@@ -20,9 +20,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-xs-3 column">
-            <label>技能</label>
-            </div>
+            <label class="col-md-3 col-xs-3 control-label">技能</label>
             <div class="col-md-5 col-xs-5 column">
             <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control" placeholder="Skill Name" />
             </div>
@@ -49,9 +47,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-xs-3 column">
-                <label>技能</label>
-            </div>
+            <label class="col-md-3 col-xs-3 control-label">技能</label>                
             <div class="col-md-5 col-xs-5 column">
                 <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control" placeholder="Skill Name" />
             </div>
@@ -78,9 +74,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-xs-3 column">
-                <label>技能</label>
-            </div>
+            <label class="col-md-3 col-xs-3 control-label">技能</label>                
             <div class="col-md-5 col-xs-5 column">
                 <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control" placeholder="Skill Name" />
             </div>
@@ -108,33 +102,33 @@
         </div> 
         </div><!--role--> 
         {/volist}
-        <div class="form-group" id="tag">
+        <div class="layui-form-item" id="tag">
           <h3>个人标签</h3>    
           <div class="col-md-12 col-xs-12 column">
-            <input type="checkbox" name="tags[]" value="1" {foreach $tags as $tag}{eq name="tag['id']" value="1"}checked="checked"{/eq}{/foreach} /> web
-            <input type="checkbox" name="tags[]" value="2" {foreach $tags as $tag}{eq name="tag['id']" value="2"}checked="checked"{/eq}{/foreach} /> 后端
-            <input type="checkbox" name="tags[]" value="3" {foreach $tags as $tag}{eq name="tag['id']" value="3"}checked="checked"{/eq}{/foreach} /> 前端
-            <input type="checkbox" name="tags[]" value="4" {foreach $tags as $tag}{eq name="tag['id']" value="4"}checked="checked"{/eq}{/foreach} /> UI
-            <input type="checkbox" name="tags[]" value="5" {foreach $tags as $tag}{eq name="tag['id']" value="5"}checked="checked"{/eq}{/foreach} /> 嵌入式
-            <input type="checkbox" name="tags[]" value="6" {foreach $tags as $tag}{eq name="tag['id']" value="6"}checked="checked"{/eq}{/foreach} /> 通信
-            <input type="checkbox" name="tags[]" value="7" {foreach $tags as $tag}{eq name="tag['id']" value="7"}checked="checked"{/eq}{/foreach} /> iOS
-            <input type="checkbox" name="tags[]" value="8" {foreach $tags as $tag}{eq name="tag['id']" value="8"}checked="checked"{/eq}{/foreach} /> Android
-            <input type="checkbox" name="tags[]" value="9" {foreach $tags as $tag}{eq name="tag['id']" value="9"}checked="checked"{/eq}{/foreach} /> 产品
-            <input type="checkbox" name="tags[]" value="10" {foreach $tags as $tag}{eq name="tag['id']" value="10"}checked="checked"{/eq}{/foreach} /> 运营
-            <input type="checkbox" name="tags[]" value="11" {foreach $tags as $tag}{eq name="tag['id']" value="11"}checked="checked"{/eq}{/foreach} /> 云计算
-            <input type="checkbox" name="tags[]" value="12" {foreach $tags as $tag}{eq name="tag['id']" value="12"}checked="checked"{/eq}{/foreach} /> 大数据
-            <input type="checkbox" name="tags[]" value="13" {foreach $tags as $tag}{eq name="tag['id']" value="13"}checked="checked"{/eq}{/foreach} /> 游戏开发
-            <input type="checkbox" name="tags[]" value="14" {foreach $tags as $tag}{eq name="tag['id']" value="14"}checked="checked"{/eq}{/foreach} /> 算法
-            <input type="checkbox" name="tags[]" value="15" {foreach $tags as $tag}{eq name="tag['id']" value="15"}checked="checked"{/eq}{/foreach} /> 机器学习
-            <input type="checkbox" name="tags[]" value="16" {foreach $tags as $tag}{eq name="tag['id']" value="16"}checked="checked"{/eq}{/foreach} /> 运维
+            <input type="checkbox" name="tags[]" title="web" value="1" {foreach $tags as $tag}{eq name="tag['id']" value="1"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="后端" value="2" {foreach $tags as $tag}{eq name="tag['id']" value="2"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="前端" value="3" {foreach $tags as $tag}{eq name="tag['id']" value="3"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="UI" value="4" {foreach $tags as $tag}{eq name="tag['id']" value="4"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="嵌入式" value="5" {foreach $tags as $tag}{eq name="tag['id']" value="5"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="通信" value="6" {foreach $tags as $tag}{eq name="tag['id']" value="6"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="iOS" value="7" {foreach $tags as $tag}{eq name="tag['id']" value="7"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="Android" value="8" {foreach $tags as $tag}{eq name="tag['id']" value="8"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="产品" value="9" {foreach $tags as $tag}{eq name="tag['id']" value="9"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="运营" value="10" {foreach $tags as $tag}{eq name="tag['id']" value="10"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="云计算" value="11" {foreach $tags as $tag}{eq name="tag['id']" value="11"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="大数据" value="12" {foreach $tags as $tag}{eq name="tag['id']" value="12"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="游戏开发" value="13" {foreach $tags as $tag}{eq name="tag['id']" value="13"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="算法" value="14" {foreach $tags as $tag}{eq name="tag['id']" value="14"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="机器学习" value="15" {foreach $tags as $tag}{eq name="tag['id']" value="15"}checked="checked"{/eq}{/foreach} /> 
+            <input type="checkbox" name="tags[]" title="运维" value="16" {foreach $tags as $tag}{eq name="tag['id']" value="16"}checked="checked"{/eq}{/foreach} />
           </div>
         </div>
-        <div class="form-group" id="exp">
+        <div class="layui-form-item" id="exp">
           <h3>项目经历</h3>
-          <div class="col-md-12 col-xs-12 column">
-            <textarea class="form-control"></textarea>    
+          <div class="col-md-12 col-xs-12">
+            <textarea class="form-control" name="exp">{$exp}</textarea>    
           </div>    
-        </div>   
+        </div> 
         <button id="submit" type="submit" class="btn btn-primary">确认提交</button>        
     </form>
 </div>
@@ -145,9 +139,9 @@
     function appendRole()
     {
         var txt=`
-            <div><b><hr /></b></div>
+            <div><hr /></div>
             <div class="form-group">
-            <div class="col-md-3 col-xs-3 column"><b>角色</b></div>
+            <label class="col-md-3 col-xs-3 control-label">角色</label>
             <div class="col-md-9 col-xs-9 column">
             <select name="role[]" class="form-control">
             <option value="1">开发&测试</option>
@@ -158,9 +152,7 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-3 col-xs-3 column">
-            <label>技能</label>
-            </div>
+            <label class="col-md-3 col-xs-3 control-label">技能</label>  
             <div class="col-md-5 col-xs-5 column">
             <input name="skill1[]" type="text" class="form-control" placeholder="Skill Name" />
             </div>
@@ -173,10 +165,8 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-2 col-xs-2 column">
-                <label>技能</label>
-            </div>
-            <div class="col-md-6 col-xs-6 column">
+            <label class="col-md-3 col-xs-3 control-label">技能</label>  
+            <div class="col-md-5 col-xs-5 column">
                 <input name="skill2[]" type="text" class="form-control" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
@@ -188,10 +178,8 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-2 col-xs-2 column">
-                <label>技能</label>
-            </div>
-            <div class="col-md-6 col-xs-6 column">
+            <label class="col-md-3 col-xs-3 control-label">技能</label>  
+            <div class="col-md-5 col-xs-5    column">
                 <input name="skill3[]" type="text" class="form-control" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">

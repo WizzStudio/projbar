@@ -9,3 +9,15 @@
 .p-footer{
     text-align: center;
 }
+.layui-form-checked span, .layui-form-checked:hover span{
+    background-color: #ef5b25;
+}
+.layui-form-checked i, .layui-form-checked:hover i{
+    color: #ef5b25;    
+}
+.layui-form-checked, .layui-form-checked:hover{
+    border-color: #ef5b25;
+}
+.layui-form-select dl dd.layui-this{
+    background-color: #ef5b25;
+}

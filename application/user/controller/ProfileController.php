@@ -50,7 +50,7 @@ class ProfileController extends UserBaseController
         $this->assign('roleInfoList', $roleInfo);
         $this->assign('user', $user);
         $this->assign('tags',$tags);
-        $this->assign('exp',$exp);
+        $this->assign('exp',$exp['exp']);
         return $this->fetch();
     }
 
@@ -72,6 +72,7 @@ class ProfileController extends UserBaseController
         $userId = bar_get_user_id();
         $userSkillQuery = Db::name("user_skill");
         $userTagQuery = Db::name("user_tag");
+        $userExpQuery = Db::name("exp");
         $roleInfo = [];
         $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
         if(!empty($userSkillList)){
@@ -95,8 +96,11 @@ class ProfileController extends UserBaseController
             ->join('__TAG__ b','a.tag_id=b.id')
             ->select();
 
+        $exp = $userExpQuery->where('user_id',$userId)->find();
+
         $this->assign('roleInfoList', $roleInfo);
         $this->assign('tags',$tags);
+        $this->assign('exp',$exp['exp']);
         return $this->fetch();
     }
 
@@ -155,6 +159,13 @@ class ProfileController extends UserBaseController
         }
         $tags = $post['tags'];
         $userSkillModel =  new UserSkill();
+        $expQuery = Db::name("exp");
+        $expFind = $expQuery->where('user_id',$userId)->find();
+        if(!empty($expFind)){
+            $expResult = $expQuery->where('user_id',$userId)->update(['exp'=>$post['exp']]);
+        }else{
+            $expResult = $expQuery->insert(['user_id'=>$userId,'exp'=>$post['exp']]);
+        }
         
         $log = $userSkillModel->doUserSkillEdit($data,$tags,$roleNumber);
         switch($log){

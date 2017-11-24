@@ -1,32 +1,85 @@
 {extend name="templates/public/base.html" /}
-{block name="cascade"}{/block}
 {block name="main"}
 <h1 align="center">Release Project</h1>
 <div class="container">
-    <form action="{:url('editBase')}" method="post">
-        <div class="form-group">
-            手机：<input type="text" class="form-control" name="mobile" placeholder="Mobile" value="{$user.mobile}">
-        </div>
-        <div class="form-group">
-            邮箱：<input type="text" class="form-control" name="email" placeholder="Email" value="{$user.email}">
-        </div>
-        <div class="form-group">
-            性别：<input type="text" class="form-control" name="sex" placeholder="Sex" value="{$user.sex}">
-        </div>
-        <div class="form-group">
-            生日：<input type="text" class="form-control" name="birthday" placeholder="birthday" value="{$user.birthday}">
-        </div>
-        <div class="form-group">
-            昵称：<input type="text" class="form-control" name="nickname" placeholder="Nickname" value="{$user.nickname}">
-        </div>
-        <div class="form-group">
-            个签：<input type="text" class="form-control" name="signature" placeholder="signature" value="{$user.signature}">
-        </div>
-        <div class="form-group">
-            额外：<input type="text" class="form-control" name="extra" placeholder="Extra" value="{$user.extra}">
-        </div>
-        <button type="submit" class="btn btn-primary">确认修改</button>
-    </form>
+<form class="layui-form form-horizontal" action="">
+  <div class="layui-form-item">
+      <h3>基础信息</h3>
+      <label class="col-lg-2 col-xs-4 layui-form-label">项目名称</label>
+      <div class="col-lg-6 col-xs-8 column">
+        <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="form-control" />
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-4 layui-form-label">项目类型</label>
+      <div class="col-lg-6 col-xs-8">
+        <select name="type" class="form-control">
+          <option>-- 请选择类型 --</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-4 layui-form-label">比赛分类</label>
+      <div class="col-lg-6 col-xs-8">
+        <select name="game_cate" class="form-control">
+          <option>-- 请选择比赛 --</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-4 layui-form-label">联系邮箱</label>
+      <div class="col-lg-6 col-xs-8">
+        <input type="text" name="email" autocomplete="off" placeholder="请填写联系邮箱" class="layui-input" />
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-4 layui-form-label">项目简介</label>
+      <div class="col-lg-6 col-xs-12">
+        <textarea class="layui-textarea" name="intro"></textarea>
+      </div>
+    </div>
+    <hr />
+    <div class="layui-form-item" id="tag">
+      <h3>项目标签</h3> 
+      <div class="col-md-8 col-xs-12 column">
+        <input type="checkbox" name="tags[]" value="1" title="web" />
+        <input type="checkbox" name="tags[]" value="2" title="后端" />
+        <input type="checkbox" name="tags[]" value="3" title="前端" />
+        <input type="checkbox" name="tags[]" value="4" title="UI" />
+        <input type="checkbox" name="tags[]" value="5" title="嵌入式" />
+        <input type="checkbox" name="tags[]" value="6" title="通信" />
+        <input type="checkbox" name="tags[]" value="7" title="iOS" />
+        <input type="checkbox" name="tags[]" value="8" title="Android" />
+        <input type="checkbox" name="tags[]" value="9" title="产品" />
+        <input type="checkbox" name="tags[]" value="10" title="运营" />
+        <input type="checkbox" name="tags[]" value="11" title="云计算" />
+        <input type="checkbox" name="tags[]" value="12" title="大数据" />
+        <input type="checkbox" name="tags[]" value="13" title="游戏开发" />
+        <input type="checkbox" name="tags[]" value="14" title="算法" />
+        <input type="checkbox" name="tags[]" value="15" title="机器学习" />
+        <input type="checkbox" name="tags[]" value="16" title="运维" />
+      </div>
+    </div>
+    <div class="layui-form-item" id="role">
+      <h3>角色需要</h3>
+      <label class="col-lg-3 col-xs-3 layui-form-label">角色</label>
+      <div class="col-lg-6 col-xs-9">
+        <select name="role[]" class="form-control">
+          <option>-- 请选择角色 --</option>
+          <option value="1">开发&测试</option>
+          <option value="2">产品&文案</option>
+          <option value="3">设计&美工</option>
+          <option value="4">运营&市场</option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-3 col-xs-3 layui-form-label">技能</label>
+      <div class="col-lg-5 col-xs-5">
+        <input type="text" name="skill[]" class="layui-input" autocomplete="off" placeholder="Skill name" />
+      </div>
+    </div>
+</form>
 </div>
 <br />
 {/block}
