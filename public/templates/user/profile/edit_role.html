@@ -2,7 +2,6 @@
 {block name="main"}
 <h1 align="center">Edit Role Info</h1>
 <div class="container">
-    <button onclick="appendRole()" class="btn btn-primary">添加角色</button> 
     <div><br /></div>
     <h3>角色信息</h3>
     <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="layui-form form-horizontal">
@@ -10,7 +9,7 @@
         <div id="arole">
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">角色{$k}</label>
-            <div class="col-md-9 col-xs-9 column">
+            <div class="col-md-5 col-xs-5 column">
             <select name="role[]" class="form-control">
                     <option value="1" {eq name="key" value="1"}selected="selected"{/eq}>开发&测试</option>
                     <option value="2" {eq name="key" value="2"}selected="selected"{/eq}>产品&文案</option>
@@ -18,11 +17,14 @@
                     <option value="4" {eq name="key" value="4"}selected="selected"{/eq}>运营&市场</option>
             </select>
             </div>
+            <div class="col-md-4 col-xs-4 column">
+              <button type="button" class="btn btn-warning delbutton">删除角色</button>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">技能</label>
             <div class="col-md-5 col-xs-5 column">
-            <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control" placeholder="Skill Name" />
+            <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
             <select name="level1[]" class="form-control">
@@ -49,7 +51,7 @@
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">技能</label>                
             <div class="col-md-5 col-xs-5 column">
-                <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control" placeholder="Skill Name" />
+                <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
             <select name="level2[]" class="form-control">
@@ -76,7 +78,7 @@
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">技能</label>                
             <div class="col-md-5 col-xs-5 column">
-                <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control" placeholder="Skill Name" />
+                <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
             <select name="level3[]" class="form-control">
@@ -101,7 +103,15 @@
             </div>
         </div> 
         </div><!--role--> 
+        <script>
+            var n={$k};
+        </script>
         {/volist}
+        <div class="col-md-3" id="add">&nbsp;</div>
+        <div class="col-md-9 col-xs-12">
+        <button type="button" onclick="appendRole()" class="btn btn-primary btn-block" id="add_role">添加角色</button>
+        </div>
+        <br /><br />
         <div class="layui-form-item" id="tag">
           <h3>个人标签</h3>    
           <div class="col-md-12 col-xs-12 column">
@@ -136,13 +146,19 @@
 {/block}
 {block name="free_js"}
 <script>
+    var n;
+    if(!n){n=0;}
+    if(n == 2){
+        $("#add_role").attr('disabled',true);
+    }
     function appendRole()
-    {
+    {   
         var txt=`
-            <div><hr /></div>
+            <div>
+            <hr />
             <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">角色</label>
-            <div class="col-md-9 col-xs-9 column">
+            <div class="col-md-5 col-xs-5 column">
             <select name="role[]" class="form-control">
             <option value="1">开发&测试</option>
             <option value="2">产品&文案</option>
@@ -150,14 +166,17 @@
             <option value="4">运营&市场</option>
             </select>
             </div>
+            <div class="col-md-4 col-xs-4 column">
+              <button type="button" class="btn btn-warning delbutton">删除角色</button>
+            </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">技能</label>  
             <div class="col-md-5 col-xs-5 column">
-            <input name="skill1[]" type="text" class="form-control" placeholder="Skill Name" />
+            <input name="skill1[]" type="text" class="form-control" id="skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
-            <select name="level1[]" class="form-control">
+            <select name="level1[]" class="form-control tttt">
             <option value="1">入门</option>
             <option value="2">熟练</option>
             <option value="3">精通</option>
@@ -167,7 +186,7 @@
         <div class="form-group">
             <label class="col-md-3 col-xs-3 control-label">技能</label>  
             <div class="col-md-5 col-xs-5 column">
-                <input name="skill2[]" type="text" class="form-control" placeholder="Skill Name" />
+                <input name="skill2[]" type="text" class="form-control" id="test" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
                 <select name="level2[]" class="form-control">
@@ -189,8 +208,45 @@
                 <option value="3">精通</option>
                 </select>
             </div>
+        </div>
         </div>`;
-        $("#tag").before(txt);
+        $("#add").before(txt);
+        n=n+1;
+        if(n == 2){
+            $("#add_role").attr('disabled',true);
+        }
+        layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+        });
+
+        $(document).ready(function(){
+            $(".delbutton").unbind('click');
+            $(".delbutton").on('click',function(){
+                $(this).parent().parent().parent().remove();
+                n=n-1;
+                console.log(n);
+                if(n <= 2){
+                    $("#add_role").attr("disabled",false);
+                }
+            });
+
+            $("#skill").unbind('change');
+            $("#skill").on('change',function(){
+                $(".tttt").attr("disabled",true);
+            });
+        });
+}
+
+$(".delbutton").unbind('click');
+$(".delbutton").on('click',function(){
+    $(this).parent().parent().parent().remove();
+    n=n-1;
+    console.log(n);
+    if(n <= 2){
+        $("#add_role").attr("disabled",false);
     }
+});
+
 </script>
 {/block}

@@ -60,10 +60,87 @@
         <input type="checkbox" name="tags[]" value="16" title="运维" />
       </div>
     </div>
+    <h3>角色需要</h3>
+    <div id="role">
+    <hr />
     <div class="layui-form-item" id="role">
-      <h3>角色需要</h3>
-      <label class="col-lg-3 col-xs-3 layui-form-label">角色</label>
-      <div class="col-lg-6 col-xs-9">
+      <label class="col-lg-2 col-xs-3 layui-form-label">角色</label>
+      <div class="col-lg-6 col-xs-6">
+        <select name="role[]" class="form-control">
+          <option>-- 请选择角色 --</option>
+          <option value="1">开发&测试</option>
+          <option value="2">产品&文案</option>
+          <option value="3">设计&美工</option>
+          <option value="4">运营&市场</option>
+        </select>        
+      </div>
+      <!-- <div class="col-lg-4 col-xs-3 column">
+        <button type="button" class="btn btn-warning delbutton">删除角色</button>
+      </div> -->
+    </div>
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+      <div class="col-lg-6 col-xs-5">
+        <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+      </div>
+      <div class="col-lg-4 col-xs-4 column">
+        <select name="skill[]" class="form-control level">
+          <option></option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+        <div class="col-lg-6 col-xs-5">
+            <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+        </div>
+        <div class="col-lg-4 col-xs-4 column">
+            <select name="skill[]" class="form-control level">
+            <option></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+        <div class="col-lg-6 col-xs-5">
+            <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+        </div>
+        <div class="col-lg-4 col-xs-4 column">
+            <select name="skill[]" class="form-control level">
+            <option></option>
+            </select>
+        </div>
+    </div>
+  </div><!--role-->
+    <div id="end"></div>
+    <div class="col-md-2">&nbsp;</div>
+    <div class="col-md-8 col-xs-12">
+      <button type="button" onclick="appendNeedRole()" class="btn btn-primary btn-block" id="add">添加角色</button>    
+    </div>
+</form>
+</div>
+<br />
+{/block}
+{block name="free_js"}
+<script>
+var n=1;
+
+$(document).ready(function(){
+$(".level").attr("disabled",true);
+layui.use('form', function(){
+    var form = layui.form;
+    form.render();
+}); 
+});
+  
+function appendNeedRole()
+{   
+      var txt = `
+      <div>
+      <hr />
+      <div class="layui-form-item" id="role">
+      <label class="col-lg-2 col-xs-3 layui-form-label">角色</label>
+      <div class="col-lg-6 col-xs-6">
         <select name="role[]" class="form-control">
           <option>-- 请选择角色 --</option>
           <option value="1">开发&测试</option>
@@ -72,14 +149,81 @@
           <option value="4">运营&市场</option>
         </select>
       </div>
-    </div>
-    <div class="layui-form-item">
-      <label class="col-lg-3 col-xs-3 layui-form-label">技能</label>
-      <div class="col-lg-5 col-xs-5">
-        <input type="text" name="skill[]" class="layui-input" autocomplete="off" placeholder="Skill name" />
+      <div class="col-lg-4 col-xs-3 column">
+        <button type="button" class="btn btn-warning delbutton">删除角色</button>
       </div>
     </div>
-</form>
-</div>
-<br />
+    <div class="layui-form-item">
+      <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+      <div class="col-lg-6 col-xs-5">
+        <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+      </div>
+      <div class="col-lg-4 col-xs-4 column">
+        <select name="skill[]" class="form-control level">
+          <option></option>
+        </select>
+      </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+        <div class="col-lg-6 col-xs-5">
+            <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+        </div>
+        <div class="col-lg-4 col-xs-4 column">
+            <select name="skill[]" class="form-control level">
+            <option></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
+        <div class="col-lg-6 col-xs-5">
+            <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+        </div>
+        <div class="col-lg-4 col-xs-4 column">
+            <select name="skill[]" class="form-control level">
+            <option></option>
+            </select>
+        </div>
+    </div>
+    </div>`;
+    n = n + 1;
+    console.log(n);
+    if(n == 4){
+      $("#add").attr("disabled",true);
+    }
+
+    $("#end").before(txt);
+    layui.use('form', function(){
+    var form = layui.form;
+    form.render('select');
+    });
+
+    $(".delbutton").unbind('click');
+    $(".delbutton").on('click',function(){
+      $(this).parent().parent().parent().remove();
+      n=n-1;
+      console.log(n);
+      if(n < 4){
+        $("#add").attr("disabled",false);
+      }
+    });
+}
+
+$(".skill").on("change",function(){
+  if($(this).val()){
+      $(this).parent().next().find("select").attr("disabled",false);
+      layui.use('form', function(){
+      var form = layui.form;
+      form.render();
+      }); 
+  }else{
+      $(this).parent().next().find("select").attr("disabled",true);
+      layui.use('form', function(){
+      var form = layui.form;
+      form.render();
+      });
+  }
+})
+</script>
 {/block}
