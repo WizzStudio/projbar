@@ -30,7 +30,7 @@
           {/switch}
         </h3>
         {volist name="roleInfo" id="skill"}        
-        <p>技能: {$skill['name']}&emsp;等级:
+        <p>ID:{$skill['id']}&emsp;技能:{$skill['name']}&emsp;等级:
             {switch name="skill['level']"}
                 {case value="1"}入门{/case}
                 {case value="2"}熟练{/case}
@@ -50,6 +50,32 @@
     <p>{$exp}</p>
     <br />
     <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
+    </div>
+</div>
+<div class="container">
+    <div class="jumbotron">
+        <h2>My Projects</h2><br />
+        {volist name="myProjList" id="proj"}
+            <p><b>【
+            {switch name="proj['cate_id']"}
+            {case value="1"}比赛{/case}    
+            {case value="2"}外包{/case}
+            {case value="3"}创业{/case}
+            {case value="4"}实验课题{/case}
+            {case value="5"}实践练手{/case}
+            {case value="6"}比赛：国创{/case}
+            {case value="7"}比赛：互联网+{/case}
+            {case value="8"}比赛：数模{/case}
+            {case value="10"}比赛：挑战杯{/case}
+            {case value="11"}比赛：TI杯{/case}
+            {case value="12"}比赛：其他{/case}
+            {/switch} 】   {$proj['name']}
+            </b></p>
+            <p>发起人：{$proj['leader_id']}</p>
+            <p>邮箱：{$proj['email']}</p>
+            <p>项目简介：{$proj['intro']}</p>
+            <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情</a></p>
+        {/volist}
     </div>
 </div>
 {/block}

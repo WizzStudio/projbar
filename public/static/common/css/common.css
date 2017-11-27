@@ -1,6 +1,7 @@
-.dark{
-    /* background-color: #23262E; */
-    background-color: #222;
+.mydark{
+    background-color: #3d3744;
+    border-color: transparent;
+    opacity: 0.86;
 }
 .grey{
     background-color: #111;

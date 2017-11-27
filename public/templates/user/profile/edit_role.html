@@ -145,7 +145,11 @@
 <br />
 {/block}
 {block name="free_js"}
+
 <script>
+    layui.use('form',function(){
+        var form = layui.form;
+    });
     var n;
     if(!n){n=0;}
     if(n == 2){

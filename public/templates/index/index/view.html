@@ -1,0 +1,58 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<div class="container">
+  <!-- <div class="jumbotron"> -->
+    <h4 class="text-info">{$projBase['name']}</h4>
+    <hr />
+    <h4>基础信息</h4><br />
+    <p>项目类型：
+    {switch name="projBase['cate_id']"}
+    {case value="1"}比赛{/case}    
+    {case value="2"}外包{/case}
+    {case value="3"}创业{/case}
+    {case value="4"}实验课题{/case}
+    {case value="5"}实践练手{/case}
+    {case value="6"}比赛：国创{/case}
+    {case value="7"}比赛：互联网+{/case}
+    {case value="8"}比赛：数模{/case}
+    {case value="10"}比赛：挑战杯{/case}
+    {case value="11"}比赛：TI杯{/case}
+    {case value="12"}比赛：其他{/case}
+    {/switch}
+    </p>
+    <p>发起人：{$projBase['leader_id']}</p>
+    <p>邮箱：{$projBase['email']}</p>
+    <p>简介：{$projBase['intro']}</p>
+    <hr />
+    <h4>项目标签</h4>
+    <p>/
+    {volist name="tags" id="tag"}
+        {$tag['name']}&nbsp;/
+    {/volist}
+    </p>
+    <hr />
+    <h4>需求角色</h4>
+    {volist name="roleInfoList" id="roleInfo" key="k"}
+        <p>角色{$k}：
+            {switch name="key"}
+                {case value="1"}开发&测试{/case}
+                {case value="2"}产品&文案{/case}
+                {case value="3"}设计&美工{/case}
+                {case value="4"}运营&市场{/case}
+                {default /}暂无
+            {/switch}
+        </p>
+        {volist name="roleInfo" id="skill"}
+        <p>
+        ID：{$skill['id']}&emsp;技能：{$skill['name']}&emsp;等级：
+            {switch name="skill['level']"}
+                {case value="1"}入门{/case}
+                {case value="2"}熟练{/case}
+                {case value="3"}精通{/case}
+            {/switch}
+        </p>
+        {/volist}
+    {/volist}
+  <!-- </div> -->
+</div>
+{/block}

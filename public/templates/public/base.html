@@ -12,10 +12,10 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/common/css/common.css" rel="stylesheet">
   </head>
-  <body style="margin-top:60px;">
+  <body style="margin-top:50px;">
     {block name="navbar"}
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-inverse navbar-fixed-top mydark" role="navigation">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -30,7 +30,8 @@
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
+              <!-- 可以加class="active"表示选中 -->
+              <li><a href="#">Home</a></li>
               <li><a href="#project">Project</a></li>
               <li><a href="#contact">Partner</a></li>
             </ul>
@@ -49,7 +50,7 @@
     {block name="main"}
     <h1 align="center">Base Main Templates</h1>
     {/block}
-    <footer class="footer dark p-footer">
+    <footer class="footer mydark p-footer">
       <div class="container">
         <p class="text-muted">Place sticky footer content here.</p>
         <p class="text-muted">create by <b>wxjackie</b></p>
@@ -59,7 +60,7 @@
     <script src="__STATIC__/bootstrap/js/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
-    <script src="__STATIC__/layui/layui.all.js"></script> 
+    <script src="__STATIC__/layui/layui.js"></script>
     {block name="free_js"}{/block}
   </body>
 </html>

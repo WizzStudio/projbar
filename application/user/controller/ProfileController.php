@@ -22,8 +22,10 @@ class ProfileController extends UserBaseController
         $userSkillQuery = Db::name("user_skill");
         $userTagQuery = Db::name("user_tag");
         $expQuery = Db::name("exp");
+        $projQuery = Db::name("project");
         $roleInfo = [];
         $exp = '';
+        $myProj = [];
         $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
         if(!empty($userSkillList)){
             foreach($userSkillList as $skill){
@@ -38,7 +40,7 @@ class ProfileController extends UserBaseController
                     }
                 }
             }
-        }
+        }   
         $tags = $userTagQuery
             ->alias('a')
             ->field('b.*')
@@ -47,10 +49,13 @@ class ProfileController extends UserBaseController
             ->select();
         $exp = $expQuery->where('user_id',$userId)->find();
 
+        $myProjList = $projQuery->where('leader_id',$userId)->select();
+
         $this->assign('roleInfoList', $roleInfo);
         $this->assign('user', $user);
         $this->assign('tags',$tags);
         $this->assign('exp',$exp['exp']);
+        $this->assign('myProjList',$myProjList);
         return $this->fetch();
     }
 
@@ -148,6 +153,7 @@ class ProfileController extends UserBaseController
      */
     public function edit_role_handle()
     {      
+        //TODO validate
         $post = $this->request->post();
         $roleNumber = count($post['role']);
         $userId = bar_get_user_id();

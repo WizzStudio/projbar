@@ -1,0 +1,47 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<div class="container">
+    <form class="layui-form form-horizontal layui-form" action="">        
+            <div class="layui-form-item">
+                    <label class="col-lg-2 col-xs-4 layui-form-label">项目类型</label>
+                    <div class="col-lg-6 col-xs-8">
+                      <select name="type" class="form-control" lay-filter="test">
+                        <option>-- 请选择类型 --</option>
+                        <option value="1">比赛</option>
+                        <option value="2">外包</option>
+                        <option value="3">创业</option>
+                        <option value="4">实验课题</option>
+                        <option value="5">实践练手</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="layui-form-item">
+                    <label class="col-lg-2 col-xs-4 layui-form-label">比赛分类</label>
+                    <div class="col-lg-6 col-xs-8">
+                      <select name="game_cate" class="form-control" id="test2">
+                        <option>-- 请选择比赛 --</option>
+                        <option value="6">国创</option>
+                        <option value="7">互联网+</option>
+                        <option value="8">数模</option>
+                        <option value="10">挑战杯</option>
+                        <option value="11">TI杯</option>
+                        <option value="12">其他</option>
+                      </select>
+                    </div>
+                  </div>
+    </form>
+    <div class="layui-progress layui-progress-big" lay-showPercent="yes">
+            <div class="layui-progress-bar layui-bg-green" lay-percent="50%">测试</div>
+          </div>
+</div>
+{/block}
+{block name="free_js"}
+<script>
+var form = layui.form;
+form.on('select(test)',function(data){
+    console.log(data.elem);
+    console.log(data.value);
+    console.log(data.othis);
+})
+</script>
+{/block}
