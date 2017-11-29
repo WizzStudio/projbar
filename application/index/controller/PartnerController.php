@@ -10,7 +10,7 @@ class PartnerController extends BaseController
     /**
      * 个人列表
      */
-    public function list()
+    public function lists()
     {
         $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
