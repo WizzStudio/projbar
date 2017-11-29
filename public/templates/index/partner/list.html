@@ -1,0 +1,87 @@
+{extend name="templates/public/base.html" /}
+{block name="cascade"}
+<form class="layui-form layui-form-pane" action="">
+    <div class="layui-row">
+        <div class="layui-input-inline layui-col-xs6">
+        <select name="quiz1" id="type">
+            <option value="" selected="">角色职能</option>
+            <option value="1">开发&测试</option>
+            <option value="2">产品&文案</option>
+            <option value="3">设计&美工</option>
+            <option value="4">运营&市场</option>
+        </select>
+        </div>
+        <div class="layui-input-inline layui-col-xs6">
+        <select name="quiz2" id="game">
+            <option value="">个人标签</option>
+            <option value="1">web</option>
+            <option value="2">后端</option>
+            <option value="3">前端</option>
+            <option value="4">UI</option>
+            <option value="5">嵌入式</option>
+            <option value="6">通信</option>
+            <option value="7">iOS</option>
+            <option value="8">Android</option>
+            <option value="9">产品</option>
+            <option value="10">运营</option>
+            <option value="11">云计算</option>
+            <option value="12">大数据</option>
+            <option value="13">游戏开发</option>
+            <option value="14">算法</option>
+            <option value="15">机器学习</option>
+            <option value="16">运维</option>
+        </select>
+        </div>
+    </div>
+</form>
+<br />
+{/block}
+{block name="main"}
+<div class="container-fluid" style="height: 80vh;">
+    {volist name="userList" id="user"}
+    <div class="col-md-3 col-xs-12 column" style="background-color: #eee">
+        <p><a href="">{$user['nickname']}</a></p>
+        <p>性别：{switch name="user.sex"}
+            {case value="1"}男{/case}
+            {case value="2"}女{/case}
+            {default /}未知
+            {/switch}
+        </p>
+        <p>标签：
+            {volist name="user['tags']" id="tag"}
+            {$tag}/
+            {/volist}
+        </p>
+            {volist name="user['role']" id="role" key="i"}
+            <p>角色：
+                {switch name="key"}
+                {case value="1"}开发&测试{/case}
+                {case value="2"}产品&文案{/case}
+                {case value="3"}设计&美工{/case}
+                {case value="4"}运营&市场{/case}
+                {default /}暂无
+                {/switch}
+            </p>
+                {volist name="role" id="level"}
+                <p>{$key}=>
+                    {switch name="level"}
+                    {case value="1"}入门{/case}
+                    {case value="2"}熟练{/case}
+                    {case value="3"}精通{/case}
+                    {/switch}
+                </p>
+                {/volist}
+            {/volist}
+        </p>
+    </div>
+    <div class="col-md-1 column">&emsp;</div>
+    {/volist}
+</div>
+{/block}
+{block name="free_js"}
+<script>
+layui.use('form',function(){
+    var form = layui.form;
+})
+</script>
+{/block}

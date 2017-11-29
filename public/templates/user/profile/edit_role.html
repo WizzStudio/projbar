@@ -180,7 +180,7 @@
             <input name="skill1[]" type="text" class="form-control" id="skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
-            <select name="level1[]" class="form-control tttt">
+            <select name="level1[]" class="form-control">
             <option value="1">入门</option>
             <option value="2">熟练</option>
             <option value="3">精通</option>
@@ -233,11 +233,6 @@
                 if(n <= 2){
                     $("#add_role").attr("disabled",false);
                 }
-            });
-
-            $("#skill").unbind('change');
-            $("#skill").on('change',function(){
-                $(".tttt").attr("disabled",true);
             });
         });
 }

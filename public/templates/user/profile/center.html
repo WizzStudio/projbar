@@ -1,9 +1,9 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<h1 align="center">Personal Center</h1>
+<h1 align="center">个人中心</h1>
 <div class="container">
     <div class="jumbotron">
-        <h2 class="text-info" align="center">User Base Info</h2>
+        <h2 class="text-info" align="center">基础信息</h2>
         <p>Username: {$user['username']}</p>
         <p>Mobile: {$user['mobile']}</p>
         <p>Email: {$user['email']}</p>
@@ -12,15 +12,15 @@
         <p>Nickname: {$user['nickname']}</p>
         <p>Signature: {$user['signature']}</p>
         <p>Extra: {$user['extra']}</p>
-        <p><a class="btn btn-primary" href="{:url('edit_base')}">Edit Base Info</a></p>
+        <p><a class="btn btn-primary" href="{:url('edit_base')}">编辑基础信息</a></p>
     </div>
 </div>
 <div class="container">
     <div class="jumbotron">
-    <h2 class="text-info" align="center">Roles Info</h2>
+    <h2 class="text-info" align="center">角色信息</h2>
     <hr />    
-    {volist name="roleInfoList" id="roleInfo" key="k"}
-        <h3>角色{$k}: 
+    {volist name="roleInfoList" id="roleInfo" key="rid"}
+        <h3>角色{$rid}: 
           {switch name="key"}
             {case value="1"}开发&测试{/case}
             {case value="2"}产品&文案{/case}
@@ -49,12 +49,12 @@
     <h3>Exp:</h3>
     <p>{$exp}</p>
     <br />
-    <p><a class="btn btn-primary" href="{:url('edit_role')}">Edit Role Info</a></p>
+    <p><a class="btn btn-primary" href="{:url('edit_role')}">编辑角色信息</a></p>
     </div>
 </div>
 <div class="container">
     <div class="jumbotron">
-        <h2>My Projects</h2><br />
+        <h2>我的项目</h2><br />
         {volist name="myProjList" id="proj"}
             <p><b>【
             {switch name="proj['cate_id']"}

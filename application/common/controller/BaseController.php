@@ -12,11 +12,11 @@ class BaseController extends Controller
     {
         $userId = bar_get_user_id();
         if(!$userId){
-            $navRight = "<li><a href=".url('user/public/login').">Login</a></li>
-            <li><a href=".url('user/public/register').">Register</a></li>";
+            $navRight = "<li><a href=".url('user/public/login').">登录</a></li>
+            <li><a href=".url('user/public/register').">注册</a></li>";
         }else{
-            $navRight = "<li><a href=".url('user/profile/center').">Personal Center</a></li>
-            <li><a href=".url('user/profile/logout').">LogOut</a></li>";
+            $navRight = "<li><a href=".url('user/profile/center').">个人中心</a></li>
+            <li><a href=".url('user/profile/logout').">注销</a></li>";
         }
         $this->navRight = $navRight;
         $this->assign('navRight',$navRight);

@@ -163,6 +163,7 @@ class ProfileController extends UserBaseController
             $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
+
         $tags = $post['tags'];
         $userSkillModel =  new UserSkill();
         $expQuery = Db::name("exp");

@@ -68,7 +68,7 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                $this->success('注册成功，欢迎加入项慕吧！', '/user/login/index');
+                $this->success('注册成功，欢迎加入项慕吧！', '/user/public/login');
                 break;
             case 1:
                 $this->error('该邮箱已被注册');

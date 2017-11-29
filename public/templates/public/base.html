@@ -24,16 +24,16 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{:url('/')}">项慕吧 projbar</a>
+            <a class="navbar-brand" href="{:url('/')}">项慕吧 PROJBAR</a>
             <span class="navbar-brand glyphicon glyphicon-search" onclick="ale()"></span>
             <a class="navbar-brand" href="{:url('user/action/release')}"><span class="glyphicon glyphicon-plus"></span></a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <!-- 可以加class="active"表示选中 -->
-              <li><a href="#">Home</a></li>
-              <li><a href="#project">Project</a></li>
-              <li><a href="#contact">Partner</a></li>
+              <li><a href="{:url('/')}">首页</a></li>
+              <li><a href="{:url('/')}">项目</a></li>
+              <li><a href="{:url('index/partner/list')}">个人</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
              {$navRight}
@@ -52,7 +52,7 @@
     {/block}
     <footer class="footer mydark p-footer">
       <div class="container">
-        <p class="text-muted">Place sticky footer content here.</p>
+        <p class="text-muted">Power by Thinkphp5 + layui</p>
         <p class="text-muted">create by <b>wxjackie</b></p>
       </div>
     </footer>
