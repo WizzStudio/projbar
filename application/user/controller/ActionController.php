@@ -2,6 +2,7 @@
 namespace app\user\controller;
 
 use think\Validate;
+use think\Db;
 use app\common\model\Project;
 use app\common\controller\UserBaseController;
 
@@ -58,10 +59,28 @@ class ActionController extends UserBaseController
     }
 
     /**
-     * 前端业务逻辑测试
+     * 用户申请加入项目
      */
-    public function test()
+    public function apply($id='')
     {
-        return $this->fetch();
+        if($id){
+            $userId = bar_get_user_id();
+            $msgQuery = Db::name("message");
+            $projQuery = Db::name("project");
+            $projBase = $projQuery->where('id',$id)->find();
+            if($projBase){
+                $leaderId = $projBase['leader_id'];
+                $msgResult = $msgQuery->insert([
+                    'from_id' => $userId,
+                    'to_id' => $leaderId,
+                    'proj_id' => $id,
+                    'type' => 1
+                ]);
+                if(!$msgResult){
+                    $this->error('发起申请失败，原因：无法向数据库添加申请数据');
+                }
+                $this->success("发起加入申请成功！");
+            }
+        }
     }
 }

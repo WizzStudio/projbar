@@ -49,10 +49,16 @@
                 {case value="1"}入门{/case}
                 {case value="2"}熟练{/case}
                 {case value="3"}精通{/case}
+                {default /}
             {/switch}
         </p>
         {/volist}
     {/volist}
   <!-- </div> -->
+  <br />
+  <p>
+    <a class="btn btn-success btn-block" href={:url("user/action/apply","id=$projBase[id]")}>申请加入</a>            
+  </p>
+  <br />
 </div>
 {/block}

@@ -46,4 +46,54 @@ class PartnerController extends BaseController
         $this->assign("userList",$userList);
         return $this->fetch();
     }
+
+    /**
+     * 查看个人的详细信息
+     */
+    public function view($id='')
+    {
+        if($id){
+            $userQuery = Db::name("user");
+            $userTagQuery = Db::name("user_tag");
+            $userSkillQuery = Db::name("user_skill");
+            $expQuery = Db::name("exp");
+            $userBase = $userQuery->where("id",$id)->find();
+            
+            $roleInfo = [];
+            $exp = '';
+
+            $userSkillList = $userSkillQuery->where("user_id",$id)->select();
+            if(!empty($userSkillList)){
+                foreach($userSkillList as $skill){
+                    $roleIds[] = $skill['role_id'];
+                }
+                $roleIds = array_unique($roleIds);
+                foreach($roleIds as $roleId){
+                    foreach($userSkillList as $skill){
+                        if($skill['role_id'] == $roleId){
+                            $roleInfo[$roleId][] = $skill;
+                        }
+                    }
+                }
+            }
+            $tags = $userTagQuery
+            ->alias('a')
+            ->field('b.*')
+            ->where(['user_id' => $id])
+            ->join('__TAG__ b','a.tag_id=b.id')
+            ->select();
+            $exp = $expQuery->where('user_id',$id)->find();
+
+            $this->assign([
+                'user' => $userBase,
+                'roleInfoList' => $roleInfo,
+                'tags' => $tags,
+                'exp' => $exp
+            ]);
+            return $this->fetch();
+
+        }else{
+            $this->error("未指定个人id");
+        }
+    }
 }

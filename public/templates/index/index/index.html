@@ -35,12 +35,13 @@
         </div>
     </div>
     </form>
+    <br />
 <!-- </div> -->
 {/block}
 {block name="main"}
-<div class="container-fluid" style="height: 80vh;">
+<div class="layui-container-fluid" style="height: 80vh;">
         {volist name="projList" id="proj"}
-        <div class="col-md-4 col-xs-12 column">
+        <div class="layui-col-md4 layui-col-xs12">
         <h4>
         【
         {switch name="proj.cate_id"}
@@ -62,7 +63,8 @@
             {$proj.intro}
         </p>
         <p>
-            <a class="btn btn-primary" href={:url("index/index/view","id=$proj[id]")}>查看详情 »</a>
+            <a class="btn btn-primary" href={:url("index/index/view","id=$proj[id]")}>查看详情 »</a>&emsp;&emsp;
+            <!-- <a class="btn btn-success" href={:url("user/action/apply","id=$proj[id]")}>申请加入</a>             -->
         </p>
         </div>
         {/volist}

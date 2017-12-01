@@ -1,0 +1,54 @@
+{extend name="templates/public/base.html"}
+{block name="main"}
+<div class="container">
+  <h1 align="center">{$user.nickname}</h1>
+  <h4>基础信息</h4>
+  <p>昵称：{$user.nickname}</p>
+  <p>头像：{$user.avatar}</p>
+  <p>性别：{switch name="user.sex"}
+    {case value="1"}男{/case}
+    {case value="2"}女{/case}
+    {default /}未知
+    {/switch}
+  </p>
+  <p>邮箱：建立合作关系后可见</p>
+  <p>个性签名：</p>
+  <h4>角色信息</h4>
+  {volist name="roleInfoList" id="roleInfo" key="k"}
+    <p><b>角色{$k}：
+        {switch name="key"}
+            {case value="1"}开发&测试{/case}
+            {case value="2"}产品&文案{/case}
+            {case value="3"}设计&美工{/case}
+            {case value="4"}运营&市场{/case}
+            {default /}暂无
+        {/switch}
+        </b>
+    </p>
+    {volist name="roleInfo" id="skill"}
+    <p>
+        技能：{$skill['name']}&emsp;等级：
+        {switch name="skill['level']"}
+            {case value="1"}入门{/case}
+            {case value="2"}熟练{/case}
+            {case value="3"}精通{/case} 
+            {default /}
+        {/switch}
+    </p>
+    {/volist}
+  {/volist}
+  <h4>个人标签</h4>
+  <p>/
+    {volist name="tags" id="tag"}
+        {$tag['name']}&nbsp;/
+    {/volist}
+  </p>
+  <h4>项目经历</h4>
+  <p>
+    {$exp.exp}
+  </p>
+  <p>
+    <a class="btn btn-success btn-block" href={:url("user/action/invite","id=$user[id]")}>邀请加入项目</a>                    
+  </p>
+</div>
+{/block}

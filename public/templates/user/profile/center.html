@@ -1,34 +1,34 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <h1 align="center">个人中心</h1>
-<div class="container">
+<div class="layui-container-fluid">
     <div class="jumbotron">
-        <h2 class="text-info" align="center">基础信息</h2>
         <p>Username: {$user['username']}</p>
         <p>Mobile: {$user['mobile']}</p>
         <p>Email: {$user['email']}</p>
         <p>Sex: {$user['sex']}</p>
-        <p>Birthday: {$user['birthday']}</p>
+        <!-- <p>Birthday: {$user['birthday']}</p> -->
         <p>Nickname: {$user['nickname']}</p>
         <p>Signature: {$user['signature']}</p>
         <p>Extra: {$user['extra']}</p>
         <p><a class="btn btn-primary" href="{:url('edit_base')}">编辑基础信息</a></p>
     </div>
 </div>
-<div class="container">
-    <div class="jumbotron">
-    <h2 class="text-info" align="center">角色信息</h2>
-    <hr />    
-    {volist name="roleInfoList" id="roleInfo" key="rid"}
-        <h3>角色{$rid}: 
-          {switch name="key"}
+
+<div class="layui-collapse">
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">技能信息</h2>
+    <div class="layui-colla-content">
+        {volist name="roleInfoList" id="roleInfo" key="i"}
+        <b>角色{$i}: 
+            {switch name="key"}
             {case value="1"}开发&测试{/case}
             {case value="2"}产品&文案{/case}
             {case value="3"}设计&美工{/case}
             {case value="4"}运营&市场{/case}
             {default /}暂无
-          {/switch}
-        </h3>
+            {/switch}
+        </b>
         {volist name="roleInfo" id="skill"}        
         <p>ID:{$skill['id']}&emsp;技能:{$skill['name']}&emsp;等级:
             {switch name="skill['level']"}
@@ -39,44 +39,70 @@
         </p>
         {/volist}
         <hr />
-    {/volist}
-    <h3>Tags:</h3>
-    <p>
-    {volist name="tags" id="tag"}
-    {$tag['name']}&nbsp;/
-    {/volist}
-    </p>
-    <h3>Exp:</h3>
-    <p>{$exp}</p>
-    <br />
-    <p><a class="btn btn-primary" href="{:url('edit_role')}">编辑角色信息</a></p>
+        {/volist}
+        <b>Tags:</b>
+        <p>
+        {volist name="tags" id="tag"}
+        {$tag['name']}&nbsp;/
+        {/volist}
+        </p>
+        <b>Exp:</b>
+        <p>{$exp}</p>
+        <br />
+        <p><a class="btn btn-primary" href="{:url('edit_role')}">编辑角色信息</a></p>
     </div>
-</div>
-<div class="container">
-    <div class="jumbotron">
-        <h2>我的项目</h2><br />
+  </div>
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">我的项目</h2>
+    <div class="layui-colla-content">
         {volist name="myProjList" id="proj"}
-            <p><b>【
-            {switch name="proj['cate_id']"}
-            {case value="1"}比赛{/case}    
-            {case value="2"}外包{/case}
-            {case value="3"}创业{/case}
-            {case value="4"}实验课题{/case}
-            {case value="5"}实践练手{/case}
-            {case value="6"}比赛：国创{/case}
-            {case value="7"}比赛：互联网+{/case}
-            {case value="8"}比赛：数模{/case}
-            {case value="10"}比赛：挑战杯{/case}
-            {case value="11"}比赛：TI杯{/case}
-            {case value="12"}比赛：其他{/case}
-            {/switch} 】   {$proj['name']}
-            </b></p>
-            <p>发起人：{$proj['leader_id']}</p>
-            <p>邮箱：{$proj['email']}</p>
-            <p>项目简介：{$proj['intro']}</p>
-            <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情</a></p>
+        <p><b>【
+        {switch name="proj['cate_id']"}
+        {case value="1"}比赛{/case}    
+        {case value="2"}外包{/case}
+        {case value="3"}创业{/case}
+        {case value="4"}实验课题{/case}
+        {case value="5"}实践练手{/case}
+        {case value="6"}比赛：国创{/case}
+        {case value="7"}比赛：互联网+{/case}
+        {case value="8"}比赛：数模{/case}
+        {case value="10"}比赛：挑战杯{/case}
+        {case value="11"}比赛：TI杯{/case}
+        {case value="12"}比赛：其他{/case}
+        {/switch} 】   {$proj['name']}
+        </b></p>
+        <p>发起人：{$proj['leader_id']}</p>
+        <p>邮箱：{$proj['email']}</p>
+        <p>项目简介：{$proj['intro']}</p>
+        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情</a></p>
+        <br />
         {/volist}
     </div>
+  </div>
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">通知消息</h2>
+    <div class="layui-colla-content">
+    <p>暂无</p>
+    </div>
+  </div>
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">联系我们</h2>
+    <div class="layui-colla-content">
+    <p>合作邮箱：vincentw23@foxmail.com</p>
+    </div>
+  </div>
 </div>
+{/block}
+{block name="free_js"}
+<script>
+layui.use(['element','layer'],function(){
+    var element = layui.element;
+    var layer = layui.layer;
+
+    element.on('collapse(test)',function(data){
+        layer.msg('展开状态：' + data.show)
+    });
+});
+</script>
 {/block}
   
