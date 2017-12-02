@@ -1,21 +1,58 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
+<style>
+.p-base{
+    font-size: 18px!important;
+}
+.p{
+    font-size: 16px!important;
+}
+.div-base{
+    background-color:#f2f2f2!important;
+}
+</style>
 <h1 align="center">个人中心</h1>
 <div class="layui-container-fluid">
-    <div class="jumbotron">
-        <p>Username: {$user['username']}</p>
-        <p>Mobile: {$user['mobile']}</p>
-        <p>Email: {$user['email']}</p>
-        <p>Sex: {$user['sex']}</p>
+    <div class="div-base">
+        <p class="p-base">用户名: {$user['username']}</p>
+        <p class="p-base">手机: {$user['mobile']}</p>
+        <p class="p-base">QQ: {$user['qq']}</p>
+        <p class="p-base">邮箱: {$user['email']}</p>
+        <p class="p-base">性别: {switch name="user.sex"}
+                                {case value="1"}男{/case}
+                                {case value="2"}女{/case}
+                                {default /}未知
+                                {/switch}</p>
         <!-- <p>Birthday: {$user['birthday']}</p> -->
-        <p>Nickname: {$user['nickname']}</p>
-        <p>Signature: {$user['signature']}</p>
-        <p>Extra: {$user['extra']}</p>
+        <p class="p-base">昵称: {$user['nickname']}</p>
+        <p class="p-base">个性签名: {$user['signature']}</p>
+        <p class="p-base">额外信息: {$user['extra']}</p>
         <p><a class="btn btn-primary" href="{:url('edit_base')}">编辑基础信息</a></p>
     </div>
+    <br />
 </div>
-
-<div class="layui-collapse">
+<br />
+<div class="layui-collapse" lay-filter="test">
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">通知消息</h2>
+    <div class="layui-colla-content layui-show">
+    {volist name="msgs" id="msg"}
+        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a>&nbsp;
+        {switch name="msg['type']"}
+        {case value="0"}系统消息：{/case}
+        {case value="1"}申请加入项目{/case}
+        {case value="2"}邀请你加入项目{/case}
+        {/switch}
+        <a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
+        </p>
+        <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
+        <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
+        </p>
+        <hr />
+    {/volist}
+    {if condition="empty($msgs)"}<p>暂无消息</p>{/if}
+    </div>
+  </div>
   <div class="layui-colla-item">
     <h2 class="layui-colla-title">技能信息</h2>
     <div class="layui-colla-content">
@@ -55,6 +92,9 @@
   <div class="layui-colla-item">
     <h2 class="layui-colla-title">我的项目</h2>
     <div class="layui-colla-content">
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">我发布的项目</h2>
+        <div class="layui-colla-content">
         {volist name="myProjList" id="proj"}
         <p><b>【
         {switch name="proj['cate_id']"}
@@ -74,15 +114,36 @@
         <p>发起人：{$proj['leader_id']}</p>
         <p>邮箱：{$proj['email']}</p>
         <p>项目简介：{$proj['intro']}</p>
-        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情</a></p>
+        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情 »</a></p>
         <br />
         {/volist}
-    </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">通知消息</h2>
-    <div class="layui-colla-content">
-    <p>暂无</p>
+        </div>
+      </div>
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">我加入的项目</h2>
+        <div class="layui-colla-content">
+        {volist name="joinProjList" id="joinProj"}
+        <p><b>
+        【
+        {switch name="joinProj['cate_id']"}
+        {case value="1"}比赛{/case}    
+        {case value="2"}外包{/case}
+        {case value="3"}创业{/case}
+        {case value="4"}实验课题{/case}
+        {case value="5"}实践练手{/case}
+        {case value="6"}比赛：国创{/case}
+        {case value="7"}比赛：互联网+{/case}
+        {case value="8"}比赛：数模{/case}
+        {case value="10"}比赛：挑战杯{/case}
+        {case value="11"}比赛：TI杯{/case}
+        {case value="12"}比赛：其他{/case}
+        {/switch} 】   {$joinProj['name']}】
+        </b></p>
+        <p>项目简介：{$joinProj['intro']}</p>
+        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$joinProj[id]")}>查看详情 »</a></p>                
+        {/volist}
+        </div>
+      </div>
     </div>
   </div>
   <div class="layui-colla-item">

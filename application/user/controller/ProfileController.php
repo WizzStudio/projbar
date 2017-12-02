@@ -22,10 +22,13 @@ class ProfileController extends UserBaseController
         $userSkillQuery = Db::name("user_skill");
         $userTagQuery = Db::name("user_tag");
         $expQuery = Db::name("exp");
+        $msgQuery = Db::name("message");
+        $userProjQuery = Db::name("user_proj");
         $projQuery = Db::name("project");
         $roleInfo = [];
         $exp = '';
         $myProj = [];
+        $msgs = [];
         $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
         if(!empty($userSkillList)){
             foreach($userSkillList as $skill){
@@ -48,14 +51,35 @@ class ProfileController extends UserBaseController
             ->join('__TAG__ b','a.tag_id=b.id')
             ->select();
         $exp = $expQuery->where('user_id',$userId)->find();
+        $myExp =$exp['exp'];
+
+        $msgs = $msgQuery
+            ->alias('a')
+            ->field('a.*,b.cate_id,b.name,c.nickname')
+            ->where('to_id',$userId)
+            ->where('has_handle', 0)
+            ->join('__PROJECT__ b','a.proj_id=b.id')
+            ->join('__USER__ c','a.from_id=c.id')
+            ->select();
 
         $myProjList = $projQuery->where('leader_id',$userId)->select();
+        $joinProjList = $userProjQuery
+            ->alias('a')
+            ->field('b.id,b.cate_id,b.name,b.intro')
+            ->where('user_id',$userId)
+            ->join('__PROJECT__ b','a.proj_id=b.id')
+            ->select();
 
-        $this->assign('roleInfoList', $roleInfo);
-        $this->assign('user', $user);
-        $this->assign('tags',$tags);
-        $this->assign('exp',$exp['exp']);
-        $this->assign('myProjList',$myProjList);
+        $this->assign([
+            'roleInfoList' => $roleInfo,
+            'user' => $user,
+            'tags' => $tags,
+            'exp' => $myExp,
+            'msgs' => $msgs,
+            'myProjList' => $myProjList,
+            'joinProjList' => $joinProjList
+        ]);
+        
         return $this->fetch();
     }
 

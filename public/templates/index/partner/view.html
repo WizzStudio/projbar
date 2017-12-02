@@ -1,6 +1,6 @@
 {extend name="templates/public/base.html"}
 {block name="main"}
-<div class="container">
+<div class="layui-container" style="height: 86vh;">
   <h1 align="center">{$user.nickname}</h1>
   <h4>基础信息</h4>
   <p>昵称：{$user.nickname}</p>
@@ -48,7 +48,49 @@
     {$exp.exp}
   </p>
   <p>
-    <a class="btn btn-success btn-block" href={:url("user/action/invite","id=$user[id]")}>邀请加入项目</a>                    
+    <button class="layui-btn btn-block" id="invite">邀请加入</button>      
   </p>
 </div>
+<br />
+{/block}0
+{block name="free_js"}
+<script>
+layui.use(['form','layer'],function(){
+    var form = layui.form;
+    var layer = layui.layer;
+    
+    $("#invite").on('click',function(){
+        layer.open({
+          type: 1,
+          title: '请选择邀请加入的项目',
+          skin: 'layui-layer-rim', //加上边框
+          // area: ['90vw'], //宽高
+          content: `
+            <div>
+              {volist name="myProjects" id="myproject"}
+                <p>【
+                    {switch name="myproject['cate_id']"}
+                    {case value="1"}比赛{/case}    
+                    {case value="2"}外包{/case}
+                    {case value="3"}创业{/case}
+                    {case value="4"}实验课题{/case}
+                    {case value="5"}实践练手{/case}
+                    {case value="6"}比赛：国创{/case}
+                    {case value="7"}比赛：互联网+{/case}
+                    {case value="8"}比赛：数模{/case}
+                    {case value="10"}比赛：挑战杯{/case}
+                    {case value="11"}比赛：TI杯{/case}
+                    {case value="12"}比赛：其他{/case}
+                    {/switch}
+                】<a href={:url("user/action/invite","uid=$user[id]&pid=$myproject[id]")}>{$myproject.name}</a></p>
+              {/volist}
+            </div>
+          `,
+          success: function(layero, index){
+            console.log(layero,index);
+          }
+        });
+    });
+});
+</script>
 {/block}

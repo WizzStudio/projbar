@@ -57,6 +57,7 @@ class PartnerController extends BaseController
             $userTagQuery = Db::name("user_tag");
             $userSkillQuery = Db::name("user_skill");
             $expQuery = Db::name("exp");
+            $projQuery = Db::name("project");
             $userBase = $userQuery->where("id",$id)->find();
             
             $roleInfo = [];
@@ -84,11 +85,15 @@ class PartnerController extends BaseController
             ->select();
             $exp = $expQuery->where('user_id',$id)->find();
 
+            $userId = bar_get_user_id();
+            $myProjects = $projQuery->where('leader_id',$userId)->field('id,cate_id,name')->select();
+
             $this->assign([
                 'user' => $userBase,
                 'roleInfoList' => $roleInfo,
                 'tags' => $tags,
-                'exp' => $exp
+                'exp' => $exp,
+                'myProjects' => $myProjects
             ]);
             return $this->fetch();
 

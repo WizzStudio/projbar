@@ -83,4 +83,68 @@ class ActionController extends UserBaseController
             }
         }
     }
+
+    /**
+     * 邀请个人加入项目
+     */
+    public function invite($uid,$pid)
+    {
+        if($uid && $pid){
+            $userId = bar_get_user_id();
+            $msgQuery = Db::name("message");
+            $msgResult = $msgQuery->insert([
+                'from_id' => $userId,
+                'to_id' => $uid,
+                'proj_id' => $pid,
+                'type' => 2
+            ]);
+            if(!$msgResult){
+                $this->error("发起邀请失败，原因：无法向数据库中插入邀请数据");
+            }$this->success("发起邀请成功！");
+        }else{
+            $this->error("请求参数错误");
+        }
+    }
+
+    /**
+     * 接受邀请或申请
+     */
+    public function accept($id=''){
+        if($id){
+            $userId = bar_get_user_id();
+            $msgQuery = Db::name("message");
+            $userProjQuery = Db::name("user_proj");
+            $msg = $msgQuery->where('id',$id)->find();
+            if(!$msg){
+                $this->error("不存在该条申请/邀请信息");
+            }
+            $projId = $msg['proj_id'];
+            if($msg['type'] == 1){
+                $addUserId = $msg['from_id'];
+            }elseif($msg['type'] == 2){
+                $addUserId = $msg['to_id'];
+            }
+            if($msg['to_id'] == $userId){
+                $msgResult = $msgQuery->where('id',$id)->update(['has_handle' => 1]);
+                $userProjResult = $userProjQuery->insert(['proj_id'=>$projId,'user_id'=>$addUserId]); 
+                if($msgResult && $userProjResult){
+                    $this->success("接受成功！您可以在个人中心->我的项目里查看有关详细信息");
+                }else{
+                    $this->error("接受失败！数据库内部错误，如果您一直遇到此问题，请尽快反馈给我们");
+                }
+            }else{
+                $this->error("操作授权错误,请不要搞事，谢谢合作");
+            }
+        }else{
+            $this->error("不受理的访问");
+        }
+    }
+    
+    /**
+     * 测试
+     */
+    public function test(){
+        print_r(session('user'));
+        return ;
+    }
 }

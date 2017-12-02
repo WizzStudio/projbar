@@ -39,7 +39,7 @@
 {block name="main"}
 <div class="container-fluid">
     {volist name="userList" id="user"}
-    <div class="col-md-3 col-xs-12 column" style="background-color: #eee">
+    <div class="layui-col-md4 layui-col-xs12" style="background-color: #eee">
         <p><a href={:url("index/partner/view","id=$user[id]")}>{$user['nickname']}</a></p>
         <p>性别：{switch name="user.sex"}
             {case value="1"}男{/case}
@@ -74,10 +74,8 @@
             {/volist}
             <p>
                 <a class="btn btn-primary" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
-                <button class="layui-btn" id="invite">邀请加入</button>           
             </p>
     </div>
-    <div class="col-md-1 column">&emsp;</div>
     {/volist}
 </div>
 {/block}
@@ -86,16 +84,6 @@
 layui.use(['form','layer'],function(){
     var form = layui.form;
     var layer = layui.layer;
-    
-    $("#invite").on('click',function(){
-        layer.open({
-        type: 1,
-        title: '请选择邀请ta进入的项目',
-        skin: 'layui-layer-rim', //加上边框
-        area: ['420px', '240px'], //宽高
-        content: 'html内容'
-        });
-    });
 });
 </script>
 {/block}

@@ -9,6 +9,7 @@
 }
 .p-footer{
     text-align: center;
+    height: 80px;
 }
 .layui-form-checked span, .layui-form-checked:hover span{
     background-color: #ef5b25;
