@@ -39,14 +39,27 @@
     {volist name="msgs" id="msg"}
         <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a>&nbsp;
         {switch name="msg['type']"}
-        {case value="0"}系统消息：{/case}
-        {case value="1"}申请加入项目{/case}
-        {case value="2"}邀请你加入项目{/case}
+        {case value="1"}
+          申请加入项目<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
+          <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
+            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
+          </p>
+        {/case}
+        {case value="2"}
+          邀请你加入项目<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
+          <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
+            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
+          </p>
+        {/case}
+        {case value="3"}
+          同意了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
+          <p><a class="layui-btn" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a></p>
+        {/case}
+        {case value="4"}
+          拒绝了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
+          <p><a class="layui-btn" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a></p>          
+        {/case}
         {/switch}
-        <a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
-        </p>
-        <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
-        <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
         </p>
         <hr />
     {/volist}
