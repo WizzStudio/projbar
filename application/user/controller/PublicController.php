@@ -5,6 +5,7 @@ use app\common\controller\BaseController;
 use think\Request;
 use think\Validate;
 use app\common\model\User;
+use think\View;
 
 class PublicController extends BaseController
 {
@@ -148,6 +149,36 @@ class PublicController extends BaseController
                 break;
             default:
                 $this->error('未受理的请求');
+        }
+    }
+
+    /**
+     * 发送邮箱/手机(TODO)验证码
+     */
+    public function send($account='')
+    {   
+        if($account){
+            //TODO Emailcheck
+            $code = bar_get_verify_code($account);
+            if(!$code){
+                $this->error("验证码发送次数过多，请明天再试，或者联系我们解决。");
+            }
+            $emailTemplate = bar_get_option('email_template_verify_code');
+            $message = htmlspecialchars_decode($emailTemplate['template']);
+            $view = new View();
+            $message = $view->display($message, ['code' => $code]);
+            $subject = $emailTemplate['subject'];
+            $result = bar_send_email($account,$subject,$message);
+            if(!$result['error']){
+                bar_verify_code_log($account,$code);
+                return 0;
+            }else{
+                // echo $result['msg'];
+                return $result['msg'];
+            }
+
+        }else{
+            return 1;
         }
     }
 }

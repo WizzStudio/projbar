@@ -73,7 +73,7 @@ function bar_get_verify_code($account, $length = 6)
     if(empty($account)) return false;
     $verifyCodeQuery = Db::name('verify_code');
     $currentTime = time();
-    $maxCount = 8;
+    $maxCount = 6;
     $find = $verifyCodeQuery->where('account', $account)->find();
     $result = false;
     if(empty($find)){
@@ -119,16 +119,75 @@ function bar_get_verify_code($account, $length = 6)
   *   "message" => "出错信息"
   * );
   */
-function bar_send_email($address, $subject, $message)
+function bar_send_email($address,$subject,$message)
 {
-    $mail = new \PHPMailer();
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
     $mail->IsSMTP();
     $mail->IsHTML(true);
-    $mail->Charset = 'UTF-8';
+    $mail->CharSet = 'UTF-8';
     //添加收件人地址，可以多次使用来添加多个收件人
     $mail->AddAddress($address);
     $mail->Subject = $subject;
     $mail->Body = $message;
+    $mail->From = "wxjackie@wxj.projbar.cn";
+    $mail->FromName = "项慕吧";
+    $mail->Subject = $subject;
+    $mail->Host = 'smtpdm.aliyun.com';
+    $mail->Port = 80;
+    $mail->SMTPAuth = true;
+    $mail->SMTPAutoTLS = false;
+    $mail->Timeout = 10;
+    $smtpSetting = bar_get_option("smtp_setting");
+    $mail->Username = $smtpSetting['username'];
+    $mail->Password = $smtpSetting['password'];
+    if(!$mail->Send()){
+        $mailError = $mail->ErrorInfo;
+        return ['error'=>1,"msg"=>$mailError];
+    }else{
+        return ['error'=>0,"msg"=>"success"];
+    }
+}
+
+/**
+ * 更新手机或邮箱验证码发送日志
+ * @param string $account 手机或邮箱
+ * @param string $code 验证码
+ * @param int $expireTime 过期时间
+ * @return boolean
+ */
+function bar_verify_code_log($account, $code, $expireTime = 0)
+{
+    $currentTime           = time();
+    $expireTime            = $expireTime > $currentTime ? $expireTime : $currentTime + 15 * 60;
+    $verifyCodeQuery = Db::name('verify_code');
+    $find = $verifyCodeQuery->where('account', $account)->find();
+    if ($find) {
+        $todayStartTime = strtotime(date("Y-m-d"));//当天0点
+        if ($find['send_time'] <= $todayStartTime) {
+            $count = 1;
+        } else {
+            $count = ['exp', 'count+1'];//????
+        }
+        $result = $verifyCodeQuery
+            ->where('account', $account)
+            ->update([
+                'send_time'   => $currentTime,
+                'expire_time' => $expireTime,
+                'code'        => $code,
+                'count'       => $count
+            ]);
+    } else {
+        $result = $verifyCodeQuery
+            ->insert([
+                'account'     => $account,
+                'send_time'   => $currentTime,
+                'code'        => $code,
+                'count'       => 1,
+                'expire_time' => $expireTime
+            ]);
+    }
+
+    return $result;
 }
 
 /**
@@ -159,7 +218,7 @@ function bar_get_option($key)
         if(!empty($optionValue)){
             $optionValue = json_decode($optionValue, true);
 
-            cache('stars_options_' . $key, $optionValue);
+            cache('bar_options_' . $key, $optionValue);
         }
     }
 
@@ -221,4 +280,23 @@ function bar_get_root()
     $request = Request::instance();
     $root    = $request->root();
     return $root;
+}
+
+/**
+ * 测试邮件发送
+ */
+function test_send($account,$subject,$message){
+    $mail = new \PHPMailer\PHPMailer\PHPMailer();
+    $mail->IsSMTP();
+    $mail->IsHTML(true);
+    $mail->Charset = 'UTF-8';
+    $mail->Host = 'smtpdm.aliyun.com';
+    $mail->Port = 80;
+    $mail->Username = $smtpSetting['username'];
+    $mail->Password = $smtpSetting['password'];
+    if($mail->Send()){
+        return 0;
+    }else{
+        return 1;
+    }
 }

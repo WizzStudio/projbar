@@ -1,26 +1,77 @@
 {extend name="templates/public/base.html" /}
 {block name="cascade"}{/block}
 {block name="main"}
-<h1 align="center">Please Register</h1>
+<br />
+<h1 align="center">用户注册</h1>
+<br />
 <div class="container" style="height: 78vh;">
     <form action="{:url('doRegister')}" method="post">
         <div class="form-group">
-        <input type="text" class="form-control" name="email" placeholder="Email">
+        <input type="text" class="form-control" name="account" id="account" placeholder="请输入常用邮箱">
         </div>
         <div class="form-group">
-        <input type="text" class="form-control" name="username" placeholder="Your Username">
+        <input type="text" class="form-control" name="username" placeholder="请输入用户名作为您的唯一标示">
         </div>
         <div class="form-group">
-        <input type="password" class="form-control" name="password" placeholder="Password">
+        <input type="password" class="form-control" name="password" placeholder="请输入密码">
         </div>
         <div class="form-group">
-        <input type="text" class="form-control" name="captcha" id="captcha" placeholder="Captcha">
+          <input type="text" class="form-control" name="verify_code" placeholder="请输入接收到的邮箱验证码" />
+        </div>
+        <!-- <div class="form-group">
+        <input type="text" class="form-control" name="captcha" id="captcha" placeholder="验证码">
         <br />
         <div class="code-img">
             <img src="{:captcha_src()}" alt="点击更换" title="点击更换" onclick="this.src='{:captcha_src()}?time='+Math.random()" class="captcha" name="codeimage" id="codeimage" border="0"/>
         </div>
+        </div> -->
+        <div class="form-group">
+          <p>
+            <button type="button" class="btn btn-success" id="send">发送邮箱验证码</button>&emsp;
+            <button type="submit" class="btn btn-primary">确认注册</button>
+          </p>
         </div>
-        <button type="submit" class="btn btn-primary">Register</button>
     </form>
 </div>
+{/block}
+{block name="free_js"}
+<script>
+layui.use(['form','layer'],function(){
+  var form = layui.form;
+  var layer = layui.layer;
+
+  var InterValObj; //timer变量，控制时间
+  var count = 60; //间隔函数，1秒执行
+  var curCount;//当前剩余秒数
+  $("#send").on('click',function(){
+    var account = $("#account").val();
+    curCount = count;
+    $(this).attr("disabled","true");
+    $(this).text(+curCount+"秒后再获取");
+    InterValObj = window.setInterval(SetRemainTime, 1000);
+    $.get("{:url('/user/public/send')}"+"?account="+account,function(data,status){
+      if(data == 0){
+        return true;
+      }else{
+        if(data == 1){
+          alert("请输入正确的邮箱格式");
+        }else{
+          alert(data);
+        }
+      }
+    });
+  });
+  function SetRemainTime(){
+	  if (curCount == 0){
+		  window.clearInterval(InterValObj);//停止计时器
+		  $("#send").removeAttr("disabled");//启用按钮
+		  $("#send").text("重新发送验证码");
+	  } 
+	  else{
+		  curCount--;
+		  $("#send").text( + curCount + "秒再获取");
+	  }
+  }
+});
+</script>
 {/block}

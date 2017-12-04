@@ -1,11 +1,11 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<div class="container" style="height: 90vh;">
+<div class="layui-container">
   <!-- <div class="jumbotron"> -->
     <br />
-    <h4 class="text-info">{$projBase['name']}</h4>
+    <h3 class="text-info">{$projBase['name']}</h3>
     <hr />
-    <h4>基础信息</h4><br />
+    <h3>基础信息</h3><br />
     <p>项目类型：
     {switch name="projBase['cate_id']"}
     {case value="1"}比赛{/case}    
@@ -25,14 +25,14 @@
     <p>邮箱：{$projBase['email']}</p>
     <p>简介：{$projBase['intro']}</p>
     <hr />
-    <h4>项目标签</h4>
+    <h3>项目标签</h3>
     <p>/
     {volist name="tags" id="tag"}
         {$tag['name']}&nbsp;/
     {/volist}
     </p>
     <hr />
-    <h4>需求角色</h4>
+    <h3>需求角色</h3>
     {volist name="roleInfoList" id="roleInfo" key="k"}
         <p>角色{$k}：
             {switch name="key"}
@@ -57,9 +57,20 @@
     {/volist}
   <!-- </div> -->
   <br />
-  <p>
-    <a class="btn btn-success btn-block" href={:url("user/action/apply","id=$projBase[id]")}>申请加入</a>            
-  </p>
+  {eq name="has_join" value="1"}
+  <h3>成员信息(项目内人员可见)</h3><br />
+  {volist name="partners" id="partner"}
+   <p><b><a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a></b></p>
+   <p>性别：{switch name="partner.sex"}
+    {case value="1"}男{/case}
+    {case value="2"}女{/case}
+    {default /}未知
+    {/switch}</p>
+   <p>QQ：{$partner.qq}</p>
+   <p>Email：{$partner.email}</p>
+  {/volist}
+  {else/}<p><a class="btn btn-success btn-block" href={:url("user/action/apply","id=$projBase[id]")}>申请加入</a></p>            
+  {/eq}
   <br />
 </div>
 {/block}

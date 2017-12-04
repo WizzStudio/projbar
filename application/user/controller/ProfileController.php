@@ -64,8 +64,7 @@ class ProfileController extends UserBaseController
         $sysMsgs = [];
         $sysMsgs = $msgQuery->where('to_id',$userId)->where('has_handle',0)->select();
 
-        $myProjList = $projQuery->where('leader_id',$userId)->select();
-        $joinProjList = $userProjQuery
+        $myProjList = $userProjQuery
             ->alias('a')
             ->field('b.id,b.cate_id,b.name,b.intro')
             ->where('user_id',$userId)
@@ -79,8 +78,7 @@ class ProfileController extends UserBaseController
             'exp' => $myExp,
             'msgs' => $msgs,
             'sysMsgs' => $sysMsgs,
-            'myProjList' => $myProjList,
-            'joinProjList' => $joinProjList
+            'myProjList' => $myProjList
         ]);
         
         return $this->fetch();

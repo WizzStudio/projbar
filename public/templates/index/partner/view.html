@@ -2,18 +2,18 @@
 {block name="main"}
 <div class="layui-container" style="height: 86vh;">
   <h1 align="center">{$user.nickname}</h1>
-  <h4>基础信息</h4>
+  <h3>基础信息</h3>
   <p>昵称：{$user.nickname}</p>
-  <p>头像：{$user.avatar}</p>
   <p>性别：{switch name="user.sex"}
     {case value="1"}男{/case}
     {case value="2"}女{/case}
     {default /}未知
     {/switch}
   </p>
-  <p>邮箱：建立合作关系后可见</p>
+  <p>邮箱：建立合作关系后在我的项目->详情中查看</p>
   <p>个性签名：</p>
-  <h4>角色信息</h4>
+  <hr />
+  <h3>角色信息</h3>
   {volist name="roleInfoList" id="roleInfo" key="k"}
     <p><b>角色{$k}：
         {switch name="key"}
@@ -37,22 +37,28 @@
     </p>
     {/volist}
   {/volist}
-  <h4>个人标签</h4>
+  <hr />
+  <h3>个人标签</h3>
   <p>/
     {volist name="tags" id="tag"}
         {$tag['name']}&nbsp;/
     {/volist}
   </p>
-  <h4>项目经历</h4>
+  <hr />
+  <h3>项目经历</h3>
   <p>
     {$exp.exp}
   </p>
   <p>
+    {eq name="status" value="0"}
     <button class="layui-btn btn-block" id="invite">邀请加入</button>      
+    {else/}
+    <button class="layui-btn btn-block" id="invite">前往个人中心</button>          
+    {/eq}
   </p>
 </div>
 <br />
-{/block}0
+{/block}
 {block name="free_js"}
 <script>
 layui.use(['form','layer'],function(){

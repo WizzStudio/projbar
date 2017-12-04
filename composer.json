@@ -30,6 +30,7 @@
         "think-path": "thinkphp"
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "vendor-dir": "vendor"
     }
 }

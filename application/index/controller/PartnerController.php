@@ -53,6 +53,9 @@ class PartnerController extends BaseController
     public function view($id='')
     {
         if($id){
+            $status = 0;
+            $userId = bar_get_user_id();
+            if($userId == $id) $status = 1;
             $userQuery = Db::name("user");
             $userTagQuery = Db::name("user_tag");
             $userSkillQuery = Db::name("user_skill");
@@ -85,10 +88,10 @@ class PartnerController extends BaseController
             ->select();
             $exp = $expQuery->where('user_id',$id)->find();
 
-            $userId = bar_get_user_id();
             $myProjects = $projQuery->where('leader_id',$userId)->field('id,cate_id,name')->select();
 
             $this->assign([
+                'status' => $status,
                 'user' => $userBase,
                 'roleInfoList' => $roleInfo,
                 'tags' => $tags,

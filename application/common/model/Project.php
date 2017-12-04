@@ -12,6 +12,7 @@ class Project extends Model
     public function doRelease($data,$tags,$baseInfo,$roleNumber)
     {
         $projectQuery = Db::name("project");
+        $userProjQuery = Db::name("user_proj");
         $projTagQuery = Db::name("proj_tag");
         $projSkillQuery = Db::name("proj_skill");
         $userId = bar_get_user_id();
@@ -46,8 +47,13 @@ class Project extends Model
                     }
                 }
             }
-            //success
-            return 0;
+            $userProjResult = $userProjQuery->insert(['proj_id'=>$projId,'user_id'=>$userId]);
+            if($userProjResult){
+                //success
+                return 0;
+            }else{
+                return 4;
+            }
         }else{
             //基本信息添加失败
             return 1;

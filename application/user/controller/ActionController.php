@@ -53,6 +53,9 @@ class ActionController extends UserBaseController
             case 3:
                 $this->error('项目需求角色信息添加失败！');
                 break;
+            case 4:
+                $this->error('添加发起人到成员列表失败！');
+                break;
             default:
                 $this->error('未受理的请求');
         }
@@ -91,7 +94,15 @@ class ActionController extends UserBaseController
     {
         if($uid && $pid){
             $userId = bar_get_user_id();
+            if($userId == $uid){
+                $this->error("不能邀请自己！");    
+            }
             $msgQuery = Db::name("message");
+            $userProjQuery = Db::name("user_proj");
+            $find = $userProjQuery->where(['proj_id'=> $pid,'user_id'=>$uid])->find();
+            if($find){
+                $this->error("不能邀请已经在项目内的成员！");
+            }
             $msgResult = $msgQuery->insert([
                 'from_id' => $userId,
                 'to_id' => $uid,

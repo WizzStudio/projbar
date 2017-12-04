@@ -106,39 +106,10 @@
     <h2 class="layui-colla-title">我的项目</h2>
     <div class="layui-colla-content">
       <div class="layui-colla-item">
-        <h2 class="layui-colla-title">我发布的项目</h2>
-        <div class="layui-colla-content">
-        {volist name="myProjList" id="proj"}
-        <p><b>【
-        {switch name="proj['cate_id']"}
-        {case value="1"}比赛{/case}    
-        {case value="2"}外包{/case}
-        {case value="3"}创业{/case}
-        {case value="4"}实验课题{/case}
-        {case value="5"}实践练手{/case}
-        {case value="6"}比赛：国创{/case}
-        {case value="7"}比赛：互联网+{/case}
-        {case value="8"}比赛：数模{/case}
-        {case value="10"}比赛：挑战杯{/case}
-        {case value="11"}比赛：TI杯{/case}
-        {case value="12"}比赛：其他{/case}
-        {/switch} 】   {$proj['name']}
-        </b></p>
-        <p>发起人：{$proj['leader_id']}</p>
-        <p>邮箱：{$proj['email']}</p>
-        <p>项目简介：{$proj['intro']}</p>
-        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$proj[id]")}>查看详情 »</a></p>
-        <br />
-        {/volist}
-        </div>
-      </div>
-      <div class="layui-colla-item">
-        <h2 class="layui-colla-title">我加入的项目</h2>
-        <div class="layui-colla-content">
-        {volist name="joinProjList" id="joinProj"}
+        {volist name="myProjList" id="myProj"}
         <p><b>
         【
-        {switch name="joinProj['cate_id']"}
+        {switch name="myProj['cate_id']"}
         {case value="1"}比赛{/case}    
         {case value="2"}外包{/case}
         {case value="3"}创业{/case}
@@ -150,12 +121,12 @@
         {case value="10"}比赛：挑战杯{/case}
         {case value="11"}比赛：TI杯{/case}
         {case value="12"}比赛：其他{/case}
-        {/switch} 】   {$joinProj['name']}】
+        {/switch} 】   {$myProj['name']}】
         </b></p>
-        <p>项目简介：{$joinProj['intro']}</p>
-        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$joinProj[id]")}>查看详情 »</a></p>                
+        <p>项目简介：{$myProj['intro']}</p>
+        <p><a class="btn btn-primary" href={:url('index/index/view',"id=$myProj[id]")}>查看详情 »</a></p>                
+        <br />
         {/volist}
-        </div>
       </div>
     </div>
   </div>

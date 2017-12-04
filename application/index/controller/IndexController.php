@@ -23,10 +23,16 @@ class IndexController extends BaseController
     public function view($id='')
     {
         if($id){
+            $userId = bar_get_user_id();
             $projQuery = Db::name("project");
+            $userProjQuery = Db::name("user_proj");
             $projTagQuery = Db::name("proj_tag");
             $projSkillQuery = Db::name("proj_skill");
             $projBase = $projQuery->where('id',$id)->find();
+            $has_join = 0;
+            if($userId == $projBase['leader_id']){
+                $has_join = 1;
+            }
             if($projBase){
                 $tags = $projTagQuery
                 ->alias('a')
@@ -48,11 +54,31 @@ class IndexController extends BaseController
                             }
                         }
                     }
+                    $leader = $projQuery
+                        ->alias('a')
+                        ->field('b.id,b.username,b.sex,b.qq,b.nickname,b.realname')
+                        ->where('a.id',$id)
+                        ->join('__USER__ b','a.leader_id=b.id')
+                        ->find();
+                    $userProjFind = $userProjQuery->where('user_id',$userId)->where('proj_id',$id)->find();
+                    $partners = [];
+                    if($userProjFind){
+                        $has_join = 1;
+                        $partners = $userProjQuery
+                        ->alias('a')
+                        ->field('b.id,b.username,b.qq,b.email,b.sex,b.nickname,b.realname')
+                        ->where('proj_id',$id)
+                        ->join('__USER__ b','a.user_id=b.id')
+                        ->select();
+                    }
 
                     $this->assign([
                         'projBase' => $projBase,
                         'tags' => $tags,
                         'roleInfoList' => $roleInfo,
+                        'has_join' => $has_join,
+                        'leader' => $leader,
+                        'partners' => $partners
                     ]);
                     return $this->fetch();
                 }else{
