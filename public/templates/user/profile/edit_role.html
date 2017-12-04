@@ -1,15 +1,16 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<h1 align="center">Edit Role Info</h1>
+<h1 align="center">编辑角色信息</h1>
 <div class="container">
     <div><br /></div>
     <h3>角色信息</h3>
+    <i>术业有专攻，您最多只可以有两个角色</i><hr />
     <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="layui-form form-horizontal">
         {volist name="roleInfoList" id="roleInfo" key="k"}
         <div id="arole">
+        <label class="control-label">角色{$k}</label>
         <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">角色{$k}</label>
-            <div class="col-md-5 col-xs-5 column">
+            <div class="col-md-5 col-xs-6 column">
             <select name="role[]" class="form-control">
                     <option value="1" {eq name="key" value="1"}selected="selected"{/eq}>开发&测试</option>
                     <option value="2" {eq name="key" value="2"}selected="selected"{/eq}>产品&文案</option>
@@ -21,9 +22,9 @@
               <button type="button" class="btn btn-warning delbutton">删除角色</button>
             </div>
         </div>
+        <label class="control-label">技能</label>
         <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>
-            <div class="col-md-5 col-xs-5 column">
+            <div class="col-md-5 col-xs-6 column">
             <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
@@ -49,8 +50,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>                
-            <div class="col-md-5 col-xs-5 column">
+            <div class="col-md-5 col-xs-6 column">
                 <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
@@ -76,8 +76,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>                
-            <div class="col-md-5 col-xs-5 column">
+            <div class="col-md-5 col-xs-6 column">
                 <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
             </div>
             <div class="col-md-4 col-xs-4 column">
@@ -107,12 +106,12 @@
             var n={$k};
         </script>
         {/volist}
-        <div class="col-md-3" id="add">&nbsp;</div>
-        <div class="col-md-9 col-xs-12">
+        <div class="col-md-12 col-xs-12">
         <button type="button" onclick="appendRole()" class="btn btn-primary btn-block" id="add_role">添加角色</button>
         </div>
-        <br /><br />
+        <br />
         <div class="layui-form-item" id="tag">
+          <br />
           <h3>个人标签</h3>    
           <div class="col-md-12 col-xs-12 column">
             <input type="checkbox" name="tags[]" title="web" value="1" {foreach $tags as $tag}{eq name="tag['id']" value="1"}checked="checked"{/eq}{/foreach} /> 

@@ -2,17 +2,14 @@
 {block name="main"}
 <h1 align="center">发布项目</h1>
 <div class="container">
-<form class="layui-form form-horizontal" action="{:url('release_handle')}" method="post">
+<form class="layui-form" action="{:url('release_handle')}" method="post">
   <div class="layui-form-item">
-      <h3>基础信息</h3>
-      <label class="col-lg-2 col-xs-4 layui-form-label">项目名称</label>
-      <div class="col-lg-6 col-xs-8 column">
-        <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="form-control" />
-      </div>
+      <h3>基础信息</h3><br />
+      <label class="control-label">项目名称</label>
+      <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="form-control" />
     </div>
     <div class="layui-form-item">
-      <label class="col-lg-2 col-xs-4 layui-form-label">项目类型</label>
-      <div class="col-lg-6 col-xs-8">
+      <label class="control-label">项目类型</label>
         <select name="category" class="form-control">
           <option value="">-- 请选择类型 --</option>
           <option value="1">比赛</option>
@@ -27,19 +24,14 @@
           <option value="4">实验课题</option>
           <option value="5">实践练手</option>
         </select>
-      </div>
     </div>
     <div class="layui-form-item">
-      <label class="col-lg-2 col-xs-4 layui-form-label">联系邮箱</label>
-      <div class="col-lg-6 col-xs-8">
-        <input type="text" name="email" autocomplete="off" placeholder="请填写联系邮箱" class="layui-input" />
-      </div>
+      <label class="control-label">联系邮箱</label>
+      <input type="text" name="email" autocomplete="off" placeholder="请填写联系邮箱" class="layui-input" />
     </div>
     <div class="layui-form-item">
-      <label class="col-lg-2 col-xs-4 layui-form-label">项目简介</label>
-      <div class="col-lg-6 col-xs-12">
-        <textarea class="layui-textarea" name="intro"></textarea>
-      </div>
+      <label class="control-label">项目简介</label>
+      <textarea class="layui-textarea" name="intro"></textarea>
     </div>
     <hr />
     <div class="layui-form-item" id="tag">
@@ -67,26 +59,24 @@
     <div id="role">
     <hr />
     <div class="layui-form-item" id="role">
-      <label class="col-lg-2 col-xs-3 layui-form-label">角色</label>
-      <div class="col-lg-6 col-xs-5">
-        <select name="role[]" class="form-control">
-          <option value="" disabled=true selected="selected">-- 请选择角色 --</option>
-          <option value="1">开发&测试</option>
-          <option value="2">产品&文案</option>
-          <option value="3">设计&美工</option>
-          <option value="4">运营&市场</option>
-        </select>        
-      </div>
+      <label class="control-label">角色</label>
+      <select name="role[]" class="form-control">
+        <option value="" disabled=true selected="selected">-- 请选择角色 --</option>
+        <option value="1">开发&测试</option>
+        <option value="2">产品&文案</option>
+        <option value="3">设计&美工</option>
+        <option value="4">运营&市场</option>
+      </select>        
       <!-- <div class="col-lg-4 col-xs-3 column">
         <button type="button" class="btn btn-warning delbutton">删除角色</button>
       </div> -->
     </div>
+    <label class="control-label">需求技能</label>    
     <div class="layui-form-item">
-      <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
-      <div class="col-lg-6 col-xs-5">
+      <div class="col-lg-6 col-xs-7">
         <input type="text" name="skill1[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
       </div>
-      <div class="col-lg-4 col-xs-4 column">
+      <div class="col-lg-6 col-xs-5">
         <select name="level1[]" class="form-control level">
           <option value="" disabled=true selected="selected">空</option>
           <option value="1">入门</option>
@@ -96,11 +86,10 @@
       </div>
     </div>
     <div class="layui-form-item">
-        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
-        <div class="col-lg-6 col-xs-5">
+        <div class="col-lg-6 col-xs-7">
             <input type="text" name="skill2[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
         </div>
-        <div class="col-lg-4 col-xs-4 column">
+        <div class="col-lg-4 col-xs-5">
             <select name="level2[]" class="form-control level">
               <option value="" disabled=true selected="selected">空</option>
               <option value="1">入门</option>
@@ -110,11 +99,10 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="col-lg-2 col-xs-3 layui-form-label">技能</label>
-        <div class="col-lg-6 col-xs-5">
+        <div class="col-lg-6 col-xs-7">
             <input type="text" name="skill3[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
         </div>
-        <div class="col-lg-4 col-xs-4 column">
+        <div class="col-lg-4 col-xs-5 column">
             <select name="level3[]" class="form-control level">
               <option value="" disabled=true selected="selected">空</option>
               <option value="1">入门</option>
