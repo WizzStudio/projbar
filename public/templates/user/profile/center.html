@@ -8,10 +8,12 @@
     font-size: 16px!important;
 }
 .div-base{
-    background-color:#f2f2f2!important;
+    background-color:#565363!important;
+    color: #eee;
 }
+
 </style>
-<h1 align="center">个人中心</h1>
+<br /><h1 align="center">个人中心</h1><br />
 <div class="layui-container-fluid">
     <div class="div-base" style="padding:20px;">
         <p class="p-base">用户名: {$user['username']}</p>
@@ -27,7 +29,8 @@
         <p class="p-base">昵称: {$user['nickname']}</p>
         <p class="p-base">个性签名: {$user['signature']}</p>
         <p class="p-base">额外信息: {$user['extra']}</p>
-        <p><a class="btn btn-primary" href="{:url('edit_base')}">编辑基础信息</a></p>
+        <br />
+        <p><a class="layui-btn btn-block" href="{:url('edit_base')}">编辑基础信息</a></p>
     </div>
     <br />
 </div>
