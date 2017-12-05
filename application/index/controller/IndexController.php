@@ -91,4 +91,28 @@ class IndexController extends BaseController
             $this->error('未指定项目id');
         }
     }
+
+    /**
+     * 搜索项目
+     */
+    public function search()
+    {   
+        $getData = $this->request->get();
+        $key = empty($getData['key']) ? '':$getData['key'];
+        $tagIds = isset($getData['tags']) ? $getData['tags'] : [];
+        if(empty($key) && empty($tagIds)){
+            $this->redirect($this->request->root().'/');
+        }
+        $projQuery = Db::name("project");
+        $projTagQuery = Db::name("proj_tag");
+        $result = $projQuery
+            ->alias('a')
+            ->field('a.*')
+            ->where('a.name','like','%'.$key.'%')
+            ->where('b.tag_id',$tagIds[0])
+            ->join('__PROJ_TAG__ b','a.id=b.proj_id')
+            ->distinct(true)
+            ->select();
+        return json($result);
+    }
 }

@@ -39,9 +39,11 @@
 <!-- </div> -->
 {/block}
 {block name="main"}
-<div class="layui-container-fluid" style="height: 80vh;">
+<div class="layui-container-fluid" style="height: 80vh;" id="list">
+    <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
         {volist name="projList" id="proj"}
         <div class="layui-col-md4 layui-col-xs12">
+          <div style="height:180px;padding:10px;background-color: #373744;opacity: 0.86;color:#eee;"> 
         <h4>
         【
         {switch name="proj.cate_id"}
@@ -63,17 +65,72 @@
             {$proj.intro}
         </p>
         <p>
-            <a class="btn btn-primary" href={:url("index/index/view","id=$proj[id]")}>查看详情 »</a>&emsp;&emsp;
+            <a class="layui-btn" href={:url("index/index/view","id=$proj[id]")}>查看详情 »</a>&emsp;&emsp;
             <!-- <a class="btn btn-success" href={:url("user/action/apply","id=$proj[id]")}>申请加入</a>             -->
         </p>
+          </div>
         </div>
         {/volist}
+    </div>
 </div>
 {/block}
 {block name="free_js"}
 <script>
-layui.use('form',function(){
+layui.use(['form','layer'],function(){
     var form = layui.form;
+    var layer = layui.layer;
+
+    $("#search").on('click',function(){
+        layer.open({
+        type: 1 //Page层类型
+        ,offset: ['40px']
+        ,skin: 'layui-layer-molv'
+        ,area: ['95vw', '380px']
+        ,title: '搜索项目'
+        ,shade: 0.6//遮罩透明度
+        ,shadeClose: true
+        ,anim: 0 //0-6的动画形式，-1不开启
+        ,content: `<form class="layui-form"action={:url('index/index/search')} method="get">
+                    <div class="layui-form-item" style="padding:10px;text-align: center;">
+                        <input class="layui-input" type="text" name="key" id="key" placeholder="输入项目名称或直接下方勾选标签" />
+                        <br />
+                        <input type="checkbox" name="tags[]" value="1" title="web" />
+                        <input type="checkbox" name="tags[]" value="2" title="后端" />
+                        <input type="checkbox" name="tags[]" value="3" title="前端" />
+                        <input type="checkbox" name="tags[]" value="4" title="UI" />
+                        <input type="checkbox" name="tags[]" value="5" title="嵌入式" />
+                        <input type="checkbox" name="tags[]" value="6" title="通信" />
+                        <input type="checkbox" name="tags[]" value="7" title="iOS" />
+                        <input type="checkbox" name="tags[]" value="8" title="Android" />
+                        <input type="checkbox" name="tags[]" value="9" title="产品" />
+                        <input type="checkbox" name="tags[]" value="10" title="运营" />
+                        <input type="checkbox" name="tags[]" value="11" title="云计算" />
+                        <input type="checkbox" name="tags[]" value="12" title="大数据" />
+                        <input type="checkbox" name="tags[]" value="13" title="游戏开发" />
+                        <input type="checkbox" name="tags[]" value="14" title="算法" />
+                        <input type="checkbox" name="tags[]" value="15" title="机器学习" />
+                        <input type="checkbox" name="tags[]" value="16" title="运维" />
+                   </div>
+                   <div class="layui-container">
+                     <button class="layui-btn btn-block" lay-submit id="test" lay-filter="mySubmit">搜索</button>
+                   </div>
+                   </form>
+                   `
+                   
+        });
+        form.render();
+
+        // $("#test").on('click',function(){
+        //     var key = $("#key").val();
+            // var tags = $(".layui-form-checked").text();
+            // alert(tags);
+            // $.get("{:url('index/index/search')}",{'key':key},function(data, status){
+            //     data.forEach(function(currentValue,index,item){
+            //         console.log(currentValue.name);
+            //     });
+            // });
+        // });
+    });
 })
 </script>
 {/block}

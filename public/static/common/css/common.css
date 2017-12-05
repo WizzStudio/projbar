@@ -1,7 +1,10 @@
 .mydark{
-    background-color: #3d3744;
+    background-color: #373744;
     border-color: transparent;
     opacity: 0.86;
+}
+.layui-layer-molv .layui-layer-title{
+    background-color: #3d3744!important;
 }
 .grey{
     background-color: #111;

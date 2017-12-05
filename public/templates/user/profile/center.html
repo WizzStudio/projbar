@@ -13,7 +13,7 @@
 </style>
 <h1 align="center">个人中心</h1>
 <div class="layui-container-fluid">
-    <div class="div-base">
+    <div class="div-base" style="padding:20px;">
         <p class="p-base">用户名: {$user['username']}</p>
         <p class="p-base">手机: {$user['mobile']}</p>
         <p class="p-base">QQ: {$user['qq']}</p>
@@ -65,6 +65,20 @@
     {/volist}
     {if condition="empty($msgs)"}<p>暂无消息</p>{/if}
     </div>
+  </div>
+  <div class="layui-colla-item">
+    <h2 class="layui-colla-title">智能匹配</h2>
+    <div class="layui-colla-content">
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">推荐项目</h2>
+        <div class="layui-colla-content"></div>
+      </div>
+      <div class="layui-colla-item">
+        <h2 class="layui-colla-title">推荐人才</h2>
+        <div class="layui-colla-content"></div>
+      </div>
+    </div>
+    </h2>
   </div>
   <div class="layui-colla-item">
     <h2 class="layui-colla-title">技能信息</h2>
