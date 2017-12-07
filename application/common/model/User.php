@@ -13,17 +13,17 @@ class User extends Model
     public function registerEmail($user)
     {
         $userQuery = Db::name("user");
-        $resultEmail = $userQuery->where('email', $user['email'])->find();
+        $resultEmail = $userQuery->where('email', $user['account'])->find();
         if(!empty($resultEmail)) return 1;
         $resultUserName = $userQuery->where('username', $user['username'])->find();
         if(!empty($resultUserName)) return 2;
 
         $data = [
             'username' => $user['username'],
-            'email' => $user['email'],
+            'email' => $user['account'],
             'password' => bar_password($user['password']),
             'mobile' => '',
-            'nickname' => '',
+            'nickname' => $user['username'],
             'last_login_ip' => get_client_ip(0, true),
             'create_time' => time(),
             'last_login_time' => time(),

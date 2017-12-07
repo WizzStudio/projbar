@@ -68,20 +68,33 @@ class ActionController extends UserBaseController
     {
         if($id){
             $userId = bar_get_user_id();
+            $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
             $msgQuery = Db::name("message");
             $projQuery = Db::name("project");
             $projBase = $projQuery->where('id',$id)->find();
             if($projBase){
                 $leaderId = $projBase['leader_id'];
+                $toEmail = Db::name("user")->where('id',$leaderId)->value('email');
                 $msgResult = $msgQuery->insert([
                     'from_id' => $userId,
                     'to_id' => $leaderId,
                     'proj_id' => $id,
                     'type' => 1
                 ]);
-                if(!$msgResult){
+                if($msgResult){
+                    $subject = "【项慕吧】通知消息";
+                    $message = bar_get_action_email($userId,$name,$id,1);
+                    $emailResult = bar_send_email($toEmail,$subject,$message);
+                    if(!$emailResult['error']){
+                        $logResult = bar_action_email_log($userId,1);//主动动作为1
+                        $this->success("发送申请消息成功！");
+                    }else{
+                        $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                    }
+                }else{
                     $this->error('发起申请失败，原因：无法向数据库添加申请数据');
                 }
+
                 $this->success("发起加入申请成功！");
             }
         }
@@ -94,6 +107,8 @@ class ActionController extends UserBaseController
     {
         if($uid && $pid){
             $userId = bar_get_user_id();
+            $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
+            
             if($userId == $uid){
                 $this->error("不能邀请自己！");    
             }
@@ -111,7 +126,17 @@ class ActionController extends UserBaseController
             ]);
             if(!$msgResult){
                 $this->error("发起邀请失败，原因：无法向数据库中插入邀请数据");
-            }$this->success("发起邀请成功！");
+            }
+            $toEmail = Db::name("user")->where('id',$uid)->value('email');
+            $subject = "【项慕吧】通知消息";
+            $message = bar_get_action_email($userId,$name,$pid,2);
+            $emailResult = bar_send_email($toEmail,$subject,$message);
+            if(!$emailResult['error']){
+                $logResult = bar_action_email_log($userId,1); //主动动作为1
+                $this->success("发送邀请消息成功！");
+            }else{
+                $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+            }
         }else{
             $this->error("请求参数错误");
         }
@@ -123,6 +148,8 @@ class ActionController extends UserBaseController
     public function accept($id=''){
         if($id){
             $userId = bar_get_user_id();
+            $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
+            
             $msgQuery = Db::name("message");
             $userProjQuery = Db::name("user_proj");
             $msg = $msgQuery->where('id',$id)->find();
@@ -149,7 +176,16 @@ class ActionController extends UserBaseController
                     if($msgInsertResult){
                         $userProjResult = $userProjQuery->insert(['proj_id'=>$projId,'user_id'=>$addUserId]);                         
                         if($userProjResult){
-                            $this->success("接受成功！您可以在个人中心->我的项目里查看有关详细信息");
+                            $toEmail = Db::name("user")->where('id',$returnUserId)->value('email');
+                            $subject = "【项慕吧】通知消息";
+                            $message = bar_get_action_email($userId,$name,$projId,3);
+                            $emailResult = bar_send_email($toEmail,$subject,$message);
+                            if(!$emailResult['error']){
+                                $logResult = bar_action_email_log($userId,2);
+                                $this->success("接受成功！您可以在个人中心->我的项目里查看有关详细信息");
+                            }else{
+                                $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                            }
                         }else{
                             $this->error("接受失败：添加用户到项目组失败,如果您一直遇到此问题，请尽快反馈给我们");
                         }
@@ -175,6 +211,8 @@ class ActionController extends UserBaseController
     {
         if($id){
             $userId = bar_get_user_id();
+            $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
+            
             $msgQuery = Db::name("message");
             $msg = $msgQuery->where('id',$id)->find();
             if(!$msg){
@@ -192,7 +230,15 @@ class ActionController extends UserBaseController
                         'type' => 4
                     ]);
                     if($msgInsertResult){
-                        $this->success("已拒绝该请求，感谢您的严格把关，祝您找到更好的人才和项目！");
+                        $subject = "【项慕吧】通知消息";
+                        $message = bar_get_action_email($userId,$name,$projId,4);
+                        $emailResult = bar_send_email($toEmail,$subject,$message);
+                        if(!$emailResult['error']){
+                            $logResult = bar_action_email_log($userId,2);
+                            $this->success("已拒绝该请求，感谢您的严格把关，祝您找到更好的人才和项目！");
+                        }else{
+                            $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                        }
                     }else{
                         $this->error("已拒绝该请求，但回复消息发送失败，如果您一直遇到此问题，请尽快反馈给我们");
                     }
@@ -215,6 +261,8 @@ class ActionController extends UserBaseController
     {
         if($id){
             $userId = bar_get_user_id();
+            $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
+            
             $msgQuery = Db::name("message");
             $msg = $msgQuery->where('id',$id)->find();
             if(!$msg){
@@ -235,11 +283,12 @@ class ActionController extends UserBaseController
             $this->error("未受理的请求");
         }
     }
+
     /**
      * 测试
      */
     public function test(){
-        print_r(session('user'));
+        print_r(session('user.nickname'));
         return ;
     }
 }

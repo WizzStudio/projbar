@@ -62,6 +62,69 @@
     <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
     <script src="__STATIC__/layui/layui.js"></script>
     {block name="free_js"}
+    <script>
+      layui.use(['form','layer'],function(){
+          var form = layui.form;
+          var layer = layui.layer;
+      
+          $("#search").on('click',function(){
+              layer.open({
+              type: 1 //Page层类型
+              ,offset: ['40px']
+              ,skin: 'layui-layer-molv'
+              ,area: ['95vw','50vh']
+              ,title: '搜索项目'
+              ,shade: 0.6//遮罩透明度
+              ,shadeClose: true
+              ,anim: 0 //0-6的动画形式，-1不开启
+              ,content: `<form class="layui-form"action={:url('index/index/search')} method="get">
+                           <div class="layui-form-item" style="padding:10px;text-align: center;">
+                              <input type="radio" name="type" value="1" title="搜项目" checked />
+                              <input type="radio" name="type" value="2" title="搜人才" />
+                            <input class="layui-input" type="text" name="key" id="key" placeholder="名称检索：输入项目名称/用户昵称" />
+                              <br />
+                              <select name="tag" lay-verify="" lay-search>
+                                <option value="" selected>标签检索</option>
+                                <option value="1">web</option>
+                                <option value="2">后端</option>
+                                <option value="3">前端</option>
+                                <option value="4">UI</option>
+                                <option value="5">嵌入式</option>
+                                <option value="6">通信</option>
+                                <option value="7">iOS</option>
+                                <option value="8">Android</option>
+                                <option value="9">产品</option>
+                                <option value="10">运营</option>
+                                <option value="11">云计算</option>
+                                <option value="12">大数据</option>
+                                <option value="13">游戏开发</option>
+                                <option value="14">算法</option>
+                                <option value="15">机器学习</option>
+                                <option value="16">运维</option>
+                              </select>  
+                           </div>
+                           <div class="layui-container">
+                             <button class="layui-btn btn-block" lay-submit id="test" lay-filter="mySubmit">搜索</button>
+                           </div>
+                         </form>
+                         `
+                         
+              });
+              form.render();
+      
+              // $("#test").on('click',function(){
+              //     var key = $("#key").val();
+                  // var tags = $(".layui-form-checked").text();
+                  // alert(tags);
+                  // $.get("{:url('index/index/search')}",{'key':key},function(data, status){
+                  //     data.forEach(function(currentValue,index,item){
+                  //         console.log(currentValue.name);
+                  //     });
+                  // });
+              // });
+          });
+      });
+    </script>
     {/block}
   </body>
 </html>

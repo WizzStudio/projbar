@@ -60,6 +60,7 @@ class ProfileController extends UserBaseController
             ->where('has_handle', 0)
             ->join('__PROJECT__ b','a.proj_id=b.id')
             ->join('__USER__ c','a.from_id=c.id')
+            ->order('id desc')
             ->select();
         $sysMsgs = [];
         $sysMsgs = $msgQuery->where('to_id',$userId)->where('has_handle',0)->select();

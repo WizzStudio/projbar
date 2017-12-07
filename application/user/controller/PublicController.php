@@ -31,10 +31,9 @@ class PublicController extends BaseController
         }
 
         $rules = [
-            'email' => 'require|email',
+            'account' => 'require|email',
             'username' => 'require|min:3|max:20',
             'password' => 'require|min:6|max:32',
-            'captcha' => 'require|captcha',
             'verify_code' => 'require'
         ];
 
@@ -46,13 +45,11 @@ class PublicController extends BaseController
 
         $validate = new Validate($rules);
         $validate->message([
-            'email.require' => '邮箱不能为空',
+            'account.require' => '邮箱不能为空',
             'username.require' => '用户名不能为空',
             'username.min' => '用户名不能小于3个字符',
             'username.max' => '用户名不能大于20个字符',
             'verify_code.require' => '邮箱验证码不能为空',
-            'captcha.require' => '图像验证码不能为空',
-            'captcha.captcha' => '图像验证码不正确',
             'password.require' => '密码不能为空',
             'password.min' => '密码不能小于6个字符',
             'passowrd.max' => '密码不能大于32个字符'
@@ -63,8 +60,14 @@ class PublicController extends BaseController
             $this->error($validate->getError());
         }
         
+        if(!$isOpenRegister){
+            $errMsg = bar_check_verify_code($postData['account'], $postData['verify_code']);
+            if(!empty($errMsg)){
+                $this->error($errMsg);
+            }
+        }
+        
         $userModel = new User();
-
         $log = $userModel->registerEmail($postData);
 
         switch($log){

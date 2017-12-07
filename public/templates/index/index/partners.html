@@ -37,11 +37,12 @@
 <br />
 {/block}
 {block name="main"}
+<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tag}</b>&nbsp;的结果如下：</div>
 <div class="layui-container-fluid">
-    <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                                
+  <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
-      <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                                         
+      <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                     
         <p>{$user['nickname']}</p>
         <p>性别：{switch name="user.sex"}
             {case value="1"}男{/case}
@@ -80,6 +81,7 @@
       </div>
     </div>
     {/volist}
+  </div>  
 </div>
 {/block}
 {block name="free_js"}

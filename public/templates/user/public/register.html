@@ -10,7 +10,7 @@
         <input type="text" class="form-control" name="account" id="account" placeholder="请输入常用邮箱">
         </div>
         <div class="form-group">
-        <input type="text" class="form-control" name="username" placeholder="请输入用户名作为您的唯一标示">
+        <input type="text" class="form-control" name="username" placeholder="注册用户名, 不能为邮箱或手机号">
         </div>
         <div class="form-group">
         <input type="password" class="form-control" name="password" placeholder="请输入密码">
@@ -35,6 +35,7 @@
 </div>
 {/block}
 {block name="free_js"}
+{__block__}
 <script>
 layui.use(['form','layer'],function(){
   var form = layui.form;

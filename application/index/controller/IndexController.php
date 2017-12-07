@@ -98,21 +98,88 @@ class IndexController extends BaseController
     public function search()
     {   
         $getData = $this->request->get();
+        // print_r($getData);
+        // return ;
         $key = empty($getData['key']) ? '':$getData['key'];
-        $tagIds = isset($getData['tags']) ? $getData['tags'] : [];
-        if(empty($key) && empty($tagIds)){
-            $this->redirect($this->request->root().'/');
+        $tag = empty($getData['tag']) ? '':$getData['tag'];
+        $type = $getData['type'];
+        if(empty($key) && empty($tag)){
+            if($type == 1){
+                $this->redirect($this->request->root().'/');
+            }else{
+                $this->redirect('index/partner/lists');
+            }
         }
-        $projQuery = Db::name("project");
-        $projTagQuery = Db::name("proj_tag");
-        $result = $projQuery
+        if($type == 1){
+            $item = "project";
+            $itemTag = "proj_tag";
+            $itemUp = '__PROJ_TAG__ b';
+            $itemId = 'proj_id';
+            $itemName = 'name';
+        }elseif($type == 2){
+            $item = "user";
+            $itemTag = "user_tag";
+            $itemUp = '__USER_TAG__ b';
+            $itemId = 'user_id';
+            $itemName = 'nickname';
+        }
+        $itemQuery = Db::name($item);
+        $itemTagQuery = Db::name($itemTag);
+        $itemList = [];
+        if($tag){
+            $itemList = $itemQuery
             ->alias('a')
             ->field('a.*')
-            ->where('a.name','like','%'.$key.'%')
-            ->where('b.tag_id',$tagIds[0])
-            ->join('__PROJ_TAG__ b','a.id=b.proj_id')
+            ->where('a.'.$itemName,'like','%'.$key.'%')
+            ->where('b.tag_id',$tag)
+            ->join($itemUp,'a.id=b.'.$itemId)
             ->distinct(true)
             ->select();
-        return json($result);
+        }else{
+            $itemList = $itemQuery->where($itemName,'like','%'.$key.'%')->distinct(true)->select();
+        }
+        if($type == 1){
+            $this->assign([
+                'type' => $type,
+                'key' => $key,
+                'tag' => $tag,
+                'itemList' => $itemList
+            ]);
+            return $this->fetch('index@index/projects'); 
+        }elseif($type == 2){
+            $userSkillQuery = Db::name("user_skill");
+            $userList = [];
+            foreach($itemList as $user){
+                if(!$user['nickname']){
+                    $user['nickname'] = $user['username'];
+                }
+                $user['tags'] = [];
+                $user['role'] = [];
+                $tagSelect = $itemTagQuery
+                    ->alias('a')
+                    ->field('b.id,b.name')
+                    ->where(['user_id' => $user['id']])
+                    ->join('__TAG__ b','a.tag_id=b.id')
+                    ->select();
+                foreach($tagSelect as $tag){
+                    $user['tags'][] = $tag['name'];
+                }
+                $skillSelect = $userSkillQuery
+                    ->where(['user_id' => $user['id']])
+                    ->select();
+                foreach($skillSelect as $skill){
+                    $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                }
+                array_pop($user['role']);
+                $userList[] = $user;
+            }
+            $this->assign([
+                'type' => $type,
+                'key' => $key,
+                'tag' => $tag,
+                'userList' => $userList
+            ]);
+            return $this->fetch('index@index/partners');
+        }
     }
 }
