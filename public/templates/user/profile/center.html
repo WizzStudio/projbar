@@ -40,48 +40,55 @@
     <h2 class="layui-colla-title">通知消息</h2>
     <div class="layui-colla-content layui-show">
     {volist name="msgs" id="msg"}
-        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a>&nbsp;
         {switch name="msg['type']"}
         {case value="1"}
+        <div>
+        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a></p>&nbsp;        
           申请加入项目<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
-          <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
-            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
+          <p>
+            <!-- <a class="layui-btn ac-apply" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
+            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a> -->
+            <button class="layui-btn accept" data-mid="{$msg['id']}">接受</button>
+            <button class="layui-btn layui-btn-danger refuse" data-mid="{$msg['id']}">拒绝</button>
           </p>
+          </div>
         {/case}
         {case value="2"}
+        <div>
+        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a></p>&nbsp;                
           邀请你加入项目<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
-          <p><a class="layui-btn" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
-            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a>
+          <p>
+            <!-- <a class="layui-btn ac-invite" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
+            <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a> -->
+            <button class="layui-btn accept">接受</button>
+            <button class="layui-btn layui-btn-danger refuse">拒绝</button>
           </p>
+        </div>
         {/case}
         {case value="3"}
+        <div>
+        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a></p>&nbsp;                
           同意了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
-          <p><a class="layui-btn" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a></p>
+          <p>
+            <!-- <a class="layui-btn confirm" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a> -->
+            <button class="layui-btn confirm">我知道了</button>
+          </p>
+        </div>
         {/case}
         {case value="4"}
+        <div>
+        <p><a href={:url("index/partner/view","id=$msg[from_id]")}><b>{$msg.nickname}</b></a></p>&nbsp;                
           拒绝了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
-          <p><a class="layui-btn" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a></p>          
+          <p>
+            <!-- <a class="layui-btn confirm" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a> -->
+            <button class="layui-btn confirm">我知道了</button>
+          </p>          
+        </div>
         {/case}
         {/switch}
-        </p>
-        <hr />
     {/volist}
     {if condition="empty($msgs)"}<p>暂无消息</p>{/if}
     </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">智能匹配</h2>
-    <div class="layui-colla-content">
-      <div class="layui-colla-item">
-        <h2 class="layui-colla-title">推荐项目</h2>
-        <div class="layui-colla-content"></div>
-      </div>
-      <div class="layui-colla-item">
-        <h2 class="layui-colla-title">推荐人才</h2>
-        <div class="layui-colla-content"></div>
-      </div>
-    </div>
-    </h2>
   </div>
   <div class="layui-colla-item">
     <h2 class="layui-colla-title">技能信息</h2>
@@ -161,6 +168,36 @@
 layui.use(['element','layer'],function(){
     var element = layui.element;
     var layer = layui.layer;
+
+    //AJAX处理用户对于消息的处理
+    //接受
+    $(".accept").on('click',function(){
+      var mid = $(this).attr('data-mid');
+      layer.confirm("确认要接受该申请吗？",{icon:3,offset:'40vh'},function(index){
+        $.get(
+          '{:url("user/action/accept")}'+"?id="+mid,
+          function(data,status){
+            if(data == 0){
+              layer.msg('接受成功！可在我的项目中查看详情',{icon: 1,time: 2000,offset:'40vh'});
+            }else if(data == 1){
+              layer.msg('接受失败：添加用户到项目组失败，如果一直遇到此问题，请联系我们！',{icon:2, offset:'40vh'});
+            }else if(data == 2){
+              layer.msg('接受失败：发送回复消息失败，如果您一直遇到此问题，请尽快反馈给我们',{icon:2, offset:'40vh'});
+            }else if(data == 3){
+              layer.msg('接受失败：更新消息处理状态失败,如果您一直遇到此问题，请尽快反馈给我们',{icon:2,offset:'40vh'});
+            }else if(data == 4){
+              layer.msg('操作授权错误',{icon:2,offset:'40vh'});
+            }else if(data == 5){
+              layer.msg('不受理的访问！',{icon:2,offset:'40vh'});
+            }
+            $(`[data-mid=${mid}]`).parent().parent().remove();
+          }
+        );
+      });
+    });
+    //拒绝申请/邀请
+    
+
 
     element.on('collapse(test)',function(data){
         layer.msg('展开状态：' + data.show)

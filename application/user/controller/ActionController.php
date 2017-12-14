@@ -12,7 +12,22 @@ class ActionController extends UserBaseController
      * 发布项目
      */
     public function release()
-    {
+    {   
+        $cateQuery = Db::name("category");
+        $tagQuery = Db::name("tag");
+        $roleQuery = Db::name("role");
+        $parentCates = $cateQuery->where('parent_id',0)->select();
+        $tags = $tagQuery->select();
+        $roles = $roleQuery->select();
+        foreach($parentCates as $cate){
+            $childCates = $cateQuery->where('parent_id',$cate['id'])->field('id,parent_id,name')->select();
+            $cateList[$cate['name']] = $childCates;
+        }
+        $this->assign([
+            'cateList' => $cateList,
+            'tags' => $tags,
+            'roles' => $roles
+        ]);
         return $this->fetch();
     }
 
@@ -31,12 +46,14 @@ class ActionController extends UserBaseController
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
         $tags = $post['tags'];
+        $imageId = rand(1,9);
 
         $baseInfo['name'] = $post['name'];
         $baseInfo['cate_id'] = $post['category'];
         $baseInfo['email'] = $post['email'];
         $baseInfo['intro'] = $post['intro'];
         $baseInfo['leader_id'] = $userId;
+        $baseInfo['image'] = bar_get_proj_image($imageId);
 
         $projectModel = new Project();
         $log = $projectModel->doRelease($data,$tags,$baseInfo,$roleNumber);
@@ -63,39 +80,51 @@ class ActionController extends UserBaseController
 
     /**
      * 用户申请加入项目
+     * @return 0成功/1申请消息入库失败/
      */
     public function apply($id='')
-    {
+    {   
         if($id){
             $userId = bar_get_user_id();
             $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
             $msgQuery = Db::name("message");
             $projQuery = Db::name("project");
             $projBase = $projQuery->where('id',$id)->find();
+            $has_apply_today = bar_has_action_today($userId,$projBase['leader_id'],$projBase['id'],1);
+            if($has_apply_today){
+                return 3;
+            }
             if($projBase){
                 $leaderId = $projBase['leader_id'];
                 $toEmail = Db::name("user")->where('id',$leaderId)->value('email');
+                $currentTime = time();
                 $msgResult = $msgQuery->insert([
                     'from_id' => $userId,
                     'to_id' => $leaderId,
                     'proj_id' => $id,
-                    'type' => 1
+                    'type' => 1,
+                    'send_time' => $currentTime
                 ]);
                 if($msgResult){
-                    $subject = "【项慕吧】通知消息";
-                    $message = bar_get_action_email($userId,$name,$id,1);
-                    $emailResult = bar_send_email($toEmail,$subject,$message);
-                    if(!$emailResult['error']){
-                        $logResult = bar_action_email_log($userId,1);//主动动作为1
-                        $this->success("发送申请消息成功！");
-                    }else{
-                        $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
-                    }
+                    return 0;
                 }else{
-                    $this->error('发起申请失败，原因：无法向数据库添加申请数据');
+                    return 1;
                 }
-
-                $this->success("发起加入申请成功！");
+                // if($msgResult){
+                //     $subject = "【项慕吧】通知消息";
+                //     $message = bar_get_action_email($userId,$name,$id,1);
+                //     $emailResult = bar_send_email($toEmail,$subject,$message);
+                //     if(!$emailResult['error']){
+                //         $logResult = bar_action_email_log($userId,1);//主动动作为1
+                //         return 0;
+                //     }else{
+                //         // $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                //         return 2;
+                //     }
+                // }else{
+                //     // $this->error('发起申请失败，原因：无法向数据库添加申请数据');
+                //     return 1;
+                // }
             }
         }
     }
@@ -110,33 +139,47 @@ class ActionController extends UserBaseController
             $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
             
             if($userId == $uid){
-                $this->error("不能邀请自己！");    
+                // $this->error("不能邀请自己！");    
+                return 1;
             }
             $msgQuery = Db::name("message");
+            $has_invite_today = bar_has_action_today($userId,$uid,$pid,2);
+            if($has_invite_today){
+                //今日已经邀请过
+                return 4;
+            }
             $userProjQuery = Db::name("user_proj");
             $find = $userProjQuery->where(['proj_id'=> $pid,'user_id'=>$uid])->find();
             if($find){
-                $this->error("不能邀请已经在项目内的成员！");
+                // $this->error("不能邀请已经在项目内的成员！");
+                return 2;
             }
+            $currentTime = time();
             $msgResult = $msgQuery->insert([
                 'from_id' => $userId,
                 'to_id' => $uid,
                 'proj_id' => $pid,
-                'type' => 2
+                'type' => 2,
+                'send_time' => $currentTime
             ]);
             if(!$msgResult){
-                $this->error("发起邀请失败，原因：无法向数据库中插入邀请数据");
+                // $this->error("发起邀请失败，原因：无法向数据库中插入邀请数据");
+                return 3;
             }
-            $toEmail = Db::name("user")->where('id',$uid)->value('email');
-            $subject = "【项慕吧】通知消息";
-            $message = bar_get_action_email($userId,$name,$pid,2);
-            $emailResult = bar_send_email($toEmail,$subject,$message);
-            if(!$emailResult['error']){
-                $logResult = bar_action_email_log($userId,1); //主动动作为1
-                $this->success("发送邀请消息成功！");
-            }else{
-                $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
-            }
+            // $this->success("发起邀请成功！");
+            return 0;
+
+
+            // $toEmail = Db::name("user")->where('id',$uid)->value('email');
+            // $subject = "【项慕吧】通知消息";
+            // $message = bar_get_action_email($userId,$name,$pid,2);
+            // $emailResult = bar_send_email($toEmail,$subject,$message);
+            // if(!$emailResult['error']){
+            //     $logResult = bar_action_email_log($userId,1); //主动动作为1
+            //     $this->success("发送邀请消息成功！");
+            // }else{
+            //     $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+            // }
         }else{
             $this->error("请求参数错误");
         }
@@ -167,39 +210,48 @@ class ActionController extends UserBaseController
             if($msg['to_id'] == $userId){
                 $msgUpdateResult = $msgQuery->where('id',$id)->update(['has_handle' => 1]);
                 if($msgUpdateResult){
+                    $currentTime = time();
                     $msgInsertResult = $msgQuery->insert([
                         'from_id' => $userId,
                         'to_id' => $returnUserId,
                         'proj_id' => $projId,
-                        'type' => 3
+                        'type' => 3,
+                        'send_time' => $currentTime
                     ]);
                     if($msgInsertResult){
                         $userProjResult = $userProjQuery->insert(['proj_id'=>$projId,'user_id'=>$addUserId]);                         
                         if($userProjResult){
-                            $toEmail = Db::name("user")->where('id',$returnUserId)->value('email');
-                            $subject = "【项慕吧】通知消息";
-                            $message = bar_get_action_email($userId,$name,$projId,3);
-                            $emailResult = bar_send_email($toEmail,$subject,$message);
-                            if(!$emailResult['error']){
-                                $logResult = bar_action_email_log($userId,2);
-                                $this->success("接受成功！您可以在个人中心->我的项目里查看有关详细信息");
-                            }else{
-                                $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
-                            }
+                            // $this->success("接受成功！");
+                            return 0;
+                            // $toEmail = Db::name("user")->where('id',$returnUserId)->value('email');
+                            // $subject = "【项慕吧】通知消息";
+                            // $message = bar_get_action_email($userId,$name,$projId,3);
+                            // $emailResult = bar_send_email($toEmail,$subject,$message);
+                            // if(!$emailResult['error']){
+                            //     $logResult = bar_action_email_log($userId,2);
+                            //     $this->success("接受成功！您可以在个人中心->我的项目里查看有关详细信息");
+                            // }else{
+                            //     $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                            // }
                         }else{
-                            $this->error("接受失败：添加用户到项目组失败,如果您一直遇到此问题，请尽快反馈给我们");
+                            // $this->error("接受失败：添加用户到项目组失败,如果您一直遇到此问题，请尽快反馈给我们");
+                            return 1;
                         }
                     }else{
-                        $this->error("接受失败：发送回复消息失败，如果您一直遇到此问题，请尽快反馈给我们");
+                        // $this->error("接受失败：发送回复消息失败，如果您一直遇到此问题，请尽快反馈给我们");
+                        return 2;
                     }
                 }else{
-                    $this->error("接受失败：更新消息处理状态失败,如果您一直遇到此问题，请尽快反馈给我们");
+                    // $this->error("接受失败：更新消息处理状态失败,如果您一直遇到此问题，请尽快反馈给我们");
+                    return 3;
                 }
             }else{
-                $this->error("操作授权错误,请不要搞事，谢谢合作");
+                // $this->error("操作授权错误,请不要搞事，谢谢合作");
+                return 4;
             }
         }else{
-            $this->error("不受理的访问");
+            // $this->error("不受理的访问");
+            return 5;
         }
     }
 
@@ -223,22 +275,25 @@ class ActionController extends UserBaseController
             if($msg['to_id'] == $userId){
                 $msgUpdateResult = $msgQuery->where('id',$id)->update(['has_handle' => 2]);
                 if($msgUpdateResult){
+                    $currentTime = time();
                     $msgInsertResult = $msgQuery->insert([
                         'from_id' => $userId,
                         'to_id' => $returnUserId,
                         'proj_id' => $projId,
-                        'type' => 4
+                        'type' => 4,
+                        'send_time' => $currentTime
                     ]);
                     if($msgInsertResult){
-                        $subject = "【项慕吧】通知消息";
-                        $message = bar_get_action_email($userId,$name,$projId,4);
-                        $emailResult = bar_send_email($toEmail,$subject,$message);
-                        if(!$emailResult['error']){
-                            $logResult = bar_action_email_log($userId,2);
-                            $this->success("已拒绝该请求，感谢您的严格把关，祝您找到更好的人才和项目！");
-                        }else{
-                            $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
-                        }
+                        $this->success("已拒绝该请求");
+                        // $subject = "【项慕吧】通知消息";
+                        // $message = bar_get_action_email($userId,$name,$projId,4);
+                        // $emailResult = bar_send_email($toEmail,$subject,$message);
+                        // if(!$emailResult['error']){
+                        //     $logResult = bar_action_email_log($userId,2);
+                        //     $this->success("已拒绝该请求，感谢您的严格把关，祝您找到更好的人才和项目！");
+                        // }else{
+                        //     $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
+                        // }
                     }else{
                         $this->error("已拒绝该请求，但回复消息发送失败，如果您一直遇到此问题，请尽快反馈给我们");
                     }
@@ -288,7 +343,6 @@ class ActionController extends UserBaseController
      * 测试
      */
     public function test(){
-        print_r(session('user.nickname'));
-        return ;
+
     }
 }

@@ -180,15 +180,28 @@ class ProfileController extends UserBaseController
     public function edit_role_handle()
     {      
         //TODO validate
-        $post = $this->request->post();
-        $roleNumber = count($post['role']);
         $userId = bar_get_user_id();
-        for($i=0;$i<$roleNumber;$i++){
-            $roleId = $post['role'][$i];
-            $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
-            $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
-            $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
+        $post = $this->request->post();
+        if(isset($post['role'])){
+            $roleNumber = count($post['role']);
+            for($i=0;$i<$roleNumber;$i++){
+                $roleId = $post['role'][$i];
+                $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
+                $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
+                $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
+            }
+        }else{
+            $roleNumber = [];
+            $data = [];
         }
+        // $roleNumber = count($post['role']);
+        // $userId = bar_get_user_id();
+        // for($i=0;$i<$roleNumber;$i++){
+        //     $roleId = $post['role'][$i];
+        //     $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
+        //     $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
+        //     $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
+        // }
 
         $tags = $post['tags'];
         $userSkillModel =  new UserSkill();

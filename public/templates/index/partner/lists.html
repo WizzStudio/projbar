@@ -4,32 +4,18 @@
     <div class="layui-row">
         <div class="layui-input-inline layui-col-xs6">
         <select name="quiz1" id="type">
-            <option value="" selected="">角色职能</option>
-            <option value="1">开发&测试</option>
-            <option value="2">产品&文案</option>
-            <option value="3">设计&美工</option>
-            <option value="4">运营&市场</option>
+            <option value="">角色职能</option>
+            {volist name="roles" id="role"}
+            <option value="{$role.id}">{$role.name}</option>
+            {/volist}
         </select>
         </div>
         <div class="layui-input-inline layui-col-xs6">
-        <select name="quiz2" id="game">
+        <select name="tags" id="tags">
             <option value="">个人标签</option>
-            <option value="1">web</option>
-            <option value="2">后端</option>
-            <option value="3">前端</option>
-            <option value="4">UI</option>
-            <option value="5">嵌入式</option>
-            <option value="6">通信</option>
-            <option value="7">iOS</option>
-            <option value="8">Android</option>
-            <option value="9">产品</option>
-            <option value="10">运营</option>
-            <option value="11">云计算</option>
-            <option value="12">大数据</option>
-            <option value="13">游戏开发</option>
-            <option value="14">算法</option>
-            <option value="15">机器学习</option>
-            <option value="16">运维</option>
+            {volist name="tags" id="tag"}
+            <option value="{$tag.id}">{$tag.name}</option>
+            {/volist}
         </select>
         </div>
     </div>
@@ -80,6 +66,8 @@
       </div>
     </div>
     {/volist}
+    </div>
+    <div class="layui-container" align="center">{$userBase->render()}</div>    
 </div>
 {/block}
 {block name="free_js"}

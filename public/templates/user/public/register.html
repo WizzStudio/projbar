@@ -4,7 +4,7 @@
 <br />
 <h1 align="center">用户注册</h1>
 <br />
-<div class="container" style="height: 78vh;">
+<div class="container" style="height: 78vh;width:86vw;">
     <form action="{:url('doRegister')}" method="post">
         <div class="form-group">
         <input type="text" class="form-control" name="account" id="account" placeholder="请输入常用邮箱">
@@ -14,6 +14,9 @@
         </div>
         <div class="form-group">
         <input type="password" class="form-control" name="password" placeholder="请输入密码">
+        </div>
+        <div class="form-group">
+          <input type="password" class="form-control" name="repassword" placeholder="请确认你的密码">
         </div>
         <div class="form-group">
           <input type="text" class="form-control" name="verify_code" placeholder="请输入接收到的邮箱验证码" />

@@ -1,6 +1,11 @@
 {extend name="templates/public/base.html"}
 {block name="main"}
-<div class="layui-container" style="height: 86vh;">
+<style>
+.p-base{
+  font-size: 18px!important;
+}
+</style>
+<div class="layui-container">
   <h1 align="center">{$user.nickname}</h1>
   <h3>基础信息</h3>
   <p>昵称：{$user.nickname}</p>
@@ -53,7 +58,7 @@
     {eq name="status" value="0"}
     <button class="layui-btn btn-block" id="invite">邀请加入</button>      
     {else/}
-    <button class="layui-btn btn-block" id="invite">前往个人中心</button>          
+    <a href="{:url('user/profile/center')}" class="layui-btn btn-block">前往个人中心</a>          
     {/eq}
   </p>
 </div>
@@ -70,13 +75,17 @@ layui.use(['form','layer'],function(){
         layer.open({
           type: 1,
           title: '请选择邀请加入的项目',
-          skin: 'layui-layer-rim', //加上边框
-          // area: ['90vw'], //宽高
+          offset: ['30vh'],
+          skin: 'layui-layer-molv', //加上边框
+          closeBtn: 2,
+          shadeClose: true,
+          area: ['90vw'], //宽高
           content: `
-            <div>
+            <div style="padding:15px;">
               {volist name="myProjects" id="myproject"}
-                <p>【
-                    {switch name="myproject['cate_id']"}
+                <button class="btn btn-success btn-block invite-btn" {eq name="$myproject['has_invite_today']" value="1"}disabled=true{/eq}
+                 data-uid="{$user['id']}" data-pid="{$myproject['id']}">
+                【{switch name="myproject['cate_id']"}
                     {case value="1"}比赛{/case}    
                     {case value="2"}外包{/case}
                     {case value="3"}创业{/case}
@@ -88,15 +97,41 @@ layui.use(['form','layer'],function(){
                     {case value="10"}比赛：挑战杯{/case}
                     {case value="11"}比赛：TI杯{/case}
                     {case value="12"}比赛：其他{/case}
-                    {/switch}
-                】<a href={:url("user/action/invite","uid=$user[id]&pid=$myproject[id]")}>{$myproject.name}</a></p>
+                    {/switch}】{$myproject.name}
+                </button>
               {/volist}
             </div>
           `,
           success: function(layero, index){
-            console.log(layero,index);
+            form.render();
+            $(".invite-btn").on('click',function(){
+            uid = $(this).attr('data-uid');
+            pid = $(this).attr('data-pid');
+            $(this).attr("disabled",true);
+            $(this).text($(this).text()+"(今日已经邀请过ta加入此项目了)");
+            $.get(
+              "{:url('user/action/invite')}"+"?uid="+uid+"&pid="+pid,
+              function(data,status){
+                if(data == 0){
+                  layer.msg('发起邀请成功！',{icon: 1,time: 2000});
+                }else if(data == 1){
+                  layer.msg('不能邀请自己！',{icon: 2,time: 2000});
+                }else if(data == 2){
+                  layer.msg('不能邀请已经在项目中的成员',{icon: 2,time: 2000});
+                }else if(data == 3){
+                  layer.msg('内部错误，如果持续出现请联系我们',{icon: 2,time: 2000});
+                }else if(data == 4){
+                  layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000});
+                }else{
+                  layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
+                }
+              }
+            );
+            layer.close(index);
+            });
           }
         });
+
     });
 });
 </script>

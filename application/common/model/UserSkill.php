@@ -23,34 +23,38 @@ class UserSkill extends Model
         if(!empty($tagFind)){
             $tagDelete = $userTagQuery->where('user_id',$userId)->delete();
         }
-
-        foreach($data as $roleId => $skillData)
-        {   
-            foreach($skillData as $skillName => $skillLevel){
-                $insertSkill = [
-                    'user_id' => $userId,
-                    'role_id' => $roleId,
-                    'name' => $skillName,
-                    'level' => $skillLevel
-                ];
-                $skillResult = $userSkillQuery->insert($insertSkill);
-                if(!$skillResult){
-                    return 1;
+        if($data){
+            foreach($data as $roleId => $skillData)
+            {   
+                foreach($skillData as $skillName => $skillLevel){
+                    $insertSkill = [
+                        'user_id' => $userId,
+                        'role_id' => $roleId,
+                        'name' => $skillName,
+                        'level' => $skillLevel
+                    ];
+                    $skillResult = $userSkillQuery->insert($insertSkill);
+                    if(!$skillResult){
+                        return 1;
+                    }
                 }
             }
         }
 
-        foreach($tags as $tag){
-            if(empty($tagFindResult)){
-                $tagResult = $userTagQuery->insert([
-                    'user_id' => $userId,
-                    'tag_id' => $tag
-                ]);
-            }
-            if(!$tagResult){
-                return 2;
+        if($tags){
+            foreach($tags as $tag){
+                if(empty($tagFindResult)){
+                    $tagResult = $userTagQuery->insert([
+                        'user_id' => $userId,
+                        'tag_id' => $tag
+                    ]);
+                }
+                if(!$tagResult){
+                    return 2;
+                }
             }
         }
+
         return 0;
     }
 }

@@ -6,6 +6,7 @@ use think\Request;
 use think\Validate;
 use app\common\model\User;
 use think\View;
+use think\Db;
 
 class PublicController extends BaseController
 {
@@ -32,8 +33,9 @@ class PublicController extends BaseController
 
         $rules = [
             'account' => 'require|email',
-            'username' => 'require|min:3|max:20',
+            'username' => 'require|min:3|max:20|alphaNum',
             'password' => 'require|min:6|max:32',
+            'repassword' => 'require|confirm:password',
             'verify_code' => 'require'
         ];
 
@@ -183,5 +185,18 @@ class PublicController extends BaseController
         }else{
             return 1;
         }
+    }
+
+    /**
+     * AJAX:获取用户创建的项目列表
+     */
+    public function myprojects(){
+        $userId = bar_get_user_id();
+        if($userId == 0){
+            return 1;
+        }
+        $projQuery = Db::name("project");
+        $myProjects = $projQuery->where("leader_id",$userId)->field('id,cate_id,name')->select();
+        return json($myProjects);
     }
 }

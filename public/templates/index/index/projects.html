@@ -38,36 +38,17 @@
 <!-- </div> -->
 {/block}
 {block name="main"}
-<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tag}</b>&nbsp;的结果如下：</div>
+<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
 <div class="layui-container-fluid" id="list">
     <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
-        {volist name="itemList" id="item"}
+        {volist name="projList" id="proj"}
         <div class="layui-col-md4 layui-col-xs12">
-          <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;"> 
-            <p>
-            【
-            {switch name="item.cate_id"}
-            {case value="1"}比赛{/case}    
-            {case value="2"}外包{/case}
-            {case value="3"}创业{/case}
-            {case value="4"}实验课题{/case}
-            {case value="5"}实践练手{/case}
-            {case value="6"}比赛：国创{/case}
-            {case value="7"}比赛：互联网+{/case}
-            {case value="8"}比赛：数模{/case}
-            {case value="10"}比赛：挑战杯{/case}
-            {case value="11"}比赛：TI杯{/case}
-            {case value="12"}比赛：其他{/case}
-            {/switch}
-            】{$item.name}
-            </p>
-            <p>
-            {$item.intro}
-            </p>
-            <p>
-            <a class="layui-btn" href={:url("index/index/view","id=$item[id]")}>查看详情 »</a>&emsp;&emsp;
-            </p>
-          </div>
+            <div style="height:200px;padding:10px;background-image:url({$proj.image});background-size:contain;
+            background-repeat:round;background-color: #3a3744;opacity: 0.86;color: #eee;"> 
+            <p><b>{$proj.cate_name}:{$proj.name}</b></p>
+            <p>{$proj.intro}</p>
+            <p><a style="color:#fff;" href={:url("index/index/view","id=$proj[id]")}>查看详情 »»»</a>&emsp;&emsp;</p>
+            </div>
         </div>
         {/volist}
     </div>

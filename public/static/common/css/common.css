@@ -1,14 +1,17 @@
 .mydark{
-    background-color: #373744;
+    background-color: #333;
     border-color: transparent;
     opacity: 0.86;
 }
 .layui-layer-molv .layui-layer-title{
-    background-color: #3d3744!important;
+    background-color: #333!important;
 }
 .grey{
     background-color: #111;
     border: 1px;
+}
+.great{
+    color: #3d3744;
 }
 .p-footer{
     text-align: center;

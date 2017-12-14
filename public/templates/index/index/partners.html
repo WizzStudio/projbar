@@ -37,7 +37,7 @@
 <br />
 {/block}
 {block name="main"}
-<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tag}</b>&nbsp;的结果如下：</div>
+<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
 <div class="layui-container-fluid">
   <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                
     {volist name="userList" id="user"}
@@ -52,7 +52,7 @@
         </p>
         <p>标签：
             {volist name="user['tags']" id="tag"}
-            {$tag}/
+            {$tag.name}/
             {/volist}
         </p>
             {volist name="user['role']" id="role" key="i"}

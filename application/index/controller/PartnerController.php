@@ -15,7 +15,12 @@ class PartnerController extends BaseController
         $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
         $userSkillQuery = Db::name("user_skill");
-        $userBase = $userQuery->field('id,username,sex,nickname')->select();
+        $tagQuery = Db::name("tag");
+        $roleQuery = Db::name("role");
+        $tags = $tagQuery->select();
+        $roles = $roleQuery->select();
+        // TODO 按照信息完整度排序
+        $userBase = $userQuery->field('id,username,sex,nickname')->order('id','desc')->paginate(3);
         $userList = [];
         foreach($userBase as $user){
             if(!$user['nickname']){
@@ -43,7 +48,12 @@ class PartnerController extends BaseController
         }
         // print_r($userList);
         // return ;
-        $this->assign("userList",$userList);
+        $this->assign([
+            "userBase" => $userBase,
+            "userList" => $userList,
+            "roles" => $roles,
+            "tags" => $tags,
+        ]);
         return $this->fetch();
     }
 
@@ -89,14 +99,19 @@ class PartnerController extends BaseController
             $exp = $expQuery->where('user_id',$id)->find();
 
             $myProjects = $projQuery->where('leader_id',$userId)->field('id,cate_id,name')->select();
-
+            foreach($myProjects as $project){
+                //查询每个项目今日是否已经邀请该用户
+                $project['has_invite_today'] = bar_has_action_today($userId,$id,$project['id'],2);
+                $resultMyProjects[] = $project;
+            }
+            
             $this->assign([
                 'status' => $status,
                 'user' => $userBase,
                 'roleInfoList' => $roleInfo,
                 'tags' => $tags,
                 'exp' => $exp,
-                'myProjects' => $myProjects
+                'myProjects' => $resultMyProjects
             ]);
             return $this->fetch();
 

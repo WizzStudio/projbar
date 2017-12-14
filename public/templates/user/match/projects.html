@@ -1,0 +1,39 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<br />
+<h2 align="center">匹配推荐项目</h2>
+<div class="layui-container-fluid" id="list">
+    <div class="layui-row layui-col-space12" style="margin:10px;">
+        {volist name="projList" id="proj"}
+        <div class="layui-col-md4 layui-col-xs12">
+            <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;"> 
+            <p>
+            【
+            {switch name="proj.cate_id"}
+            {case value="1"}比赛{/case}    
+            {case value="2"}外包{/case}
+            {case value="3"}创业{/case}
+            {case value="4"}实验课题{/case}
+            {case value="5"}实践练手{/case}
+            {case value="6"}比赛：国创{/case}
+            {case value="7"}比赛：互联网+{/case}
+            {case value="8"}比赛：数模{/case}
+            {case value="10"}比赛：挑战杯{/case}
+            {case value="11"}比赛：TI杯{/case}
+            {case value="12"}比赛：其他{/case}
+            {/switch}
+            】{$proj.name}
+            </p>
+            <p>
+                {$proj.intro}
+            </p>
+            <p>
+                <a class="layui-btn" href={:url("index/index/view","id=$proj[id]")}>查看详情 »</a>&emsp;&emsp;
+                <!-- <a class="btn btn-success" href={:url("user/action/apply","id=$proj[id]")}>申请加入</a>             -->
+            </p>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+{/block}

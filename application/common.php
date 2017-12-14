@@ -249,6 +249,7 @@ function bar_get_action_email($userId,$fromName,$projId,$type)
             $result = true;
         }else{
             $sendTime = $find['send_time'];
+            //获取今日开始时间，没毛病
             $todayStartTime = strtotime(date('Y-m-d',$currentTime));
             if($sendTime < $todayStartTime){
                 $result = true;
@@ -433,4 +434,45 @@ function test_send($account,$subject,$message){
     }else{
         return 1;
     }
+}
+
+/**
+ * 判断用户今日是否已经申请加入项目/邀请该用户
+ * @param int $fromId 消息发送方ID
+ * @param int $projId 相关项目
+ * @param int $type 1申请/2邀请
+ * @param int 1今日已申请/邀请,0未
+ */
+function bar_has_action_today($fromId,$toId,$projId,$type)
+{   
+    $result = 0;
+    $msgFind = Db::name("message")
+        ->where(['from_id'=>$fromId,'to_id'=>$toId,'proj_id'=>$projId,'type'=>$type])
+        ->order('id','desc')
+        ->find();
+    if($msgFind){
+        $currentTime = time();
+        $sendTime = $msgFind['send_time'];
+        $todayStartTime = strtotime(date('Y-m-d',$currentTime));
+        if($sendTime > $todayStartTime){
+            $result = 1;
+        }
+    }
+    return $result;
+}
+
+/**
+ * 发布项目时获取项目背景图(1-9)
+ * @param $id 图片id
+ * @return string 图片相对路径
+ */
+function bar_get_proj_image($id=1)
+{   
+    if($id){
+        $beforeUrl = 'static/images/proj_images';
+        $result = $beforeUrl.'/bg'.$id.'.jpg';
+    }
+    $beforeUrl = 'static/images/proj_images';
+    $result = $beforeUrl.'/bg'.$id.'.jpg';
+    return $result;
 }

@@ -1,0 +1,51 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<br />
+<i>为您创建的项目<a href={:url('index/index/view',"id=$projId")}><b>{$projName}</b></a>推荐的人才如下：</i>
+<div class="layui-container-fluid">
+  <div class="layui-row layui-col-space12" style="margin:10px;">                                                
+        {eq name="isNull" value="1"}<h1 align="center">Sorry,暂时没有找到</h1>{else/}
+        {volist name="userList" id="user"}
+        <div class="layui-col-md4 layui-col-xs12">
+          <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                                         
+            <p>{$user['nickname']}</p>
+            <p>性别：{switch name="user.sex"}
+                {case value="1"}男{/case}
+                {case value="2"}女{/case}
+                {default /}未知
+                {/switch}
+            </p>
+            <p>标签：
+                {volist name="user['tags']" id="tag"}
+                {$tag}/
+                {/volist}
+            </p>
+                {volist name="user['role']" id="role" key="i"}
+                <p>角色：
+                    {switch name="key"}
+                    {case value="1"}开发&测试{/case}
+                    {case value="2"}产品&文案{/case}
+                    {case value="3"}设计&美工{/case}
+                    {case value="4"}运营&市场{/case}
+                    {default /}暂无
+                    {/switch}
+                </p>
+                    {volist name="role" id="level"}
+                    <p>{$key}=>
+                        {switch name="level"}
+                        {case value="1"}入门{/case}
+                        {case value="2"}熟练{/case}
+                        {case value="3"}精通{/case}
+                        {/switch}
+                    </p>
+                    {/volist}
+                {/volist}
+                <p>
+                    <a class="btn btn-primary" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+                </p>
+          </div>
+        </div>
+        {/volist}
+        {/eq}
+</div>
+{/block}
