@@ -42,7 +42,12 @@ class MatchController extends UserBaseController
             
             if($count > 3) $count = 3;
             for($i=0;$i<$count;$i++){
-                $proj = $projQuery->where('id',$projIds[$i])->find();
+                $proj = $projQuery
+                    ->alias('a')
+                    ->join('__CATEGORY__ b','a.cate_id=b.id')
+                    ->where('a.id',$projIds[$i])
+                    ->field('a.*,b.name as cate_name')
+                    ->find();
                 $projList[] = $proj;
             }
         }

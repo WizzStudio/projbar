@@ -469,10 +469,8 @@ function bar_has_action_today($fromId,$toId,$projId,$type)
 function bar_get_proj_image($id=1)
 {   
     if($id){
-        $beforeUrl = 'static/images/proj_images';
+        $beforeUrl = '/static/images/proj_images';
         $result = $beforeUrl.'/bg'.$id.'.jpg';
     }
-    $beforeUrl = 'static/images/proj_images';
-    $result = $beforeUrl.'/bg'.$id.'.jpg';
     return $result;
 }

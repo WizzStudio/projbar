@@ -1,22 +1,25 @@
 {extend name="templates/public/base.html" /}
 {block name="cascade"}
-<form class="layui-form layui-form-pane" action="">
+<form class="layui-form layui-form-pane" action="{:url('index/partner/filter')}" method="get">
     <div class="layui-row">
-        <div class="layui-input-inline layui-col-xs6">
-        <select name="quiz1" id="type">
+        <div class="layui-input-inline layui-col-xs5">
+        <select name="role" id="role">
             <option value="">角色职能</option>
             {volist name="roles" id="role"}
             <option value="{$role.id}">{$role.name}</option>
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs6">
-        <select name="tags" id="tags">
+        <div class="layui-input-inline layui-col-xs5">
+        <select name="tag" id="tag">
             <option value="">个人标签</option>
             {volist name="tags" id="tag"}
             <option value="{$tag.id}">{$tag.name}</option>
             {/volist}
         </select>
+        </div>
+        <div class="layui-input-inline layui-col-xs2">
+            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
         </div>
     </div>
 </form>

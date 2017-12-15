@@ -1,11 +1,36 @@
 {extend name="templates/public/base.html" /}
+{block name="cascade"}
+<form class="layui-form layui-form-pane" action="{:url('index/partner/filter')}" method="get">
+    <div class="layui-row">
+        <div class="layui-input-inline layui-col-xs5">
+        <select name="role" id="role">
+            <option value="">角色职能</option>
+            {volist name="roles" id="role"}
+            <option value="{$role.id}">{$role.name}</option>
+            {/volist}
+        </select>
+        </div>
+        <div class="layui-input-inline layui-col-xs5">
+        <select name="tag" id="tag">
+            <option value="">个人标签</option>
+            {volist name="tags" id="tag"}
+            <option value="{$tag.id}">{$tag.name}</option>
+            {/volist}
+        </select>
+        </div>
+        <div class="layui-input-inline layui-col-xs2">
+            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
+        </div>
+    </div>
+</form>
+<br />
+{/block}
 {block name="main"}
-<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
 <div class="layui-container-fluid">
-  <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                
+    <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
-      <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                     
+        <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                                         
         <p>{$user['nickname']}</p>
         <p>性别：{switch name="user.sex"}
             {case value="1"}男{/case}
@@ -15,7 +40,7 @@
         </p>
         <p>标签：
             {volist name="user['tags']" id="tag"}
-            {$tag.name}/
+            {$tag}/
             {/volist}
         </p>
             {volist name="user['role']" id="role" key="i"}
@@ -41,19 +66,12 @@
             <p>
                 <a class="btn btn-primary" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>
-      </div>
+        </div>
     </div>
     {/volist}
-  </div> 
-  <div align="center">{$userBaseList->render()}</div> 
+    </div>
 </div>
 {/block}
 {block name="free_js"}
 {__block__}
-<script>
-layui.use(['form','layer'],function(){
-    var form = layui.form;
-    var layer = layui.layer;
-});
-</script>
 {/block}

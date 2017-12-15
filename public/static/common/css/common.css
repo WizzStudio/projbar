@@ -29,3 +29,12 @@
 .layui-form-select dl dd.layui-this{
     background-color: #ef5b25;
 }
+.proj{
+    height:200px;
+    padding:10px;
+    background-size:contain;
+    background-repeat:round;
+    background-color: #3a3744;
+    opacity: 0.86;
+    color: #eee;
+}

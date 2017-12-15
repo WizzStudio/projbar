@@ -119,4 +119,110 @@ class PartnerController extends BaseController
             $this->error("未指定个人id");
         }
     }
+
+    /**
+     * 获得筛选后的人才列表(有问题！！！！！)
+     */
+    public function filter()
+    {
+        $getData = $this->request->get();
+        $page = isset($getData['page'])?$getData['page']:1;
+        $rid = isset($getData['role'])?$getData['role']:0;        
+        $tid = isset($getData['tag'])?$getData['tag']:0;
+        $userQuery = Db::name("user");
+        $userTagQuery = Db::name("user_tag");
+        $tagQuery = Db::name("tag");
+        $userSkillQuery = Db::name("user_skill");
+        $roleQuery = Db::name("role");
+        $tags = $tagQuery->select();
+        $roles = $roleQuery->select();
+        
+        if(!$rid && !$tid){
+            return $this->redirect(url('index/partner/lists'));
+        }else{
+            $userBaseList = $userQuery
+                ->field('id,username,nickname,sex')
+                ->order('id','desc')
+                // ->page($page,3)
+                ->select();
+
+            $roleInfoList = [];
+            $exp = '';
+            $userList = [];
+
+            foreach($userBaseList as $user){
+                $user['tags'] = [];
+                $user['role'] = [];
+                if($rid && !$tid){
+                    $skills = $userSkillQuery
+                        ->where('user_id',$user['id'])
+                        ->where('role_id',$rid)
+                        ->select();
+                    if(!$skills) continue;
+                    foreach($skills as $skill){
+                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                    }
+                    $num = count($user['role']);
+                    if($num > 1) array_pop($user['role']);
+                    $tags = $userTagQuery
+                    ->alias('a')
+                    ->field('b.id,b.name')
+                    ->where('user_id',$user['id'])
+                    ->join('__TAG__ b','a.tag_id=b.id')
+                    ->select();
+                    foreach($tags as $tag){
+                        $user['tags'][] = $tag['name'];
+                    }
+                }else if(!$rid && $tid){
+                    $tags = $userTagQuery
+                    ->alias('a')
+                    ->field('b.id,b.name')
+                    ->where('user_id',$user['id'])
+                    ->where('tag_id',$tid)
+                    ->join('__TAG__ b','a.tag_id=b.id')
+                    ->select();
+                    if(!$tags)continue;
+                    foreach($tags as $tag){
+                        $user['tags'][] = $tag['name'];
+                    }
+                    $skills = $userSkillQuery
+                        ->where('user_id',$user['id'])
+                        ->select();
+                    foreach($skills as $skill){
+                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                    }
+                    $num = count($user['role']);
+                    if($num > 1) array_pop($user['role']);
+                }else if($rid && $tid){
+                    $tags = $userTagQuery
+                    ->alias('a')
+                    ->field('b.id,b.name')
+                    ->where('user_id',$user['id'])
+                    ->where('tag_id',$tid)
+                    ->join('__TAG__ b','a.tag_id=b.id')
+                    ->select();
+                    if(!$tags)continue;
+                    $skills = $userSkillQuery
+                    ->where('user_id',$user['id'])
+                    ->where('role_id',$rid)
+                    ->select();
+                    if(!$skills) continue;
+                    foreach($tags as $tag){
+                        $user['tags'][] = $tag['name'];
+                    }
+                    foreach($skills as $skill){
+                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                    }
+                }
+                $userList[] = $user;
+            }
+        }
+        $this->assign([
+            'userBaseList' => $userBaseList,
+            "userList" => $userList,
+            "roles" => $roles,
+            "tags" => $tags
+        ]);
+        return $this->fetch();
+    }
 }

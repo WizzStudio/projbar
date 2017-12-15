@@ -2,28 +2,31 @@
 {block name="cascade"}
 <!--联动选择框 -->
 <!-- <div class="container-fluid"> -->
-    <form class="layui-form layui-form-pane" action="">
+    <form class="layui-form layui-form-pane" action="{:url('index/index/filter')}" method="get">
     <div class="layui-row">
-        <div class="layui-input-inline layui-col-xs4">
-        <select name="type1" id="type1" lay-filter="type1">
-            <option value="">项目性质</option>
+        <div class="layui-input-inline layui-col-xs3">
+        <select name="cate1" id="cate1" lay-filter="cate1">
+            <option value="">性质</option>
             {volist name="firstCates" id="firstCate"}
             <option value="{$firstCate.id}">{$firstCate.name}</option>
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs4">
-        <select name="type2" id="type2" lay-filter="typeRole">
+        <div class="layui-input-inline layui-col-xs3">
+        <select name="cate2" id="cate2" lay-filter="typeRole">
         <!-- js -->
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs4">
+        <div class="layui-input-inline layui-col-xs3">
         <select name="role" id="role" lay-filter="typeRole">
-            <option value="">需求角色</option>
+            <option value="">角色</option>
             {volist name="roles" id="role"}
             <option value="{$role.id}">{$role.name}</option>
             {/volist}
         </select>
+        </div>
+        <div class="layui-input-inline layui-col-xs3">
+        <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
         </div>
     </div>
     </form>
@@ -35,8 +38,7 @@
     <div class="layui-row layui-col-space12" id="main" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
         {volist name="projList" id="proj"}
         <div class="layui-col-md4 layui-col-xs12">
-          <div style="height:200px;padding:10px;background-image:url({$proj.image});background-size:contain;
-          background-repeat:round;background-color: #3a3744;opacity: 0.86;color: #eee;"> 
+          <div class="proj" style="background-image:url({$proj.image});"> 
             <p><b>{$proj.cate_name} : {$proj.name}</b></p>
             <p>{$proj.intro}</p>
             <p><a style="color:#fff;" href={:url("index/index/view","id=$proj[id]")}>查看详情 »»»</a>&emsp;&emsp;</p>
@@ -53,12 +55,7 @@
   layui.use(['form','laypage'],function(){
     var form = layui.form;
     var laypage = layui.laypage;
-    laypage.render({
-        elem: 'paginate',
-        count: 50,
-        limit: 9
-    });
-    form.on('select(type1)',function(data){
+    form.on('select(cate1)',function(data){
         if(data.value){
         $.get(
             "{:url('index/index/getChildType')}"+"?pid="+data.value,
@@ -67,10 +64,11 @@
                 $.each(data,function(i,item){
                 optionStr += "<option value='"+item.id+"'>"+item.name+"</option>";
                 });
-                $("#type2").html('<option value="">二级分类</option>'+optionStr);
+                $("#cate2").html('<option value="">次分类</option>'+optionStr);
                 form.render('select');
             }
         );
+        $("#filter_icon").attr("style","color: #ef5b25;")
         }
         var cid1 = $("#type1").val();
         var cid2 = $("#type2").val();
@@ -81,14 +79,11 @@
         $.get(
             "{:url('index/index/getFilterResult')}"+"?cid="+cid+"&rid="+rid,
             function(data){
-                console.log(data.length); //!!!!!!解决分页问题就靠你了！
-                var num = data.length;
                 var mainStr = "";
                 $.each(data,function(i,item){
                     mainStr += `
                     <div class="layui-col-md4 layui-col-xs12">
-                        <div style="height:200px;padding:10px;background-image:url(${item.image});background-size:contain;
-                        background-repeat:round;background-color: #3a3744;opacity: 0.86;color: #eee;"> 
+                        <div class="proj" style="background-image:url(${item.image});"> 
                             <p><b>${item.cate_name} : ${item.name}</b></p>
                             <p>${item.intro}</p>
                             <p><a class="layui-btn" href={:url("index/index/view")}?id=${item.id}>查看详情 »</a>&emsp;&emsp;</p>
@@ -116,8 +111,7 @@
                 $.each(data,function(i,item){
                     mainStr += `
                     <div class="layui-col-md4 layui-col-xs12">
-                        <div style="height:200px;padding:10px;background-image:url(${item.image});background-size:contain;
-                        background-repeat:round;background-color: #3a3744;opacity: 0.86;color: #eee;"> 
+                        <div class="proj" style="background-image:url(${item.image});"> 
                             <p><b>${item.cate_name} : ${item.name}</b></p>
                             <p>${item.intro}</p>
                             <p><a class="layui-btn" href={:url("index/index/view")}?id=${item.id}>查看详情 »</a>&emsp;&emsp;</p>
@@ -129,6 +123,7 @@
                 form.render();
             }
         );
+        $("#filter_icon").attr("style","color: #ef5b25;")
     });
 
   });
