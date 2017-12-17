@@ -60,8 +60,8 @@
           <p>
             <!-- <a class="layui-btn ac-invite" href={:url('user/action/accept',"id=$msg[id]")}>接受</a>
             <a class="layui-btn layui-btn-danger" href={:url('user/action/refuse',"id=$msg[id]")}>拒绝</a> -->
-            <button class="layui-btn accept">接受</button>
-            <button class="layui-btn layui-btn-danger refuse">拒绝</button>
+            <button class="layui-btn accept" data-mid="{$msg['id']}">接受</button>
+            <button class="layui-btn layui-btn-danger refuse" data-mid="{$msg['id']}">拒绝</button>
           </p>
         </div>
         {/case}
@@ -71,7 +71,7 @@
           同意了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
           <p>
             <!-- <a class="layui-btn confirm" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a> -->
-            <button class="layui-btn confirm">我知道了</button>
+            <button class="layui-btn confirm" data-mid="{$msg['id']}">我知道了</button>
           </p>
         </div>
         {/case}
@@ -81,7 +81,7 @@
           拒绝了您的请求，相关项目：<a href={:url("index/index/view","id=$msg[proj_id]")}><b>{$msg.name}</b></a>
           <p>
             <!-- <a class="layui-btn confirm" href={:url('user/action/confirm',"id=$msg[id]")}>我知道了</a> -->
-            <button class="layui-btn confirm">我知道了</button>
+            <button class="layui-btn confirm" data-mid="{$msg['id']}">我知道了</button>
           </p>          
         </div>
         {/case}
@@ -173,13 +173,13 @@ layui.use(['element','layer'],function(){
     //接受
     $(".accept").on('click',function(){
       var mid = $(this).attr('data-mid');
-      layer.confirm("确认要接受该申请吗？",{icon:3,offset:'40vh'},function(index){
+      layer.confirm("确认要接受该申请吗？",{icon:3,offset:['40vh']},function(index){
+      layer.msg('接受成功！可在我的项目中查看详情',{icon: 1,time: 2000,offset:'40vh'});
+      $(`[data-mid=${mid}]`).parent().parent().remove();
         $.get(
           '{:url("user/action/accept")}'+"?id="+mid,
           function(data,status){
-            if(data == 0){
-              layer.msg('接受成功！可在我的项目中查看详情',{icon: 1,time: 2000,offset:'40vh'});
-            }else if(data == 1){
+            if(data == 1){
               layer.msg('接受失败：添加用户到项目组失败，如果一直遇到此问题，请联系我们！',{icon:2, offset:'40vh'});
             }else if(data == 2){
               layer.msg('接受失败：发送回复消息失败，如果您一直遇到此问题，请尽快反馈给我们',{icon:2, offset:'40vh'});
@@ -190,17 +190,41 @@ layui.use(['element','layer'],function(){
             }else if(data == 5){
               layer.msg('不受理的访问！',{icon:2,offset:'40vh'});
             }
-            $(`[data-mid=${mid}]`).parent().parent().remove();
           }
         );
       });
     });
     //拒绝申请/邀请
-    
-
-
-    element.on('collapse(test)',function(data){
-        layer.msg('展开状态：' + data.show)
+    $(".refuse").on('click',function(){
+      var mid = $(this).attr('data-mid');
+      layer.confirm("确认要拒绝该申请吗？",{icon:3,offset:['40vh']},function(index){
+        layer.close(index);
+        $(`[data-mid=${mid}]`).parent().parent().remove();
+        layer.msg('已拒绝该请求',{icon: 1,time: 2000,offset:['40vh']});
+        $.get(
+          '{:url("user/action/refuse")}'+'?id='+mid,
+          function(data,status){
+            console.log(data);
+            if(data != 0){
+              layer.msg('内部错误：'+data,{icon:2, offset:['40vh']});
+            }
+          }
+        );
+      });
+    });
+    //我知道了
+    $(".confirm").on('click',function(){
+      var mid = $(this).attr('data-mid');
+      $.get(
+        '{:url("user/action/confirm")}'+'?id='+mid,
+        function(data,status){
+          if(data == 0){
+            $(`[data-mid=${mid}]`).parent().parent().remove();
+          }else{
+            layer.msg('内部错误'+data,{icon:2, offset:['40vh']});
+          }
+        }
+      );
     });
 });
 </script>

@@ -97,7 +97,7 @@ class PartnerController extends BaseController
             ->join('__TAG__ b','a.tag_id=b.id')
             ->select();
             $exp = $expQuery->where('user_id',$id)->find();
-
+            $resultMyProjects = [];
             $myProjects = $projQuery->where('leader_id',$userId)->field('id,cate_id,name')->select();
             foreach($myProjects as $project){
                 //查询每个项目今日是否已经邀请该用户

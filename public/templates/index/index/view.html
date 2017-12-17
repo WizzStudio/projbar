@@ -39,8 +39,8 @@ h3{
     <hr />
     <h3>需求角色</h3>
     {volist name="roleInfoList" id="roleInfo"}
+    <p style="color:grey;text-align:center;">{$key}</p>    
         <table class="layui-table" lay-skin="nob">
-        <caption>{$key}</caption>
             <colgroup>
               <col width="30">
               <col width="900">
@@ -119,13 +119,15 @@ layui.use(['layer','element'],function(){
                 '{:url("user/action/apply","id=$projBase[id]")}',
                 function(data,status){
                     if(data == 0){
-                        layer.msg('发起申请成功！',{icon: 1, time:2000});
+                        layer.msg('发起申请成功！',{icon: 1, time:2000,offset:['30vh']});
                     }else if(data == 1){
-                        layer.msg('发起申请失败',{icon: 2,time:2000});
+                        layer.msg('发起申请失败',{icon: 2,time:2000,offset:['30vh']});
                     }else if(data == 2){
-                        layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4});
+                        layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4,offset:['30vh']});
+                    }else if(data.code == 0){
+                        layer.msg('您还未登录，请登录后再进行操作！',{icon:2,offset:['30vh']});
                     }else{
-                        layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
+                        layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000,offset:['30vh']});
                     }
                 }
             );

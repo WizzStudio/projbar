@@ -74,7 +74,7 @@ layui.use(['form','layer'],function(){
     $("#invite").on('click',function(){
         layer.open({
           type: 1,
-          title: '请选择邀请加入的项目',
+          title: '请选择邀请加入的项目(登录后的功能)',
           offset: ['30vh'],
           skin: 'layui-layer-molv', //加上边框
           closeBtn: 2,
@@ -113,15 +113,17 @@ layui.use(['form','layer'],function(){
               "{:url('user/action/invite')}"+"?uid="+uid+"&pid="+pid,
               function(data,status){
                 if(data == 0){
-                  layer.msg('发起邀请成功！',{icon: 1,time: 2000});
+                  layer.msg('发起邀请成功！',{icon: 1,time: 2000,offset: ['30vh']});
                 }else if(data == 1){
-                  layer.msg('不能邀请自己！',{icon: 2,time: 2000});
+                  layer.msg('不能邀请自己！',{icon: 2,time: 2000,offset: ['30vh']});
                 }else if(data == 2){
-                  layer.msg('不能邀请已经在项目中的成员',{icon: 2,time: 2000});
+                  layer.msg('不能邀请已经在项目中的成员',{icon: 2,time: 2000,offset: ['30vh']});
                 }else if(data == 3){
                   layer.msg('内部错误，如果持续出现请联系我们',{icon: 2,time: 2000});
                 }else if(data == 4){
-                  layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000});
+                  layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000,offset: ['30vh']});
+                }else if(data.code == 0){
+                  layer.msg('您还未登录，请登录后再进行操作！',{icon:2,offset:['30vh']});
                 }else{
                   layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
                 }

@@ -49,16 +49,16 @@ class User extends Model
                 if($result['status'] == 0){
                     return 3;
                 }
-                $myProjects = Db::name("project")
-                    ->where('leader_id',$result['id'])
-                    ->field('id,cate_id,leader_id,name')
-                    ->select();
-                $result['projects'] = [];
-                if($myProjects){
-                    foreach($myProjects as $myProject){
-                        $result['projects'][] = $myProject;
-                    }
-                }
+                // $myProjects = Db::name("project")
+                //     ->where('leader_id',$result['id'])
+                //     ->field('id,cate_id,leader_id,name')
+                //     ->select();
+                // $result['projects'] = [];
+                // if($myProjects){
+                //     foreach($myProjects as $myProject){
+                //         $result['projects'][] = $myProject;
+                //     }
+                // }
 
                 session('user', $result);
                 $data = [

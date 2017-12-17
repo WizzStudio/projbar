@@ -263,19 +263,20 @@ function bar_get_action_email($userId,$fromName,$projId,$type)
 
     if($result){
         $projQuery = Db::name("project");
-        $projName = $projQuery->where('id',$projId)->value('name');
+        $projName = $projQuery->where('id',$projId)->value('name');       
         switch($type){
             case 1:
-                $result = "【项慕吧】".$fromName."申请加入您的项目：".$projName."，请登录<a href='http://www.projbar.cn'>项慕吧PROJBar</a>，在个人中心查看详情。";
+                // $result = "【项慕吧】".$fromName."申请加入您的项目：".$projName."，请登录<a href='http://www.projbar.cn'>项慕吧PROJBar</a>，在个人中心查看详情。";
+                $result = "【项慕吧】".$fromName."申请加入您的项目：".$projName."，请在项慕吧->个人中心查看详情，为了您的账户安全，请勿将该邮件转发给他人，";                
                 break;
             case 2:
-                $result = "【项慕吧】".$fromName."邀请您加入项目：".$projName."，请登录<a href='http://www.projbar.cn'>项慕吧PROJBar</a>，在个人中心查看详情。";
+                $result = "【项慕吧】".$fromName."邀请您加入项目：".$projName."，请在项慕吧->个人中心查看详情，为了您的账户安全，请勿将该邮件转发给他人，";
                 break;
             case 3:
-                $result = "【项慕吧】".$fromName."同意了您的请求，相关项目：".$projName."，请登录<a href='http://www.projbar.cn'>项慕吧PROJBar</a>，在个人中心查看详情。";
+                $result = "【项慕吧】".$fromName."同意了您的请求，相关项目：".$projName."，请在项慕吧->个人中心查看详情，为了您的账户安全，请勿将该邮件转发给他人，";
                 break;
             case 4:
-                $result = "【项慕吧】".$fromName."拒绝了您的请求，相关项目：".$projName."，请登录<a href='http://www.projbar.cn'>项慕吧PROJBar</a>，在个人中心查看详情。";
+                $result = "【项慕吧】".$fromName."拒绝了您的请求，相关项目：".$projName."，请在项慕吧->个人中心查看详情，为了您的账户安全，请勿将该邮件转发给他人，";
                 break;
         }
     }
@@ -327,6 +328,7 @@ function bar_action_email_log($userId,$type)
   * @param string $address 收件人邮箱
   * @param string $subject 邮件标题
   * @param string $message 邮件内容
+  * @param string $token 用户直接进入个人中心的token
   * @return array
   * 返回格式
   * array(
@@ -334,15 +336,15 @@ function bar_action_email_log($userId,$type)
   *   "message" => "出错信息"
   * );
   */
-  function bar_send_email($address,$subject,$message)
-  {
+  function bar_send_email($address,$subject,$message,$token='')
+  {   
       $mail = new \PHPMailer\PHPMailer\PHPMailer();
       $mail->IsSMTP();
       $mail->IsHTML(true);
       $mail->CharSet = 'UTF-8';
       //添加收件人地址，可以多次使用来添加多个收件人
       $mail->AddAddress($address);
-      $mail->Body = $message;
+      $mail->Body = $message."若使用QQ邮箱，鉴于过滤机制，请复制该链接到浏览器或自行登录项慕吧，两小时内有效：http://www.projbar.cn/user/profile/center?token=$token";
       $mail->From = "wxjackie@wxj.projbar.cn";
       $mail->FromName = "项慕吧";
       $mail->Subject = $subject;
@@ -473,4 +475,31 @@ function bar_get_proj_image($id=1)
         $result = $beforeUrl.'/bg'.$id.'.jpg';
     }
     return $result;
+}
+
+/**
+ * 生成get参数中的token
+ */
+function bar_get_user_token($uid)
+{   
+    $userTokenQuery = Db::name("user_token");
+    $data = [];
+    $currentTime = time();
+    $expireTime = $currentTime + 3600*3;
+    $data['token'] = md5(uniqid('one')) . md5(uniqid('two'));
+    $data['user_id'] = $uid;
+    $data['expire_time'] = $expireTime;
+    $exist = $userTokenQuery->where('user_id',$uid)->find();
+    if($exist){
+        $data['update_time'] = $currentTime;
+        $result = $userTokenQuery->where('user_id',$uid)->update($data);
+    }else{
+        $data['create_time'] = $currentTime;
+        $result = $userTokenQuery->insert($data);        
+    }
+    if($result){
+        return $data['token'];
+    }else{
+        return false;
+    }
 }
