@@ -344,7 +344,7 @@ function bar_action_email_log($userId,$type)
       $mail->CharSet = 'UTF-8';
       //添加收件人地址，可以多次使用来添加多个收件人
       $mail->AddAddress($address);
-      $mail->Body = $message."若使用QQ邮箱，鉴于过滤机制，请复制该链接到浏览器或自行登录项慕吧，两小时内有效：http://www.projbar.cn/user/profile/center?token=$token";
+      $mail->Body = $message."(若使用QQ邮箱，可能存在过滤，请复制该链接到浏览器或自行登录项慕吧),两小时内有效,跳转链接：<a href='http://www.projbar.cn/user/profile/center?token=$token'>项慕吧-我的个人中心</a>";
       $mail->From = "wxjackie@wxj.projbar.cn";
       $mail->FromName = "项慕吧";
       $mail->Subject = $subject;

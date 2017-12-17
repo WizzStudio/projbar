@@ -297,7 +297,7 @@ class ActionController extends UserBaseController
                             return 0;
                         }else{
                             // $this->error("内部错误：".$emailResult['msg'].",如果一直出现此问题，请反馈给我们");
-                            return 3;
+                            return $emailResult['error'];
                         }
                     }else{
                         // $this->error("已拒绝该请求，但回复消息发送失败，如果您一直遇到此问题，请尽快反馈给我们");
