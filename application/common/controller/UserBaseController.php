@@ -23,7 +23,7 @@ class UserBaseController extends BaseController
                 session('user', $getUser);
 
                 $navRight = "<li><a href=".url('user/profile/center').">个人中心</a></li>
-                <li><a href=".url('user/profile/logout').">注销</a></li>";
+                <li><a id='logout'>注销</a></li>";
                 $this->assign('navRight',$navRight);
                 
                 $data = [

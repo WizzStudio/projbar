@@ -26,14 +26,26 @@ h3{
         </tr>
         <tr>
             <td>邮箱</td>
-            <td>确认合作关系后可见</td>
+            <td>确认合作关系后在下方可见</td>
         </tr>
         <tr><td colspan="2">简介：{$projBase.intro}</td></tr>
     </table>
     <h3>项目标签</h3>
-    <p>/
-    {volist name="tags" id="tag"}
-        {$tag['name']}&nbsp;/
+    <br />
+    <p>
+    {volist name="tags" id="tag" key="k"}
+    <span 
+    {switch name="k"}
+    {case value="1"}class="layui-bg-red"{/case}
+    {case value="2"}class="layui-bg-orange"{/case}
+    {case value="3"}class="layui-bg-green"{/case}
+    {case value="4"}class="layui-bg-cyan"{/case}
+    {case value="5"}class="layui-bg-black"{/case}
+    {case value="6"}class="layui-bg-green"{/case}
+    {default/}class="layui-bg-black"
+    {/switch}
+    style="color:#eee;
+    ;padding:10px;margin:5px;">{$tag['name']}</span>
     {/volist}
     </p>
     <hr />
@@ -42,7 +54,7 @@ h3{
     <p style="color:grey;text-align:center;">{$key}</p>    
         <table class="layui-table" lay-skin="nob">
             <colgroup>
-              <col width="30">
+              <col width="300">
               <col width="900">
             </colgroup>
             <thead>
@@ -79,7 +91,6 @@ h3{
                 {/volist}
             </tbody>
         </table>
-
     {/volist}
   <!-- </div> -->
   <br />
@@ -88,10 +99,10 @@ h3{
   {volist name="partners" id="partner"}
    <p><b><a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a></b></p>
    <p>性别：{switch name="partner.sex"}
-    {case value="1"}男{/case}
-    {case value="2"}女{/case}
-    {default /}未知
-    {/switch}</p>
+        {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
+        {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
+        {default /}
+        {/switch}</p>
    <p>QQ：{$partner.qq}</p>
    <p>Email：{$partner.email}</p>
   {/volist}

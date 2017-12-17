@@ -16,7 +16,7 @@ class BaseController extends Controller
             <li><a href=".url('user/public/register').">注册</a></li>";
         }else{
             $navRight = "<li><a href=".url('user/profile/center').">个人中心</a></li>
-            <li><a href=".url('user/profile/logout').">注销</a></li>";
+            <li><a id='logout'>注销</a></li>";
         }
         $this->navRight = $navRight;
         $this->assign('navRight',$navRight);

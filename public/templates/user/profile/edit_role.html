@@ -1,250 +1,79 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<h1 align="center">编辑角色信息</h1>
-<div class="container">
-    <div><br /></div>
+<br />
+<h1 align="center">编辑角色信息</h1><hr />
+<div class="layui-container" style="margin-bottom:20px;">
     <h3>角色信息</h3>
-    <i>术业有专攻，您最多只可以有两个角色</i><hr />
-    <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="layui-form form-horizontal">
-        {volist name="roleInfoList" id="roleInfo" key="k"}
-        <div id="arole">
-        <label class="control-label">角色{$k}</label>
-        <div class="form-group">
-            <div class="col-md-5 col-xs-6 column">
-            <select name="role[]" class="form-control">
-                    <option value="1" {eq name="key" value="1"}selected="selected"{/eq}>开发&测试</option>
-                    <option value="2" {eq name="key" value="2"}selected="selected"{/eq}>产品&文案</option>
-                    <option value="3" {eq name="key" value="3"}selected="selected"{/eq}>设计&美工</option>
-                    <option value="4" {eq name="key" value="4"}selected="selected"{/eq}>运营&市场</option>
-            </select>
+    <form class="layui-form form-horizontal" action="{:url('edit_role_handle')}" method="post" role="form">
+        <div id="role">
+            <div class="layui-form-item">
+                <div class="col-md-9 col-xs-11 column">
+                <select name="role" class="form-control">
+                    {volist name="roles" id="role"}
+                    <option value="{$role.id}" {eq name="$role['id']" value="$roleId"}selected="selected"{/eq}>{$role.name}</option>
+                    {/volist}
+                </select>
+                </div>
             </div>
-            <div class="col-md-4 col-xs-4 column">
-              <button type="button" class="btn btn-warning delbutton">删除角色</button>
+            {for start="0" end="3" name="i"}
+            <div class="layui-form-item">
+                {if condition="$skillList == []"}
+                <div class="col-md-5 col-xs-6 column">
+                    <input name="skill[]" type="text" class="form-control skill" placeholder="技能名称(必填)" lay-verify="required" />
+                    </div>
+                    <div class="col-md-4 col-xs-5 column">
+                    <select name="level[]" class="form-control">
+                        <option value="1">入门</option>
+                        <option value="2">熟练</option>
+                        <option value="3">精通</option>
+                    </select>
+                </div>
+                {else/}
+                <div class="col-md-5 col-xs-6 column">
+                <input name="skill[]" value="{$skillList[$i]['name']}" type="text" class="form-control skill" placeholder="技能名称(必填)" lay-verify="required" />
+                </div>
+                <div class="col-md-4 col-xs-5 column">
+                <select name="level[]" class="form-control">
+                    <option value="1" {eq name="$skillList[$i]['level']" value='1'}selected='selected'{/eq}>入门</option>
+                    <option value="2" {eq name="$skillList[$i]['level']" value='2'}selected='selected'{/eq}>熟练</option>
+                    <option value="3" {eq name="$skillList[$i]['level']" value='3'}selected='selected'{/eq}>精通</option>
+                </select>
+                </div>
+                {/if}
             </div>
-        </div>
-        <label class="control-label">技能</label>
-        <div class="form-group">
-            <div class="col-md-5 col-xs-6 column">
-            <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-            <select name="level1[]" class="form-control">
-            {switch name="roleInfo[0]['level']"}
-            {case value="1"}
-            <option value="1" selected="selected">入门</option>
-            <option value="2">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="2"}
-            <option value="1">入门</option>
-            <option value="2" selected="selected">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="3"}
-            <option value="1">入门</option>
-            <option value="2">熟练</option>
-            <option value="3" selected="selected">精通</option>
-            {/case}
-            {/switch}
-            </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-5 col-xs-6 column">
-                <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-            <select name="level2[]" class="form-control">
-            {switch name="roleInfo[1]['level']"}
-            {case value="1"}
-            <option value="1" selected="selected">入门</option>
-            <option value="2">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="2"}
-            <option value="1">入门</option>
-            <option value="2" selected="selected">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="3"}
-            <option value="1">入门</option>
-            <option value="2">熟练</option>
-            <option value="3" selected="selected">精通</option>
-            {/case}
-            {/switch}
-            </select>
+            {/for}
+        </div> <!-- role -->
+        <hr />
+        <div id="tag">
+            <div class="layui-form-item">
+              <h3>个人标签</h3>
+              <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签</div>
+              <div class="layui-col-md12 layui-col-xs12">
+                {volist name="resultTags" id="tag"}
+                <input type="checkbox" name="tags[]" title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />
+                {/volist}
+              </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-5 col-xs-6 column">
-                <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control skill" placeholder="Skill Name" />
+        <hr />
+        <div id="exp">
+            <div class="layui-form-item">
+              <h3>项目/实践经历</h3>
+              <div class="layui-col-md12 layui-col-xs12">
+                <textarea class="form-control" name="exp">{$exp}</textarea>
+              </div>
             </div>
-            <div class="col-md-4 col-xs-4 column">
-            <select name="level3[]" class="form-control">
-            {switch name="roleInfo[2]['level']"}
-            {case value="1"}
-            <option value="1" selected="selected">入门</option>
-            <option value="2">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="2"}
-            <option value="1">入门</option>
-            <option value="2" selected="selected">熟练</option>
-            <option value="3">精通</option>
-            {/case}
-            {case value="3"}
-            <option value="1">入门</option>
-            <option value="2">熟练</option>
-            <option value="3" selected="selected">精通</option>
-            {/case}
-            {/switch}
-            </select>
-            </div>
-        </div> 
-        </div><!--role--> 
-        <script>
-            var n={$k};
-        </script>
-        {/volist}
-        <div class="col-md-12 col-xs-12">
-        <button type="button" onclick="appendRole()" class="btn btn-primary btn-block" id="add_role">添加角色</button>
         </div>
-        <br />
-        <div class="layui-form-item" id="tag">
-          <br />
-          <h3>个人标签</h3>    
-          <div class="col-md-12 col-xs-12 column">
-            <input type="checkbox" name="tags[]" title="web" value="1" {foreach $tags as $tag}{eq name="tag['id']" value="1"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="后端" value="2" {foreach $tags as $tag}{eq name="tag['id']" value="2"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="前端" value="3" {foreach $tags as $tag}{eq name="tag['id']" value="3"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="UI" value="4" {foreach $tags as $tag}{eq name="tag['id']" value="4"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="嵌入式" value="5" {foreach $tags as $tag}{eq name="tag['id']" value="5"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="通信" value="6" {foreach $tags as $tag}{eq name="tag['id']" value="6"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="iOS" value="7" {foreach $tags as $tag}{eq name="tag['id']" value="7"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="Android" value="8" {foreach $tags as $tag}{eq name="tag['id']" value="8"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="产品" value="9" {foreach $tags as $tag}{eq name="tag['id']" value="9"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="运营" value="10" {foreach $tags as $tag}{eq name="tag['id']" value="10"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="云计算" value="11" {foreach $tags as $tag}{eq name="tag['id']" value="11"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="大数据" value="12" {foreach $tags as $tag}{eq name="tag['id']" value="12"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="游戏开发" value="13" {foreach $tags as $tag}{eq name="tag['id']" value="13"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="算法" value="14" {foreach $tags as $tag}{eq name="tag['id']" value="14"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="机器学习" value="15" {foreach $tags as $tag}{eq name="tag['id']" value="15"}checked="checked"{/eq}{/foreach} /> 
-            <input type="checkbox" name="tags[]" title="运维" value="16" {foreach $tags as $tag}{eq name="tag['id']" value="16"}checked="checked"{/eq}{/foreach} />
-          </div>
-        </div>
-        <div class="layui-form-item" id="exp">
-          <h3>项目经历</h3>
-          <div class="col-md-12 col-xs-12">
-            <textarea class="form-control" name="exp">{$exp}</textarea>    
-          </div>    
-        </div> 
-        <button id="submit" type="submit" class="btn btn-primary">确认提交</button>        
+        <button id="submit" class="layui-btn btn-block" lay-submit>确认提交</button>
     </form>
 </div>
-<br />
 {/block}
 {block name="free_js"}
-
+{__block__}
 <script>
-    layui.use('form',function(){
-        var form = layui.form;
-    });
-    var n;
-    if(!n){n=0;}
-    if(n == 2){
-        $("#add_role").attr('disabled',true);
-    }
-    function appendRole()
-    {   
-        var txt=`
-            <div>
-            <hr />
-            <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">角色</label>
-            <div class="col-md-5 col-xs-5 column">
-            <select name="role[]" class="form-control">
-            <option value="1">开发&测试</option>
-            <option value="2">产品&文案</option>
-            <option value="3">设计&美工</option>
-            <option value="4">运营&市场</option>
-            </select>
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-              <button type="button" class="btn btn-warning delbutton">删除角色</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>  
-            <div class="col-md-5 col-xs-5 column">
-            <input name="skill1[]" type="text" class="form-control" id="skill" placeholder="Skill Name" />
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-            <select name="level1[]" class="form-control">
-            <option value="1">入门</option>
-            <option value="2">熟练</option>
-            <option value="3">精通</option>
-            </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>  
-            <div class="col-md-5 col-xs-5 column">
-                <input name="skill2[]" type="text" class="form-control" id="test" placeholder="Skill Name" />
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-                <select name="level2[]" class="form-control">
-                <option value="1">入门</option>
-                <option value="2">熟练</option>
-                <option value="3">精通</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-3 col-xs-3 control-label">技能</label>  
-            <div class="col-md-5 col-xs-5    column">
-                <input name="skill3[]" type="text" class="form-control" placeholder="Skill Name" />
-            </div>
-            <div class="col-md-4 col-xs-4 column">
-                <select name="level3[]" class="form-control">
-                <option value="1">入门</option>
-                <option value="2">熟练</option>
-                <option value="3">精通</option>
-                </select>
-            </div>
-        </div>
-        </div>`;
-        $("#add").before(txt);
-        n=n+1;
-        if(n == 2){
-            $("#add_role").attr('disabled',true);
-        }
-        layui.use('form', function(){
-        var form = layui.form;
-        form.render();
-        });
+layui.use('form',function(){
+    var form = layui.form;
 
-        $(document).ready(function(){
-            $(".delbutton").unbind('click');
-            $(".delbutton").on('click',function(){
-                $(this).parent().parent().parent().remove();
-                n=n-1;
-                console.log(n);
-                if(n <= 2){
-                    $("#add_role").attr("disabled",false);
-                }
-            });
-        });
-}
-
-$(".delbutton").unbind('click');
-$(".delbutton").on('click',function(){
-    $(this).parent().parent().parent().remove();
-    n=n-1;
-    console.log(n);
-    if(n <= 2){
-        $("#add_role").attr("disabled",false);
-    }
 });
-
 </script>
 {/block}

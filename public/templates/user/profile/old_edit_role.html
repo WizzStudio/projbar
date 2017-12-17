@@ -1,0 +1,260 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<br />
+<h1 align="center">编辑角色信息</h1>
+<div class="container">
+    <div><br /></div>
+    <h3>角色信息</h3>
+    <form action="{:url('edit_role_handle')}" method="post" role="form" id="role_form" class="layui-form form-horizontal">
+        {volist name="roleInfoList" id="roleInfo" key="k"}
+        <div id="arole">
+        <label class="control-label">角色{$k}(技能为必填项)</label>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+            <select name="role[]" class="form-control">
+                {volist name="roles" id="role"}
+                <option value="{$role.id}">{$role.name}</option>
+                {/volist}
+            </select>
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+              <button type="button" class="btn btn-warning delbutton">删除角色</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+            <input name="skill1[]" value="{$roleInfo[0]['name']}" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level1[]" class="form-control">
+            {switch name="roleInfo[0]['level']"}
+            {case value="1"}
+            <option value="1" selected="selected">入门</option>
+            <option value="2">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="2"}
+            <option value="1">入门</option>
+            <option value="2" selected="selected">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="3"}
+            <option value="1">入门</option>
+            <option value="2">熟练</option>
+            <option value="3" selected="selected">精通</option>
+            {/case}
+            {/switch}
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+                <input name="skill2[]" value="{$roleInfo[1]['name']}" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level2[]" class="form-control">
+            {switch name="roleInfo[1]['level']"}
+            {case value="1"}
+            <option value="1" selected="selected">入门</option>
+            <option value="2">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="2"}
+            <option value="1">入门</option>
+            <option value="2" selected="selected">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="3"}
+            <option value="1">入门</option>
+            <option value="2">熟练</option>
+            <option value="3" selected="selected">精通</option>
+            {/case}
+            {/switch}
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+                <input name="skill3[]" value="{$roleInfo[2]['name']}" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level3[]" class="form-control">
+            {switch name="roleInfo[2]['level']"}
+            {case value="1"}
+            <option value="1" selected="selected">入门</option>
+            <option value="2">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="2"}
+            <option value="1">入门</option>
+            <option value="2" selected="selected">熟练</option>
+            <option value="3">精通</option>
+            {/case}
+            {case value="3"}
+            <option value="1">入门</option>
+            <option value="2">熟练</option>
+            <option value="3" selected="selected">精通</option>
+            {/case}
+            {/switch}
+            </select>
+            </div>
+        </div> 
+        </div><!--role--> 
+        <script>
+            var n={$k};
+        </script>
+        {/volist}
+        <div class="col-md-12 col-xs-12" id="add_position">
+        <button type="button" onclick="appendRole()" class="btn btn-primary btn-block" id="add_role">添加角色</button>
+        </div>
+        <br />
+        <div class="layui-form-item" id="tag">
+          <br />
+          <h3>个人标签</h3>    
+          <div class="col-md-12 col-xs-12 column">
+            {volist name="resultTags" id="tag"}
+            <input type="checkbox" name="tags[]" title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />
+            {/volist}
+          </div>
+        </div>
+        <div class="layui-form-item" id="exp">
+          <h3>项目经历</h3>
+          <div class="col-md-12 col-xs-12">
+            <textarea class="form-control" name="exp">{$exp}</textarea>    
+          </div>    
+        </div>
+        <button id="submit" class="btn btn-primary">确认提交</button>        
+    </form>
+    <button id="testSkill" class="layui-btn">确认提交</button>            
+</div>
+<br />
+{/block}
+{block name="free_js"}
+
+<script>
+layui.use('form',function(){
+    var form = layui.form;
+    
+    $(".skill").on("change",function(){
+    if($(this).val()){
+        var optionStr = `
+        <option value="1">入门</option>
+        <option value="2">熟练</option>
+        <option value="3">精通</option>
+        `;
+        $(this).parent().next().find("select").attr("disabled",false);
+        $(this).parent().next().find("select").html(optionStr);
+        form.render(); 
+    }else{
+        var optionStr = `<option value="">请先填写技能名</option>`
+        $(this).parent().next().find("select").html(optionStr);
+        $(this).parent().next().find("select").attr("disabled",true);
+        form.render();
+    }
+  });
+
+  $("#submit").on('click',function(){
+    $(".skill").each(function(){
+        console.log($(this).val());
+        if(!$(this).val()){
+            layer.msg('请将技能信息填写完整！',{icon: 2,time:2000,offset:['40vh']});
+        }
+    });
+  });
+});
+    var n;
+    if(!n){n=0;}
+    if(n == 2){
+        $("#add_role").attr('disabled',true);
+    }
+    function appendRole()
+    {   
+        var newRole = `
+        <div>
+        <label class="control-label">角色</label>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+            <select name="role[]" class="form-control">
+                {volist name="roles" id="role"}
+                <option value="{$role.id}">{$role.name}</option>
+                {/volist}
+            </select>
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+              <button type="button" class="btn btn-warning delbutton">删除角色</button>
+            </div>
+        </div>
+        <label class="control-label">技能</label>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+            <input name="skill1[]" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level1[]" class="form-control">
+                <option value="1" selected="selected">入门</option>
+                <option value="2">熟练</option>
+                <option value="3">精通</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+                <input name="skill2[]" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level2[]" class="form-control">
+                <option value="1" selected="selected">入门</option>
+                <option value="2">熟练</option>
+                <option value="3">精通</option>
+            </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-5 col-xs-6 column">
+                <input name="skill3[]" type="text" class="form-control skill" placeholder="技能名称" />
+            </div>
+            <div class="col-md-4 col-xs-4 column">
+            <select name="level3[]" class="form-control">
+                <option value="1" selected="selected">入门</option>
+                <option value="2">熟练</option>
+                <option value="3">精通</option>
+            </select>
+            </div>
+        </div> 
+        </div>
+        `;
+        $("#add_position").before(newRole);
+        n=n+1;
+        if(n == 2){
+            $("#add_role").attr('disabled',true);
+        }
+        layui.use('form', function(){
+        var form = layui.form;
+        form.render();
+        });
+
+        $(document).ready(function(){
+            $(".delbutton").unbind('click');
+            $(".delbutton").on('click',function(){
+                $(this).parent().parent().parent().remove();
+                n=n-1;
+                console.log(n);
+                if(n <= 2){
+                    $("#add_role").attr("disabled",false);
+                }
+            });
+        });
+}
+
+$(".delbutton").unbind('click');
+$(".delbutton").on('click',function(){
+    $(this).parent().parent().parent().remove();
+    n=n-1;
+    console.log(n);
+    if(n <= 2){
+        $("#add_role").attr("disabled",false);
+    }
+});
+
+</script>
+{/block}

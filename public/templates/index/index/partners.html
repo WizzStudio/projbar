@@ -5,41 +5,71 @@
   <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
-      <div style="height:200px;padding:10px;background-color: #3a3744;opacity: 0.86;color:#eee;">                     
-        <p>{$user['nickname']}</p>
-        <p>性别：{switch name="user.sex"}
-            {case value="1"}男{/case}
-            {case value="2"}女{/case}
-            {default /}未知
-            {/switch}
+      <div style="height:270px;padding:10px;background-color: #444;opacity: 0.86;color:#eee;">                     
+        <p>{$user['nickname']}&emsp;
+        {switch name="user.sex"}
+        {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
+        {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
+        {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
+        {/switch}
         </p>
-        <p>标签：
-            {volist name="user['tags']" id="tag"}
-            {$tag.name}/
-            {/volist}
-        </p>
-            {volist name="user['role']" id="role" key="i"}
-            <p>角色：
-                {switch name="key"}
-                {case value="1"}开发&测试{/case}
-                {case value="2"}产品&文案{/case}
-                {case value="3"}设计&美工{/case}
-                {case value="4"}运营&市场{/case}
-                {default /}暂无
+        <br />
+        <p>{volist name="user['tags']" id="tag" key="k"}
+                <span 
+                {switch name="k"}
+                {case value="1"}class="layui-bg-red"{/case}
+                {case value="2"}class="layui-bg-orange"{/case}
+                {case value="3"}class="layui-bg-green"{/case}
+                {case value="4"}class="layui-bg-cyan"{/case}
+                {case value="5"}class="layui-bg-black"{/case}
+                {case value="6"}class="layui-bg-gray"{/case}
+                {default/}black
                 {/switch}
-            </p>
-                {volist name="role" id="level"}
-                <p>{$key}=>
-                    {switch name="level"}
-                    {case value="1"}入门{/case}
-                    {case value="2"}熟练{/case}
-                    {case value="3"}精通{/case}
-                    {/switch}
-                </p>
+                style="color:#eee;
+                ;padding:5px;">{$tag.name}</span>
                 {/volist}
-            {/volist}
-            <p>
-                <a class="btn btn-primary" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+        </p><br />
+        {volist name="user['role']" id="role" key="i"}
+        <p>角色：{$key}</p>
+        <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
+            <colgroup>
+              <col width="100">
+              <col width="900">
+            </colgroup>
+            <thead>
+            </thead>
+            <tbody>
+              {volist name="role" id="level"}
+              <tr height="10">
+                <td style="color:#eee;">{$key}</td>
+                <td>
+                    {switch name="level"}
+                    {case value="1"}
+                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                        <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
+                    </div>
+                    {/case}
+                    {case value="2"}
+                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="2/3"></div>
+                    </div>
+                    {/case}
+                    {case value="3"}
+                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                        <div class="layui-progress-bar" lay-percent="100%"></div>
+                    </div>
+                    {/case}
+                    {default /}
+                    {/switch}
+                </td>
+              </tr>
+              {/volist}
+            </tbody>
+        </table>
+
+        {/volist}
+            <p align="right">
+                <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>
       </div>
     </div>
@@ -51,7 +81,7 @@
 {block name="free_js"}
 {__block__}
 <script>
-layui.use(['form','layer'],function(){
+layui.use(['form','layer','element'],function(){
     var form = layui.form;
     var layer = layui.layer;
 });

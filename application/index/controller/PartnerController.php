@@ -38,16 +38,18 @@ class PartnerController extends BaseController
                 $user['tags'][] = $tag['name'];
             }
             $skillSelect = $userSkillQuery
+                ->alias('a')
+                ->join('__ROLE__ b','a.role_id=b.id')
                 ->where(['user_id' => $user['id']])
+                ->field('a.*,b.name as role_name')
                 ->select();
             foreach($skillSelect as $skill){
-                $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                $user['role'][$skill['role_name']][$skill['name']] = $skill['level'];
             }
-            array_pop($user['role']);
+            $num = count($user['role']);
+            if($num > 1) array_pop($user['role']);
             $userList[] = $user;
         }
-        // print_r($userList);
-        // return ;
         $this->assign([
             "userBase" => $userBase,
             "userList" => $userList,
@@ -83,9 +85,10 @@ class PartnerController extends BaseController
                 }
                 $roleIds = array_unique($roleIds);
                 foreach($roleIds as $roleId){
+                    $roleName = Db::name("role")->where('id',$roleId)->value('name');                    
                     foreach($userSkillList as $skill){
                         if($skill['role_id'] == $roleId){
-                            $roleInfo[$roleId][] = $skill;
+                            $roleInfo[$roleName][] = $skill;
                         }
                     }
                 }
@@ -98,7 +101,12 @@ class PartnerController extends BaseController
             ->select();
             $exp = $expQuery->where('user_id',$id)->find();
             $resultMyProjects = [];
-            $myProjects = $projQuery->where('leader_id',$userId)->field('id,cate_id,name')->select();
+            $myProjects = $projQuery
+                ->alias('a')
+                ->join('__CATEGORY__ b','a.cate_id=b.id')
+                ->where('leader_id',$userId)
+                ->field('a.id,a.cate_id,a.name,b.name as cate_name')
+                ->select();
             foreach($myProjects as $project){
                 //查询每个项目今日是否已经邀请该用户
                 $project['has_invite_today'] = bar_has_action_today($userId,$id,$project['id'],2);
@@ -160,7 +168,8 @@ class PartnerController extends BaseController
                         ->select();
                     if(!$skills) continue;
                     foreach($skills as $skill){
-                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                        $roleName = Db::name("role")->where('id',$skill['role_id'])->value('name');
+                        $user['role'][$roleName][$skill['name']] = $skill['level'];
                     }
                     $num = count($user['role']);
                     if($num > 1) array_pop($user['role']);

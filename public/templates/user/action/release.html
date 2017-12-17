@@ -2,16 +2,16 @@
 {block name="main"}
 <br>
 <h1 align="center">发布项目</h1>
-<div class="container" style="padding:10px;">
+<div class="layui-container" style="padding:20px;">
 <form class="layui-form" action="{:url('release_handle')}" method="post">
   <div class="layui-form-item">
       <h3>基础信息</h3><br />
       <label class="control-label">项目名称</label>
-      <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="form-control" />
+      <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="form-control" lay-verify="required" />
     </div>
     <div class="layui-form-item">
       <label class="control-label">项目类型</label>
-        <select name="category">
+        <select name="category" lay-verify="required">
           <option value="">-- 请选择 --</option>
           {volist name="cateList" id="cates"}
           <optgroup label="{$key}"></optgroup>
@@ -20,10 +20,6 @@
             {/volist}
           {/volist}
         </select>
-    </div>
-    <div class="layui-form-item">
-      <label class="control-label">联系邮箱</label>
-      <input type="text" name="email" autocomplete="off" placeholder="请填写联系邮箱" class="layui-input" />
     </div>
     <div class="layui-form-item">
       <label class="control-label">项目简介</label>
@@ -44,7 +40,7 @@
     <div class="layui-form-item">
       <div class="col-lg-8 col-xs-8">
       <label class="control-label">角色1</label>
-      <select name="role[]" class="form-inline form-control">
+      <select name="role[]" class="form-inline form-control" lay-verify="required">
         <option value="" selected="selected">-- 请选择角色 --</option>
         {volist name="roles" id="role"}
         <option value="{$role.id}">{$role.name}</option>
@@ -56,43 +52,34 @@
         <button type="button" class="btn btn-warning form-control delete">删除角色</button>
       </div>
     </div>
-    <label class="control-label">需求技能</label>    
+    <label class="control-label">需求技能(必填)</label>    
     <div class="layui-form-item">
       <div class="col-lg-6 col-xs-7">
-        <input type="text" name="skill1[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+        <input lay-verify="required" type="text" name="skill1[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
       </div>
       <div class="col-lg-4 col-xs-5">
         <select name="level1[]" class="form-control level">
-          <option value="" disabled=true selected="selected">空</option>
-          <option value="1">入门</option>
-          <option value="2">熟练</option>
-          <option value="3">精通</option>
+          <option value="">请先填写技能名</option>
         </select>
       </div>
     </div>
     <div class="layui-form-item">
         <div class="col-lg-6 col-xs-7">
-            <input type="text" name="skill2[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+            <input lay-verify="required" type="text" name="skill2[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
         </div>
         <div class="col-lg-4 col-xs-5">
             <select name="level2[]" class="form-control level">
-              <option value="" disabled=true selected="selected">空</option>
-              <option value="1">入门</option>
-              <option value="2">熟练</option>
-              <option value="3">精通</option>
+              <option value="">请先填写技能名</option>
             </select>
         </div>
     </div>
     <div class="layui-form-item">
         <div class="col-lg-6 col-xs-7">
-            <input type="text" name="skill3[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+            <input lay-verify="required" type="text" name="skill3[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
         </div>
         <div class="col-lg-4 col-xs-5 column">
             <select name="level3[]" class="form-control level">
-              <option value="" disabled=true selected="selected">空</option>
-              <option value="1">入门</option>
-              <option value="2">熟练</option>
-              <option value="3">精通</option>
+              <option value="">请先填写技能名</option>
             </select>
         </div>
     </div>
@@ -106,8 +93,9 @@
     <br /> <hr />
     <div class="col-md-2">&nbsp;</div>
     <div class="col-md-8 col-xs-12">
-      <button class="layui-btn btn-block" lay-submit lay-filter="formDemo">立即提交</button>
+      <button class="layui-btn btn-block" lay-submit lay-filter="formDemo">立即提交(发布后不可修改)</button>
     </div>
+    <br />
 </form>
 </div>
 <br />
@@ -115,14 +103,14 @@
 {block name="free_js"}
 {__block__}
 <script>
-layui.use('form',function(){
+layui.use(['form','layer'],function(){
   var form = layui.form;
+  var layer = layui.layer;
+  form.render();
   var n=2;
 
-  $(document).ready(function(){
-    $(".level").attr("disabled",true);
-    form.render();
-  });
+  $(".level").attr("disabled",true);
+  form.render();
 
   $("#add").on('click',function(){
     var appendTxt = `
@@ -130,8 +118,8 @@ layui.use('form',function(){
         <div class="layui-form-item">
           <div class="col-lg-8 col-xs-8">
           <label class="control-label">角色${n}</label>
-          <select name="role[]" class="form-inline form-control">
-              <option value="" selected="selected">-- 请选择角色 --</option>
+          <select lay-verify="required" name="role[]" class="form-inline form-control">
+              <option value="" selected="selected" >-- 请选择角色 --</option>
               {volist name="roles" id="role"}
               <option value="{$role.id}">{$role.name}</option>
               {/volist}
@@ -142,43 +130,34 @@ layui.use('form',function(){
             <button type="button" class="btn btn-warning form-control delete">删除角色</button>
           </div>
         </div>
-        <label class="control-label">需求技能</label>    
+        <label class="control-label">需求技能(必填)</label>    
         <div class="layui-form-item">
           <div class="col-lg-6 col-xs-7">
-            <input type="text" name="skill1[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+            <input lay-verify="required" type="text" name="skill1[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
           </div>
           <div class="col-lg-4 col-xs-5">
-            <select name="level1[]" disabled=true class="form-control level">
-              <option value="" selected="selected">空</option>
-              <option value="1">入门</option>
-              <option value="2">熟练</option>
-              <option value="3">精通</option>
+            <select lay-verify="required" name="level1[]" disabled=true class="form-control level">
+              <option value="">请先填写技能名</option>
             </select>
           </div>
         </div>
         <div class="layui-form-item">
             <div class="col-lg-6 col-xs-7">
-                <input type="text" name="skill2[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+                <input lay-verify="required" type="text" name="skill2[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
             </div>
             <div class="col-lg-4 col-xs-5">
-                <select name="level2[]" disabled=true class="form-control level">
-                  <option value="" selected="selected">空</option>
-                  <option value="1">入门</option>
-                  <option value="2">熟练</option>
-                  <option value="3">精通</option>
+                <select lay-verify="required" name="level2[]" disabled=true class="form-control level">
+                  <option value="">请先填写技能名</option>
                 </select>
             </div>
         </div>
         <div class="layui-form-item">
             <div class="col-lg-6 col-xs-7">
-                <input type="text" name="skill3[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
+                <input lay-verify="required" type="text" name="skill3[]" class="layui-input skill" autocomplete="off" placeholder="Skill name" />
             </div>
             <div class="col-lg-4 col-xs-5 column">
-                <select name="level3[]" class="form-control level">
-                  <option value="" disabled=true selected="selected">空</option>
-                  <option value="1">入门</option>
-                  <option value="2">熟练</option>
-                  <option value="3">精通</option>
+                <select lay-verify="required" name="level3[]" class="form-control level">
+                  <option value="">请先填写技能名</option>
                 </select>
             </div>
         </div>
@@ -192,9 +171,17 @@ layui.use('form',function(){
     
     $(".skill").on("change",function(){
       if($(this).val()){
+          var optionStr = `
+          <option value="1">入门</option>
+          <option value="2">熟练</option>
+          <option value="3">精通</option>
+          `;
           $(this).parent().next().find("select").attr("disabled",false);
+          $(this).parent().next().find("select").html(optionStr);
           form.render(); 
       }else{
+          var optionStr = `<option value="">请先填写技能名</option>`
+          $(this).parent().next().find("select").html(optionStr);
           $(this).parent().next().find("select").attr("disabled",true);
           form.render();
       }
@@ -215,19 +202,21 @@ layui.use('form',function(){
 
   $(".skill").on("change",function(){
     if($(this).val()){
+        var optionStr = `
+        <option value="1">入门</option>
+        <option value="2">熟练</option>
+        <option value="3">精通</option>
+        `;
         $(this).parent().next().find("select").attr("disabled",false);
-        layui.use('form', function(){
-        var form = layui.form;
-        form.render();
-        }); 
+        $(this).parent().next().find("select").html(optionStr);
+        form.render(); 
     }else{
+        var optionStr = `<option value="">请先填写技能名</option>`
+        $(this).parent().next().find("select").html(optionStr);
         $(this).parent().next().find("select").attr("disabled",true);
-        layui.use('form', function(){
-        var form = layui.form;
         form.render();
-        });
-      }
-    });
+    }
+  });
 
     $(".delete").unbind('click');
     $(".delete").on('click',function(){

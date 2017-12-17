@@ -70,7 +70,7 @@ class IndexController extends BaseController
                     }
                     $roleIds = array_unique($roleIds);
                     foreach($roleIds as $roleId){
-                        $roleName = Db::name("role")->where('id',$roleId)->value('name as cate_name');
+                        $roleName = Db::name("role")->where('id',$roleId)->value('name as role_name');
                         foreach($projSkillList as $skill){
                             if($skill['role_id'] == $roleId){
                                 $roleInfo[$roleName][] = $skill;
@@ -222,9 +222,9 @@ class IndexController extends BaseController
                     ->where('user_id',$user['id'])
                     ->select();
                 foreach($skills as $skill){
-                    $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                    $roleName = Db::name("role")->where('id',$skill['role_id'])->value('name');
+                    $user['role'][$roleName][$skill['name']] = $skill['level'];
                 }
-                array_pop($user['role']);
                 $userList[] = $user;
             }
             $this->assign([

@@ -38,3 +38,7 @@
     opacity: 0.86;
     color: #eee;
 }
+.mybox{
+    display: flex;
+    flex-direction: column-reverse;
+}

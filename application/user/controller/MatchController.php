@@ -103,9 +103,9 @@ class MatchController extends UserBaseController
                     ->where(['user_id' => $user['id']])
                     ->select();
                     foreach($skillSelect as $skill){
-                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
+                        $roleName = Db::name('role')->where('id',$skill['role_id'])->value('name');
+                        $user['role'][$roleName][$skill['name']] = $skill['level'];
                     }
-                    array_pop($user['role']);
                     $userList[] = $user;
                 }
             }else{
