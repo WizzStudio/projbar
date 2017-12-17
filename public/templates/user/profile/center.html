@@ -9,13 +9,14 @@
     color:grey!important;
 }
 .div-base{
-    background-color:#444!important;
+    background-color:#444;
     color: #eee;
 }
 </style>
 <br /><h1 align="center">个人中心</h1><br />
 <div class="layui-container-fluid">
-    <div class="div-base" style="padding:20px;">
+    <div style="background-size:contain;
+    background-repeat:round;color:#eee;padding:20px;background-image:url(/static/images/proj_images/center.jpg)">
         <p class="p-base">用户名: {$user['username']}
           性别: {switch name="user.sex"}
           {case value="1"}男{/case}
