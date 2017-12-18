@@ -97,12 +97,17 @@ h3{
   {eq name="has_join" value="1"}
   <h3>成员信息(项目内人员可见)</h3><br />
   {volist name="partners" id="partner"}
-   <p><b><a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a></b></p>
+   <p><b>       
+       <a href={:url('index/partner/view',"id=$partner[id]")}>
+        {$partner.nickname}{eq name="partner.is_leader" value="1"}（发起人）{/eq} 
+        </a>
+    </b></p>
    <p>性别：{switch name="partner.sex"}
         {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
         {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
         {default /}
-        {/switch}</p>
+        {/switch}      
+    </p>
    <p>QQ：{$partner.qq}</p>
    <p>Email：{$partner.email}</p>
   {/volist}

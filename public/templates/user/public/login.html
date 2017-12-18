@@ -19,7 +19,8 @@
             <img src="{:captcha_src()}" alt="点击更换" title="点击更换" onclick="this.src='{:captcha_src()}?time='+Math.random()" class="captcha" name="codeimage" id="codeimage" border="0"/>
         </div>
         </div>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <button type="submit" class="btn btn-primary btn">登录</button>&emsp;
+        <a class="btn btn-success" href="{:url('user/public/register')}">还没有账号？去注册</a>
     </form>
 </div>
 {/block}

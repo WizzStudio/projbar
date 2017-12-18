@@ -90,6 +90,13 @@ class IndexController extends BaseController
                         ->where('proj_id',$id)
                         ->join('__USER__ b','a.user_id=b.id')
                         ->select();
+                        foreach($partners as $partner){
+                            $partner['is_leader'] = 0;
+                            if($partner['id'] == $projBase['leader_id']){
+                                $partner['is_leader'] = 1;
+                            }
+                            $resultPartners[] = $partner;
+                        }
                     }else{
                         $has_apply_today = bar_has_action_today($userId,$leader['id'],$id,1);
                     }
@@ -103,7 +110,7 @@ class IndexController extends BaseController
                         'has_apply_today' => $has_apply_today,
                         'has_join' => $has_join,
                         'leader' => $leader,
-                        'partners' => $partners
+                        'partners' => $resultPartners
                     ]);
                     return $this->fetch();
                 }else{
