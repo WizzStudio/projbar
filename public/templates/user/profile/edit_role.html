@@ -47,7 +47,7 @@
         <div id="tag">
             <div class="layui-form-item">
               <h3>个人标签</h3>
-              <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签</div>
+              <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签，这将成为自动匹配的重要依据</div>
               <div class="layui-col-md12 layui-col-xs12">
                 {volist name="resultTags" id="tag"}
                 <input type="checkbox" name="tags[]" title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />

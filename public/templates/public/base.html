@@ -115,7 +115,7 @@
           });
 
           $("#logout").on('click',function(){
-            layer.confirm('您确定要注销登录吗？',{icon: 3},function(){
+            layer.confirm('您确定要注销登录吗？',{icon: 3,offset:['40vh']},function(){
               window.location.href="{:url('user/profile/logout')}";
             });
           });

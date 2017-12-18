@@ -28,6 +28,7 @@
     <hr />
     <div class="layui-form-item" id="tag">
       <h3>项目标签</h3> 
+      <div class="layui-word-aux">您最多能选择六个标签,这将成为自动匹配的重要依据</div>      
       <div class="col-md-8 col-xs-12 column" pane>
         {volist name="tags" id="tag"}
         <input type="checkbox" name="tags[]" value="{$tag.id}" title="{$tag.name}" />

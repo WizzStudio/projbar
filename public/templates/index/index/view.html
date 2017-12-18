@@ -95,7 +95,7 @@ h3{
   <!-- </div> -->
   <br />
   {eq name="has_join" value="1"}
-  <h3>成员信息(项目内人员可见)</h3><br />
+  <h3>成员通讯信息(项目内人员可见)</h3><br />
   {volist name="partners" id="partner"}
    <p><b>       
        <a href={:url('index/partner/view',"id=$partner[id]")}>
@@ -118,6 +118,11 @@ h3{
     <button class="btn btn-success btn-block" id="apply">申请加入</button>
     {/eq}
   {/eq}
+  
+  {eq name="isLeader" value="1"}
+  <br />
+  <button class="btn btn-danger btn-block" id="delete">删除该项目以及相关信息</button>
+  {/eq}
   <br />
 </div>
 {/block}
@@ -131,12 +136,12 @@ layui.use(['layer','element'],function(){
         layer.confirm("确认要申请加入该项目吗？",{icon: 3,offset:['30vh']},function(index){
             $("#apply").attr("disabled","true");
             $("#apply").text("今日已发出申请");
+            layer.close(index);
+            layer.msg('发起申请成功！',{icon: 1, time:2000,offset:['30vh']});
             $.get(
                 '{:url("user/action/apply","id=$projBase[id]")}',
                 function(data,status){
-                    if(data == 0){
-                        layer.msg('发起申请成功！',{icon: 1, time:2000,offset:['30vh']});
-                    }else if(data == 1){
+                    if(data == 1){
                         layer.msg('发起申请失败',{icon: 2,time:2000,offset:['30vh']});
                     }else if(data == 2){
                         layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4,offset:['30vh']});
@@ -147,8 +152,34 @@ layui.use(['layer','element'],function(){
                     }
                 }
             );
-            layer.close(index);
         });
+    }); //apply.click
+
+    $("#delete").on('click',function(){
+        layer.confirm(
+            "你确定要删除该项目以及相关信息吗？",
+            {icon: 3,offset:['40vh']},
+            function(index){
+                layer.close(index);
+                layer.msg(
+                    '已删除该项目，祝您在新的起点能走的更好。',
+                    {icon: 1, time:1500,offset:['40vh']},
+                    function(){
+                        window.location.href="{:url('user/profile/center')}";
+                    }
+                );
+
+                $.get(
+                    '{:url("user/action/delete","id=$projBase[id]")}',
+                    function(data,status){
+                        console.log(data);
+                        if(data != 0){
+                            layer.msg('删除项目出现问题，错误码：'+data,{icon: 2,time:2000,offset:['30vh']});
+                        }
+                    }  
+                );
+            }
+        );
     });
 });
 </script>

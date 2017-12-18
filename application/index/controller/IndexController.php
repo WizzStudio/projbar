@@ -48,6 +48,8 @@ class IndexController extends BaseController
                 ->field('a.*,b.name as cate_name')
                 ->where('a.id',$id)
                 ->find();
+            $isLeader = 0;
+            if($userId == $projBase['leader_id'])$isLeader = 1;
             $has_join = 0;
             $has_apply_today = 0;
             if($userId == $projBase['leader_id']){
@@ -82,6 +84,7 @@ class IndexController extends BaseController
                     ->find();
                     $userProjFind = $userProjQuery->where('user_id',$userId)->where('proj_id',$id)->find();
                     $partners = [];
+                    $resultPartners = [];
                     if($userProjFind){
                         $has_join = 1;
                         $partners = $userProjQuery
@@ -109,6 +112,7 @@ class IndexController extends BaseController
                         'roleInfoList' => $roleInfo,
                         'has_apply_today' => $has_apply_today,
                         'has_join' => $has_join,
+                        'isLeader' => $isLeader,
                         'leader' => $leader,
                         'partners' => $resultPartners
                     ]);
@@ -198,7 +202,7 @@ class IndexController extends BaseController
                     ->join('__USER_TAG__ b','a.id=b.user_id')
                     ->distinct(true)
                     ->order('id','desc')
-                    ->paginate(3,false,[
+                    ->paginate(6,false,[
                         'query' => request()->param()
                     ]);
             }else{
@@ -208,7 +212,7 @@ class IndexController extends BaseController
                     ->where('a.username|a.nickname','like','%'.$getKey.'%')
                     ->distinct(true)
                     ->order('id','desc')
-                    ->paginate(1,false,[
+                    ->paginate(6,false,[
                         'query' => request()->param()
                     ]);
             }
@@ -285,7 +289,7 @@ class IndexController extends BaseController
             ->join('__CATEGORY__ b','a.cate_id=b.id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name')
             ->distinct('a.id')
-            ->paginate(3,false,[
+            ->paginate(9,false,[
                 'query' => request()->param()
             ]);
         }else if(!$cid && $rid){
@@ -296,7 +300,7 @@ class IndexController extends BaseController
             ->join('__PROJ_SKILL__ b','a.id=b.proj_id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.role_id,c.name as cate_name')
             ->distinct('a.id')
-            ->paginate(3,false,[
+            ->paginate(9,false,[
                 'query' => request()->param()
             ]);
         }else if($cid && $rid){

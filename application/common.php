@@ -508,3 +508,13 @@ function bar_get_user_token($uid)
         return false;
     }
 }
+
+/**
+ * 查看用户是否今日是否还能发布项目
+ * @param int $userId 尝试发布项目的用户ID
+ */
+function bar_get_release_permission($userId)
+{
+    $projQuery = Db::name("project");
+    
+}

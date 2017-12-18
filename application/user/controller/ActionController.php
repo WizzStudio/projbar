@@ -54,6 +54,7 @@ class ActionController extends UserBaseController
         $baseInfo['intro'] = $post['intro'];
         $baseInfo['leader_id'] = $userId;
         $baseInfo['image'] = bar_get_proj_image($imageId);
+        $baseInfo['create_time'] = time();
 
         $projectModel = new Project();
         $log = $projectModel->doRelease($data,$tags,$baseInfo,$roleNumber);
@@ -350,6 +351,31 @@ class ActionController extends UserBaseController
         }else{
             // $this->error("未受理的请求");
             return 4;
+        }
+    }
+
+    /**
+     * 删除项目(发起人权利)
+     */
+    public function delete($id=''){
+        $userId = bar_get_user_id();
+        $projQuery = Db::name("project");
+        $userProjQuery = Db::name("user_proj");
+        $projTagQuery = Db::name("proj_tag");
+        $projSkillQuery = Db::name("proj_skill");
+        
+        $proj = $projQuery->where('id',$id)->find();
+        if($userId != $proj['leader_id']){
+            return 1;//没有权利！
+        }
+        $projResult = $projQuery->where('id',$id)->delete();
+        $projTagResult = $projTagQuery->where('proj_id',$id)->delete();
+        $projSkillResult = $projSkillQuery->where('proj_id',$id)->delete();
+        $userProjResult = $userProjQuery->where('proj_id',$id)->delete();
+        if($projResult && $projTagQuery && $projSkillResult && $userProjResult){
+            return 0;
+        }else{
+            return 2;
         }
     }
 
