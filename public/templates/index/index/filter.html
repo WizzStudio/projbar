@@ -6,7 +6,7 @@
     <select name="cate1" id="cate1" lay-filter="cate1">
         <option value="">性质</option>
         {volist name="firstCates" id="firstCate"}
-        <option value="{$firstCate.id}">{$firstCate.name}</option>
+        <option value="{$firstCate.id}" {eq name="cateOne" value="$firstCate.id"}selected="selected"{/eq}>{$firstCate.name}</option>
         {/volist}
     </select>
     </div>
@@ -19,7 +19,7 @@
     <select name="role" id="role" lay-filter="typeRole">
         <option value="">角色</option>
         {volist name="roles" id="role"}
-        <option value="{$role.id}">{$role.name}</option>
+        <option value="{$role.id}" {eq name="rid" value="$role.id"}selected="selected"{/eq}>{$role.name}</option>
         {/volist}
     </select>
     </div>
@@ -35,10 +35,14 @@
     <div class="layui-row layui-col-space12" id="main" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
         {volist name="projList" id="proj"}
         <div class="layui-col-md4 layui-col-xs12">
-            <div class="proj" style="background-image:url({$proj.image});"> 
-            <p><b>{$proj.cate_name} : {$proj.name}</b></p>
-            <p>{$proj.intro}</p>
-            <p><a style="color:#fff;" href={:url("index/index/view","id=$proj[id]")}>查看详情 »»»</a>&emsp;&emsp;</p>
+            <div class="layui-box">
+                <a href={:url("index/index/view","id=$proj[id]")} style="color:#fff;">                        
+                    <div class="proj" style="background-image:url({$proj.image});"> 
+                    <p><b>{$proj.cate_name} : {$proj.name}</b></p>
+                    <p>{$proj.intro}</p>
+                    <!-- <p>查看详情 »»»&emsp;&emsp;</p> -->
+                    </div>
+                </a>        
             </div>
         </div>
         {/volist}
@@ -52,6 +56,20 @@
 layui.use('form',function(){
     var form = layui.form;
     console.log(1);
+    if($("#cate1").val()){
+        data = $("#cate1").val();
+        $.get(
+            "{:url('index/index/getChildType')}"+"?pid="+data,
+            function(data){
+                var optionStr = "";
+                $.each(data,function(i,item){
+                optionStr += "<option value='"+item.id+"'>"+item.name+"</option>";
+                });
+                $("#cate2").html('<option value="">次分类</option>'+optionStr);
+                form.render();
+            }
+        );
+    }
     form.on('select(cate1)',function(data){
         console.log(1);
         if(data.value){
@@ -72,7 +90,7 @@ layui.use('form',function(){
 
     form.on('select(typeRole)',function(data){
         $("#filter_icon").attr('style',"color: #ef5b25");
-    }
+    });
 });
 </script>
 {/block}

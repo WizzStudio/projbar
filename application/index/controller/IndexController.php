@@ -271,6 +271,7 @@ class IndexController extends BaseController
         $getData = $this->request->get();
         $rid = isset($getData['role'])?$getData['role']:0;
         $cid = isset($getData['cate1'])?$getData['cate1']:0;
+        $cateOne = isset($getData['cate1'])?$getData['cate1']:'';
         $projQuery = Db::name("project");
         $cateQuery = Db::name("category");
         $roleQuery = Db::name("role");
@@ -319,6 +320,7 @@ class IndexController extends BaseController
             ]);
         }
         $this->assign([
+            'cateOne' => $cateOne,
             'firstCates' => $firstCates,
             'roles' => $roles,
             'cid' => $cid,

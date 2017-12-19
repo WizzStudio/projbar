@@ -38,11 +38,15 @@
     <div class="layui-row layui-col-space12" id="main" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
         {volist name="projList" id="proj"}
         <div class="layui-col-md4 layui-col-xs12">
+        <div class="layui-box">
+        <a href={:url("index/index/view","id=$proj[id]")} style="color:#fff;">                        
           <div class="proj" style="background-image:url({$proj.image});"> 
             <p><b>{$proj.cate_name} : {$proj.name}</b></p>
             <p>{$proj.intro}</p>
-            <p><a style="color:#fff;" href={:url("index/index/view","id=$proj[id]")}>查看详情 »»»</a>&emsp;&emsp;</p>
+            <!-- <p>查看详情 »»»&emsp;&emsp;</p> -->
           </div>
+        </a>        
+        </div>
         </div>
         {/volist}
     </div>

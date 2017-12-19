@@ -3,6 +3,7 @@ namespace app\user\controller;
 
 use think\Validate;
 use think\Db;
+use think\Request;
 use app\common\model\Project;
 use app\common\controller\UserBaseController;
 
@@ -34,9 +35,16 @@ class ActionController extends UserBaseController
     /**
      * 发布项目处理
      */
-    public function release_handle()
-    {
-        $post = $this->request->post();
+    public function release_handle(Request $request)
+    {   
+        $validate = new Validate([
+            'name' => 'require|min:2|max:25',
+            'intro' => 'require|max:160'
+        ]);
+        $post = $request->post();
+        if(!$validate->check($post)){
+            $this->error($validate->getError());
+        }        
         $roleNumber = count($post['role']);
         $userId = bar_get_user_id();
         for($i=0;$i<$roleNumber;$i++){
@@ -45,12 +53,11 @@ class ActionController extends UserBaseController
             $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
-        $tags = $post['tags'];
+        $tags = isset($post['tags'])?$post['tags']:[];
         $imageId = rand(1,9);
 
         $baseInfo['name'] = $post['name'];
         $baseInfo['cate_id'] = $post['category'];
-        $baseInfo['email'] = $post['email'];
         $baseInfo['intro'] = $post['intro'];
         $baseInfo['leader_id'] = $userId;
         $baseInfo['image'] = bar_get_proj_image($imageId);
@@ -94,7 +101,7 @@ class ActionController extends UserBaseController
             $projBase = $projQuery->where('id',$id)->find();
             $has_apply_today = bar_has_action_today($userId,$projBase['leader_id'],$projBase['id'],1);
             if($has_apply_today){
-                return 3;
+                return 8;
             }
             if($projBase){
                 $leaderId = $projBase['leader_id'];
@@ -357,7 +364,8 @@ class ActionController extends UserBaseController
     /**
      * 删除项目(发起人权利)
      */
-    public function delete($id=''){
+    public function delete($id){
+        if($id == '') return -1;
         $userId = bar_get_user_id();
         $projQuery = Db::name("project");
         $userProjQuery = Db::name("user_proj");
@@ -366,16 +374,100 @@ class ActionController extends UserBaseController
         
         $proj = $projQuery->where('id',$id)->find();
         if($userId != $proj['leader_id']){
-            return 1;//没有权利！
+            return -2;//没有权利！
         }
+        $projTagFind = $projTagQuery->where('proj_id',$id)->find();
         $projResult = $projQuery->where('id',$id)->delete();
-        $projTagResult = $projTagQuery->where('proj_id',$id)->delete();
-        $projSkillResult = $projSkillQuery->where('proj_id',$id)->delete();
-        $userProjResult = $userProjQuery->where('proj_id',$id)->delete();
-        if($projResult && $projTagQuery && $projSkillResult && $userProjResult){
-            return 0;
+        if($projResult){
+            $projTagResult = $projTagQuery->where('proj_id',$id)->delete();
+            if($projTagResult || !$projTagFind){
+                $projSkillResult = $projSkillQuery->where('proj_id',$id)->delete();
+                $userProjResult = $userProjQuery->where('proj_id',$id)->delete();
+                if($projSkillResult && $userProjResult){
+                    return 0;
+                }else{
+                    return 3;
+                }
+            }else{
+                return 2;
+            }
         }else{
-            return 2;
+            return 1;
+        }
+    }
+
+    /**
+     * 修改项目信息(TODO)分离一下，在模型层处理数据
+     */
+    public function edit($id='')
+    {  
+        if($id='') return -1;
+        $userId = bar_get_user_id();
+        $projQuery = Db::name("proj");
+        $cateQuery = Db::name("category");
+        $projTagQuery = Db::name("proj_tag");
+        $projSkillQuery = Db::name("proj_skill");
+        $roleQuery = Db::name("role");
+        $tagQuery = Db::name("tag");
+        
+        $this->redirect($this->request->root().'/');
+    }
+
+    /**
+     * 退出项目(成员/非发起人选项)
+     */
+    public function quit($id = '')
+    {
+        if($id == '') return -1;
+        $userId = bar_get_user_id();
+        $userProjQuery = Db::name("user_proj");
+        $userProjFind = $userProjQuery
+            ->where('user_id',$userId)
+            ->where('proj_id',$id)
+            ->find();
+        if($userProjFind){
+            $delete = $userProjQuery->where('id',$userProjFind['id'])->delete();
+            //TODO 对发起人在个人中心进行提醒
+            if($delete){
+                return 0;
+            }else{
+                return 2;
+            }
+        }else{
+            return 1;
+        }
+    }
+
+    /**
+     * 踢出成员(发起人功能) TODO对被踢出成员在个人中心进行提醒
+     */
+    public function dismiss($pid,$uid)
+    {   
+        if($pid && $uid){
+            $userId = bar_get_user_id();
+            $userProjQuery = Db::name("user_proj");
+            $projQuery = Db::name("project");
+            $projLeaderId = $projQuery->where('id',$pid)->value('leader_id');
+            if($userId == $projLeaderId){
+                $userProjFind = $userProjQuery
+                    ->where('proj_id',$pid)
+                    ->where('user_id',$uid)
+                    ->find();
+                if($userProjFind){
+                    $delete = $userProjQuery->where('id',$userProjFind['id'])->delete();
+                    if($delete){
+                        return 0;//success
+                    }else{
+                        return 2;//删除数据失败
+                    }
+                }else{
+                    return 1;//该用户不在该项目中
+                }
+            }else{
+                return -2; //不是创建者，没有权利
+            }
+        }else{
+            return -1;//没有参数，错误请求
         }
     }
 

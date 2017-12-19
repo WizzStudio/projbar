@@ -30,6 +30,7 @@
     <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
+    <div class="layui-box">
       <div style="height:270px;padding:10px;background-color: #444;opacity: 0.86;color:#eee;">                                         
         <p>{$user['nickname']}&emsp;
             {switch name="user.sex"}
@@ -97,6 +98,7 @@
                 <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>
       </div>
+    </div><!--layui-box-->
     </div>
     {/volist}
     </div>

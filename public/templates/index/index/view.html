@@ -98,9 +98,11 @@ h3{
   <h3>成员通讯信息(项目内人员可见)</h3><br />
   {volist name="partners" id="partner"}
    <p><b>       
-       <a href={:url('index/partner/view',"id=$partner[id]")}>
-        {$partner.nickname}{eq name="partner.is_leader" value="1"}（发起人）{/eq} 
-        </a>
+       <a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a>
+        {eq name="partner.is_leader" value="1"}（发起人）
+        {else/}&emsp;
+        <button class="btn btn-xs btn-warning dismiss" data-pid="{$projBase.id}" data-uid="{$partner.id}">踢出该成员</button>
+        {/eq}
     </b></p>
    <p>性别：{switch name="partner.sex"}
         {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
@@ -110,18 +112,21 @@ h3{
     </p>
    <p>QQ：{$partner.qq}</p>
    <p>Email：{$partner.email}</p>
+    <hr />
   {/volist}
+    <br />  
+    {eq name="isLeader" value="1"}
+    <button class="btn btn-danger btn-block" id="delete">删除该项目以及相关信息</button>
+    {else/}
+    <button class="btn btn-danger btn-block" id="quit">退出该项目</button>
+    {/eq}
   {else/}
+    <br />
     {eq name="has_apply_today" value="1"}
     <button class="btn btn-warning btn-block" disabled=true>今日已发出申请</button>
     {else/}
     <button class="btn btn-success btn-block" id="apply">申请加入</button>
     {/eq}
-  {/eq}
-  
-  {eq name="isLeader" value="1"}
-  <br />
-  <button class="btn btn-danger btn-block" id="delete">删除该项目以及相关信息</button>
   {/eq}
   <br />
 </div>
@@ -141,14 +146,16 @@ layui.use(['layer','element'],function(){
             $.get(
                 '{:url("user/action/apply","id=$projBase[id]")}',
                 function(data,status){
-                    if(data == 1){
-                        layer.msg('发起申请失败',{icon: 2,time:2000,offset:['30vh']});
-                    }else if(data == 2){
-                        layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4,offset:['30vh']});
-                    }else if(data.code == 0){
-                        layer.msg('您还未登录，请登录后再进行操作！',{icon:2,offset:['30vh']});
-                    }else{
-                        layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000,offset:['30vh']});
+                    if(data != 0){
+                        if(data == 1){
+                            layer.msg('发起申请失败',{icon: 2,time:2000,offset:['30vh']});
+                        }else if(data == 2){
+                            layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4,offset:['30vh']});
+                        }else if(data.code == 0){
+                            layer.msg('您还未登录，请登录后再进行操作！',{icon:2,offset:['30vh']});
+                        }else{
+                            layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000,offset:['30vh']});
+                        }
                     }
                 }
             );
@@ -175,6 +182,62 @@ layui.use(['layer','element'],function(){
                         console.log(data);
                         if(data != 0){
                             layer.msg('删除项目出现问题，错误码：'+data,{icon: 2,time:2000,offset:['30vh']});
+                        }
+                    }  
+                );
+            }
+        );
+    }); //delete.click
+
+    $("#quit").on('click',function(){
+        layer.confirm(
+            "你确定要退出该项目吗？",
+            {icon: 3,offset:['40vh']},
+            function(index){
+                layer.close(index);
+                layer.msg(
+                    '已退出该项目，祝您在新的起点能走的更好。',
+                    {icon: 1, time:1500,offset:['40vh']},
+                    function(){
+                        window.location.href="{:url('/')}";
+                    }
+                );
+
+                $.get(
+                    '{:url("user/action/quit","id=$projBase[id]")}',
+                    function(data,status){
+                        console.log(data);
+                        if(data != 0){
+                            layer.msg('退出项目出现问题，错误码：'+data,{icon: 2,time:2000,offset:['40vh']});
+                        }
+                    }  
+                );
+            }
+        );
+    });//quit.click
+
+    $(".dismiss").on('click',function(){
+        var pid = $(this).attr('data-pid');
+        var uid = $(this).attr('data-uid');
+        layer.confirm(
+            "你确定要踢出该成员吗？",
+            {icon: 3,offset:['40vh']},
+            function(index){
+                layer.close(index);
+                layer.msg(
+                    '已踢出该成员，祝您能找到更好的合作伙伴。',
+                    {icon: 1, time:1500,offset:['40vh']},
+                    function(){
+                        window.location.href="{:url('/')}";
+                    }
+                );
+                
+                $.get(
+                    "{:url('user/action/dismiss')}"+"?pid="+pid+"&uid="+uid,
+                    function(data,status){
+                        console.log(data);
+                        if(data != 0){
+                            layer.msg('退出项目出现问题，错误码：'+data,{icon: 2,time:2000,offset:['40vh']});
                         }
                     }  
                 );

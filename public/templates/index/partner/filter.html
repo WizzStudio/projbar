@@ -5,16 +5,16 @@
         <div class="layui-input-inline layui-col-xs5">
         <select name="role" id="role">
             <option value="">角色职能</option>
-            {volist name="roles" id="role"}
-            <option value="{$role.id}">{$role.name}</option>
+            {volist name="allRoles" id="role"}
+            <option value="{$role.id}" {eq name="rid" value="$role.id"}selected="selected"{/eq}>{$role.name}</option>
             {/volist}
         </select>
         </div>
         <div class="layui-input-inline layui-col-xs5">
         <select name="tag" id="tag">
             <option value="">个人标签</option>
-            {volist name="tags" id="tag"}
-            <option value="{$tag.id}">{$tag.name}</option>
+            {volist name="allTags" id="allTag"}
+            <option value="{$allTag.id}" {eq name="tid" value="$allTag.id"}selected="selected"{/eq}>{$allTag.name}</option>
             {/volist}
         </select>
         </div>
@@ -56,7 +56,7 @@
         {/volist}
         </p><br />
         {volist name="user['role']" id="role" key="i"}
-        <p>角色：{$key}</p>
+        <p>角色：{$user.role_name}</p>
         <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
             <colgroup>
               <col width="100">

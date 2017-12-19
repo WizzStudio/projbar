@@ -338,6 +338,7 @@ function bar_action_email_log($userId,$type)
   */
   function bar_send_email($address,$subject,$message,$token='')
   {   
+      return ['error'=>0,"msg"=>"success"];    
       $mail = new \PHPMailer\PHPMailer\PHPMailer();
       $mail->IsSMTP();
       $mail->IsHTML(true);

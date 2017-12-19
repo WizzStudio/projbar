@@ -135,25 +135,30 @@ class PartnerController extends BaseController
     {
         $getData = $this->request->get();
         $page = isset($getData['page'])?$getData['page']:1;
-        $rid = isset($getData['role'])?$getData['role']:0;        
-        $tid = isset($getData['tag'])?$getData['tag']:0;
+        $rid = isset($getData['role'])?$getData['role']:'';        
+        $tid = isset($getData['tag'])?$getData['tag']:'';
         $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
         $tagQuery = Db::name("tag");
         $userSkillQuery = Db::name("user_skill");
         $roleQuery = Db::name("role");
-        $tags = $tagQuery->select();
-        $roles = $roleQuery->select();
+        $allTags = $tagQuery->select();
+        $allRoles = $roleQuery->select();
         
         if(!$rid && !$tid){
             return $this->redirect(url('index/partner/lists'));
         }else{
             $userBaseList = $userQuery
-                ->field('id,username,nickname,sex')
+                ->alias('a')
+                ->join('__USER_SKILL__ b','a.id=b.user_id')
+                ->join('__ROLE__ c','b.role_id=c.id')
+                ->field('a.id,a.username,a.nickname,a.sex,c.name as role_name')
                 ->order('id','desc')
                 // ->page($page,3)
+                ->distinct(true)
                 ->select();
-
+            // print_r($userBaseList);
+            // return ;
             $roleInfoList = [];
             $exp = '';
             $userList = [];
@@ -161,6 +166,7 @@ class PartnerController extends BaseController
             foreach($userBaseList as $user){
                 $user['tags'] = [];
                 $user['role'] = [];
+                //只有角色无标签
                 if($rid && !$tid){
                     $skills = $userSkillQuery
                         ->where('user_id',$user['id'])
@@ -182,16 +188,20 @@ class PartnerController extends BaseController
                     foreach($tags as $tag){
                         $user['tags'][] = $tag['name'];
                     }
+                //只有标签无角色
                 }else if(!$rid && $tid){
-                    $tags = $userTagQuery
-                    ->alias('a')
-                    ->field('b.id,b.name')
+                    $hasSameTag = $userTagQuery
                     ->where('user_id',$user['id'])
                     ->where('tag_id',$tid)
-                    ->join('__TAG__ b','a.tag_id=b.id')
-                    ->select();
-                    if(!$tags)continue;
-                    foreach($tags as $tag){
+                    ->find();
+                    if(!$hasSameTag)continue;
+                    $tagResult = $userTagQuery
+                        ->alias('a')
+                        ->join('__TAG__ b','a.tag_id=b.id')
+                        ->where('a.user_id',$user['id'])
+                        ->field('b.name')
+                        ->select();
+                    foreach($tagResult as $tag){
                         $user['tags'][] = $tag['name'];
                     }
                     $skills = $userSkillQuery
@@ -203,22 +213,25 @@ class PartnerController extends BaseController
                     $num = count($user['role']);
                     if($num > 1) array_pop($user['role']);
                 }else if($rid && $tid){
-                    $tags = $userTagQuery
-                    ->alias('a')
-                    ->field('b.id,b.name')
+                    $hasSameTag = $userTagQuery
                     ->where('user_id',$user['id'])
                     ->where('tag_id',$tid)
+                    ->find();
+                    if(!$hasSameTag)continue;
+                    $tagResult = $userTagQuery
+                    ->alias('a')
                     ->join('__TAG__ b','a.tag_id=b.id')
+                    ->where('a.user_id',$user['id'])
+                    ->field('b.name')
                     ->select();
-                    if(!$tags)continue;
+                    foreach($tagResult as $tag){
+                       $user['tags'][] = $tag['name'];
+                    }
                     $skills = $userSkillQuery
                     ->where('user_id',$user['id'])
                     ->where('role_id',$rid)
                     ->select();
                     if(!$skills) continue;
-                    foreach($tags as $tag){
-                        $user['tags'][] = $tag['name'];
-                    }
                     foreach($skills as $skill){
                         $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
                     }
@@ -226,11 +239,14 @@ class PartnerController extends BaseController
                 $userList[] = $user;
             }
         }
+
         $this->assign([
+            'rid' => $rid,
+            'tid' => $tid,
             'userBaseList' => $userBaseList,
             "userList" => $userList,
-            "roles" => $roles,
-            "tags" => $tags
+            "allRoles" => $allRoles,
+            "allTags" => $allTags
         ]);
         return $this->fetch();
     }
