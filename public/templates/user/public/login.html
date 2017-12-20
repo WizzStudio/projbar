@@ -12,14 +12,14 @@
         <div class="form-group">
         <input type="password" class="form-control" name="password" placeholder="请输入密码">
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
         <input type="text" class="form-control" name="captcha" id="captcha" placeholder="图像验证码">
         <br />
         <div class="code-img">
             <img src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?t='+Math.random()"
              alt="点击更换" title="点击更换" class="captcha" name="codeimage" id="codeimage" border="0"/>
         </div>
-        </div>
+        </div> -->
         <button type="submit" class="btn btn-primary btn">登录</button>&emsp;
         <a class="btn btn-success" href="{:url('user/public/register')}">还没有账号？去注册</a>
     </form>

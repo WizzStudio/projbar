@@ -113,7 +113,7 @@ class PublicController extends BaseController
         $rules = [
             'account' => 'require',
             'password' => 'require|min:6|max:32',
-            'captcha' => 'require|captcha'
+            // 'captcha' => 'require|captcha'
         ];
 
         $validate = new Validate($rules);
@@ -123,8 +123,8 @@ class PublicController extends BaseController
             'password.require' => '密码不能为空',
             'password.min' => '密码不能小于6个字符',
             'password.max' => '密码不能大于32个字符',
-            'captcha.require' => '验证码不能为空',
-            'captcha.captcha' => '验证码不正确'
+            // 'captcha.require' => '验证码不能为空',
+            // 'captcha.captcha' => '验证码不正确'
         ]);
 
         if(!$validate->check($postData)){
