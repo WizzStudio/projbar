@@ -74,7 +74,7 @@ function bar_get_verify_code($account, $length = 6)
     $verifyCodeQuery = Db::name('verify_code');
     $currentTime = time();
     $maxCount = 6;
-    $find = $verifyCodeQuery->where('account', $account)->find();
+    $find = $verifyCodeQuery->where('account', $account)->order('id','desc')->find();
     $result = false;
     if(empty($find)){
         $result = true;
@@ -125,7 +125,7 @@ function bar_verify_code_log($account, $code, $expireTime = 0)
         if ($find['send_time'] <= $todayStartTime) {
             $count = 1;
         } else {
-            $count = ['exp', 'count+1'];//????
+            $count = $find['count'] + 1;//????
         }
         $result = $verifyCodeQuery
             ->where('account', $account)
@@ -338,7 +338,6 @@ function bar_action_email_log($userId,$type)
   */
   function bar_send_email($address,$subject,$message,$token='')
   {   
-      return ['error'=>0,"msg"=>"success"];    
       $mail = new \PHPMailer\PHPMailer\PHPMailer();
       $mail->IsSMTP();
       $mail->IsHTML(true);
@@ -518,4 +517,33 @@ function bar_get_release_permission($userId)
 {
     $projQuery = Db::name("project");
     
+}
+
+/**
+ * 获取修改密码授权
+ * @param int $userId
+ */
+function bar_get_change_pass_auth($userId)
+{
+
+}
+
+/**
+ * 获取发布项目授权
+ * @param int $userId
+ */
+function bar_get_release_auth($userId)
+{
+    $projQuery = Db::name("project");
+    $currentTime = time();
+    $todayStartTime = strtotime(date('Y-m-d',$currentTime));
+    $projCount = $projQuery
+        ->where('leader_id',$userId)
+        ->where('create_time','>',$todayStartTime)
+        ->count();
+    if($projCount < 5){
+        return 1;
+    }else{
+        return 0;
+    }
 }

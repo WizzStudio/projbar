@@ -49,16 +49,6 @@ class User extends Model
                 if($result['status'] == 0){
                     return 3;
                 }
-                // $myProjects = Db::name("project")
-                //     ->where('leader_id',$result['id'])
-                //     ->field('id,cate_id,leader_id,name')
-                //     ->select();
-                // $result['projects'] = [];
-                // if($myProjects){
-                //     foreach($myProjects as $myProject){
-                //         $result['projects'][] = $myProject;
-                //     }
-                // }
 
                 session('user', $result);
                 $data = [
@@ -113,9 +103,8 @@ class User extends Model
         $userId = bar_get_user_id();
         $data['mobile'] = $user['mobile'];
         $data['nickname'] = $user['nickname'];
+        $data['qq'] = $user['qq'];
         $data['sex'] = $user['sex'];
-        $data['birthday'] = $user['birthday'];
-        $data['signature'] = $user['signature'];
         $data['extra'] = $user['extra'];
         $userQuery = Db::name("user");
         if($userQuery->where('id', $userId)->update($data)) {
@@ -124,6 +113,30 @@ class User extends Model
             return 1;
         }else{
             return 0;
+        }
+    }
+
+    /**
+     * 修改密码
+     */
+    public function changePass($oldPass,$newPass)
+    {
+        $userId = bar_get_user_id();
+        $userQuery = Db::name("user");
+        $realPass = $userQuery->where('id',$userId)->value('password');
+        if(bar_password($oldPass) != $realPass) return 1;
+        $resultPass = bar_password($newPass);        
+        $data = [
+            'password' => $resultPass,
+            'update_time' => time()
+        ];
+        $update = $userQuery
+            ->where('id',$userId)
+            ->update($data);
+        if($update){
+            return 0;
+        }else{
+            return 2;
         }
     }
 }

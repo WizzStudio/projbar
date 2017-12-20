@@ -20,6 +20,10 @@ class ActionController extends UserBaseController
         $parentCates = $cateQuery->where('parent_id',0)->select();
         $tags = $tagQuery->select();
         $roles = $roleQuery->select();
+        $userId = bar_get_user_id();
+        if(!bar_get_release_auth($userId)){
+            $this->error('您今天的发布项目次数已经达到上限，请明天再来');
+        }   
         foreach($parentCates as $cate){
             $childCates = $cateQuery->where('parent_id',$cate['id'])->field('id,parent_id,name')->select();
             $cateList[$cate['name']] = $childCates;
@@ -475,6 +479,8 @@ class ActionController extends UserBaseController
      * 测试
      */
     public function test(){
-
+        $userId = bar_get_user_id();
+        $num = bar_get_release_auth($userId);
+        return ;
     }
 }

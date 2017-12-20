@@ -1,0 +1,31 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<br />
+<h1 align="center">修改密码</h1>
+<div class="layui-container" style="width:80vw;">
+  <div class="layui-box">
+    <form action="{:url('user/profile/pass_update_handle')}" method="post" class="layui-form">
+      <div class="layui-form-item">
+        <input type="password" class="layui-input" name="old_pass" placeholder="请输入当前密码" />
+      </div>
+      <div class="layui-form-item">
+        <input type="password" class="layui-input" name="new_pass" placeholder="请输入新密码" />
+      </div>
+      <div class="layui-form-item">
+        <input type="password" class="layui-input" name="re_new_pass" placeholder="再输入一次新密码" />
+      </div>
+      <div class="code-img">
+        <img src="{:captcha_src()}" alt="点击更换" title="点击更换" onclick="this.src='{:captcha_src()}?time='+Math.random()" class="captcha" name="codeimage" id="codeimage" border="0"/>
+      </div>
+      <br />
+      <div class="layui-form-item">
+        <input type="text" class="layui-input" name="captcha" id="captcha" placeholder="请输入图像验证码" />
+      </div>
+      <br />
+      <button class="layui-btn btn-block" lay-submit>确认修改</button>
+    </form>
+  </div>
+  <br />
+  
+</div>
+{/block}
