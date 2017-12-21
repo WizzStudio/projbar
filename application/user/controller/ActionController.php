@@ -58,7 +58,7 @@ class ActionController extends UserBaseController
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
         $tags = isset($post['tags'])?$post['tags']:[];
-        $imageId = rand(1,9);
+        $imageId = rand(1,12);
 
         $baseInfo['name'] = $post['name'];
         $baseInfo['cate_id'] = $post['category'];
