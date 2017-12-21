@@ -162,7 +162,7 @@ class IndexController extends BaseController
                     ->join('__CATEGORY__ c','a.cate_id=c.id')
                     ->distinct(true)
                     ->order('a.id','desc')
-                    ->paginate(1,false,[
+                    ->paginate(9,false,[
                         'query' => request()->param()
                     ]);
             }else{
@@ -173,7 +173,7 @@ class IndexController extends BaseController
                     ->join('__CATEGORY__ c','a.cate_id=c.id')
                     ->distinct(true)
                     ->order('a.id','desc')
-                    ->paginate(1,false,[
+                    ->paginate(9,false,[
                         'query' => request()->param()
                     ]);
             }
