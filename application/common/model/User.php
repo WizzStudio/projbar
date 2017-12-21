@@ -23,7 +23,7 @@ class User extends Model
             'email' => $user['account'],
             'password' => bar_password($user['password']),
             'mobile' => '',
-            'nickname' => $user['username'],
+            'nickname' => $user['nickname'],
             'last_login_ip' => get_client_ip(0, true),
             'create_time' => time(),
             'last_login_time' => time(),

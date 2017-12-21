@@ -33,7 +33,8 @@ class PublicController extends BaseController
 
         $rules = [
             'account' => 'require|email',
-            'username' => 'require|min:3|max:20|alphaNum',
+            'username' => 'require|min:3|max:20|alphaDash',
+            'nickname' => 'require|max:20|chsDash',
             'password' => 'require|min:4|max:24',
             'repassword' => 'require|confirm:password',
             'verify_code' => 'require'

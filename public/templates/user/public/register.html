@@ -4,13 +4,16 @@
 <br />
 <h1 align="center">用户注册</h1>
 <br />
-<div class="container" style="height: 78vh;width:86vw;">
+<div class="container" style="width:86vw;">
     <form action="{:url('doRegister')}" method="post" class="layui-form">
         <div class="layui-form-item">
         <input type="text" class="form-control" name="account" id="account" placeholder="请输入常用邮箱">
         </div>
         <div class="layui-form-item">
-        <input type="text" class="form-control" name="username" placeholder="注册用户名, 不能为邮箱或手机号">
+        <input type="text" class="form-control" name="username" placeholder="唯一用户名, 可用作登录（英文/数字/下划线）">
+        </div>
+        <div class="layui-form-item">
+          <input type="text" class="form-control" name="nickname" placeholder="昵称，用于对外显示和检索">
         </div>
         <div class="layui-form-item">
         <input type="password" class="form-control" name="password" placeholder="请输入密码">
@@ -35,6 +38,7 @@
         </div>
     </form>
 </div>
+<br />
 {/block}
 {block name="free_js"}
 {__block__}
