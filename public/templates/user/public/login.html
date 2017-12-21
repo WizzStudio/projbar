@@ -4,7 +4,7 @@
 <br />
 <h1 align="center">登录</h1>
 <br />
-<div class="container" style="height: 78vh;">
+<div class="container">
     <form action="{:url('dologin')}" method="post" >
         <div class="form-group">
         <input type="text" class="form-control" name="account" placeholder="请输入邮箱/用户名">
@@ -21,9 +21,11 @@
         </div>
         </div>
         <button type="submit" class="btn btn-primary btn">登录</button>&emsp;
-        <a class="btn btn-success" href="{:url('user/public/register')}">还没有账号？去注册</a>
+        <a class="btn btn-success" href="{:url('user/public/register')}">还没有账号？去注册</a><br /><br />
+        <a class="btn btn-warning" href="{:url('user/public/find_pass')}">&emsp;忘记密码了？点击找回密码&emsp;</a>
     </form>
 </div>
+<br />
 {/block}
 {block name="free_js"}
 {__block__}

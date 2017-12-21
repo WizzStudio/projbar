@@ -1,0 +1,68 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<br /><h1 align="center">邮箱找回密码</h1><br>
+<div class="layui-container" style="padding:30px;">
+  <form action="{:url('user/public/find_pass_handle')}" method="post" class="layui-form">
+    <div class="layui-form-item">
+        <input type="text" class="layui-input" lay-verify="require|email" name="email" id="account" placeholder="请输入您的注册邮箱" />
+    </div>
+    <div class="layui-form-item">
+        <input type="text" class="layui-input" lay-verify="require" name="verify_code" placeholder="请输入收到的验证码" />
+    </div>
+    <div class="layui-form-item">
+        <input type="password" class="layui-input" lay-verify="require" name="new_pass" placeholder="请输入新的密码" />
+    </div>
+    <div class="layui-form-item">
+        <input type="password" class="layui-input" lay-verify="require" name="re_new_pass" placeholder="请确认一遍您的新密码" />
+    </div>
+    <br />
+    <div class="layui-form-item">
+        <button class="btn btn-success btn-block" id="send">发送邮件验证码</button><br>
+        <button class="btn btn-primary btn-block" lay-submit>提交</button>
+    </div>
+  </form>
+</div>
+{/block}
+{block name="free_js"}
+{__block__}
+<script>
+    layui.use(['form','layer'],function(){
+      var form = layui.form;
+      var layer = layui.layer;
+    
+      var InterValObj; //timer变量，控制时间
+      var count = 60; //间隔函数，1秒执行
+      var curCount;//当前剩余秒数
+      $("#send").on('click',function(){
+        var account = $("#account").val();
+        curCount = count;
+        $(this).attr("disabled","true");
+        $(this).text(+curCount+"秒后再获取");
+        InterValObj = window.setInterval(SetRemainTime, 1000);
+        $.get("{:url('/user/public/send')}"+"?account="+account,function(data,status){
+          if(data == 0){
+            return true;
+          }else{
+            if(data == 1){
+              alert("请输入正确的邮箱格式");
+            }else{
+              alert(data);
+            }
+          }
+        });
+      });
+      
+    function SetRemainTime(){
+      if (curCount == 0){
+        window.clearInterval(InterValObj);//停止计时器
+        $("#send").removeAttr("disabled");//启用按钮
+            $("#send").text("重新发送验证码");
+        } 
+        else{
+            curCount--;
+            $("#send").text( + curCount + "秒再获取");
+        }
+      }
+    });
+</script>
+{/block}

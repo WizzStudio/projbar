@@ -167,7 +167,7 @@ class PublicController extends BaseController
             //TODO Emailcheck
             $code = bar_get_verify_code($account);
             if(!$code){
-                $this->error("验证码发送次数过多，请明天再试，或者联系我们解决。");
+                $this->error("注册或找回密码的验证码发送次数过多，请明天再试，或者联系我们解决。");
             }
             $emailTemplate = bar_get_option('email_template_verify_code');
             $message = htmlspecialchars_decode($emailTemplate['template']);
@@ -199,5 +199,42 @@ class PublicController extends BaseController
         $projQuery = Db::name("project");
         $myProjects = $projQuery->where("leader_id",$userId)->field('id,cate_id,name')->select();
         return json($myProjects);
+    }
+
+    /**
+     * 找回密码页
+     */
+    public function find_pass()
+    {
+        return $this->fetch();
+    }
+
+    /**
+     * 找回密码表单处理
+     */
+    public function find_pass_handle()
+    {
+        if($this->request->isPost()){
+            $data = $this->request->post();
+            $errMsg = bar_check_verify_code($data['email'],$data['verify_code']);
+            if(!empty($errMsg)){
+                $this->error($errMsg);
+            }
+            $userModel = new User();
+            $resultData = [
+                'email' => $data['email'],
+                'password' => $data['new_pass']
+            ];
+            $log = $userModel->resetPass($resultData);
+            if($log == 0){
+                $this->success('重置密码成功！请重新登录','user/public/login');
+            }else if($log == 1){
+                $this->error('新密码不能和当前密码相同！');
+            }else{
+                $this->error('内部错误，请重试');
+            }
+        }else{
+            $this->error('请求方式错误！');
+        }
     }
 }

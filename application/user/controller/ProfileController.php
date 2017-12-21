@@ -132,6 +132,8 @@ class ProfileController extends UserBaseController
             }
             $resultTags[] = $tag;
         }
+        print_r($checkTags);
+        return ;
 
         $exp = $userExpQuery->where('user_id',$userId)->find();
         $this->assign('exp',$exp['exp']);
@@ -263,14 +265,6 @@ class ProfileController extends UserBaseController
         }else{
             $this->error('内部错误，如果一直遇到此问题请联系我们');            
         }
-    }
-
-    /**
-     * 密码重置
-     */
-    public function pass_reset()
-    {
-        return $this->fetch();
     }
 
     /**

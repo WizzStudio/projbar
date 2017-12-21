@@ -75,42 +75,44 @@
 layui.use('form',function(){
     var form = layui.form;
     var num = 0;
-    $("m-tag").each(function(){
-        if($(this).attr('checked') == "checked"){
-            num += 1;
-        }
-        if(num >= 6){
-            $(".m-tag").each(function(){
-                if($(this).attr("checked","checked")){
-                    console.log(num);
-                }else{
-                    $(this).attr('disabled',true);
-                }
-            });
-        }
-    });
-    form.on('checkbox(tag)',function(data){
-        $(".m-tag").each(function(){
-            if($(this).attr('checked') == "checked"){
-                num += 1;
-            }else{
-                num --;
-            }
-        });
-        if(num >= 6){
-            $(".m-tag").each(function(){
-                if($(this).attr("checked","checked")){
-                    console.log(num);
-                }else{
-                    $(this).attr('disabled',true);
-                }
-            });
-        }
-        console.log(num);
-        // console.log(data.elem); //得到checkbox原始DOM对象
-        // console.log(data.elem.checked); //是否被选中，true或者false
-        // console.log(data.value);
-    });
+    // $(document).ready(function(){
+    //     $(".m-tag").each(function(){
+    //         if($(this).attr('checked') == "checked"){
+    //             num++;
+    //         }
+    //         if(num >= 6){
+    //             $(".m-tag").each(function(){
+    //                 if($(this).attr("checked") == "checked"){
+    //                 }else{
+    //                     $(this).attr('disabled',true);
+    //                 }
+    //             });
+    //         }
+    //     });
+    //     console.log(num);
+    // });
+    // form.on('checkbox(tag)',function(data){
+    //     var num = 0;
+    //     $(".m-tag").each(function(){
+    //         if($(this).attr('checked') == "checked"){
+    //             num++;
+    //         }
+    //     });
+    //     console.log(num);
+    //     if(num >= 6){
+    //         $(".m-tag").each(function(){
+    //             if($(this).attr("checked") == "checked"){
+    //                 $(this).attr('disabled',false);
+    //             }else{
+    //                 $(this).attr('disabled',true);
+    //             }
+    //         });
+    //     }else{
+    //         $(".m-tag").each(function(){
+    //             $(this).attr('disabled',false);
+    //         });
+    //     }   
+    // });
 });
 </script>
 {/block}

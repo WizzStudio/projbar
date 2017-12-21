@@ -48,7 +48,12 @@ class ActionController extends UserBaseController
         $post = $request->post();
         if(!$validate->check($post)){
             $this->error($validate->getError());
-        }        
+        }  
+        $tags = isset($post['tags'])?$post['tags']:[];
+        $tagNum = count($tags);
+        if($tagNum > 6){
+            $this->error('标签不能超过六个');
+        }      
         $roleNumber = count($post['role']);
         $userId = bar_get_user_id();
         for($i=0;$i<$roleNumber;$i++){
@@ -57,7 +62,6 @@ class ActionController extends UserBaseController
             $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
-        $tags = isset($post['tags'])?$post['tags']:[];
         $imageId = rand(1,12);
 
         $baseInfo['name'] = $post['name'];

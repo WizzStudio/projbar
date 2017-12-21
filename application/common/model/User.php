@@ -139,4 +139,30 @@ class User extends Model
             return 2;
         }
     }
+
+    /**
+     * 重置密码
+     */
+    public function resetPass($user)
+    {
+        $userQuery = Db::name("user");
+        $find = $userQuery->where('email',$user['email'])->find();
+        if(!$find) return 1;//该邮箱还未注册
+        $resultPass = bar_password($user['password']);
+        if($resultPass == $find['password']){
+            return 1;
+        }
+        $currentTime = time();
+        $result = $userQuery
+            ->where('id',$find['id'])
+            ->update([
+                'password' => $resultPass,
+                'update_time' => $currentTime
+            ]);
+        if($result){
+            return 0;
+        }else{
+            return 2;
+        }
+    }
 }
