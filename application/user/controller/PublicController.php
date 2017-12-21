@@ -114,7 +114,7 @@ class PublicController extends BaseController
         $rules = [
             'account' => 'require',
             'password' => 'require|min:6|max:32',
-            // 'captcha' => 'require|captcha'
+            'captcha' => 'require|captcha'
         ];
 
         $validate = new Validate($rules);

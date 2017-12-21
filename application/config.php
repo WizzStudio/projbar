@@ -242,6 +242,7 @@ return [
     ],
 
     'captcha' => [
-        'length' => 4
+        'length' => 4,
+        'reset' => true,
     ],
 ];
