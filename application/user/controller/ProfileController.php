@@ -198,6 +198,10 @@ class ProfileController extends UserBaseController
         $expQuery = Db::name("exp");
         $data['user_id'] = $userId;
         $data['role_id'] = $roleId;
+        $tagNum = count($tags);
+        if($tagNum > 6){
+            $this->error("标签不能超过六个");
+        }
         $userSkillResult = $userSkillQuery->where('user_id',$userId)->select();
         if($userSkillResult) $userSkillDelete = $userSkillQuery->where('user_id',$userId)->delete();
         for($i=0;$i<3;$i++){

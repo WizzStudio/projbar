@@ -50,7 +50,8 @@
               <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签，这将成为自动匹配的重要依据</div>
               <div class="layui-col-md12 layui-col-xs12">
                 {volist name="resultTags" id="tag"}
-                <input type="checkbox" name="tags[]" title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />
+                <input type="checkbox" lay-filter="tag" name="tags[]" class="m-tag"
+                title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />
                 {/volist}
               </div>
             </div>
@@ -73,7 +74,43 @@
 <script>
 layui.use('form',function(){
     var form = layui.form;
-
+    var num = 0;
+    $("m-tag").each(function(){
+        if($(this).attr('checked') == "checked"){
+            num += 1;
+        }
+        if(num >= 6){
+            $(".m-tag").each(function(){
+                if($(this).attr("checked","checked")){
+                    console.log(num);
+                }else{
+                    $(this).attr('disabled',true);
+                }
+            });
+        }
+    });
+    form.on('checkbox(tag)',function(data){
+        $(".m-tag").each(function(){
+            if($(this).attr('checked') == "checked"){
+                num += 1;
+            }else{
+                num --;
+            }
+        });
+        if(num >= 6){
+            $(".m-tag").each(function(){
+                if($(this).attr("checked","checked")){
+                    console.log(num);
+                }else{
+                    $(this).attr('disabled',true);
+                }
+            });
+        }
+        console.log(num);
+        // console.log(data.elem); //得到checkbox原始DOM对象
+        // console.log(data.elem.checked); //是否被选中，true或者false
+        // console.log(data.value);
+    });
 });
 </script>
 {/block}
