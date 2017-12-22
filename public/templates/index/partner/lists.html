@@ -39,6 +39,7 @@
             {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
             {/switch}
         </p><br />
+        {if condition="$user['tags'] != []"}
         <p>
             {volist name="user['tags']" id="tag" key="k"}
             <span 
@@ -54,7 +55,13 @@
             style="color:#eee;
             ;padding:4px;">{$tag}</span>
             {/volist}
-        </p><br />
+        </p>
+        {else /}
+        <span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span><br />
+        {/if}
+        <br />
+
+            {if condition="$user['role'] != []"}
             {volist name="user['role']" id="role" key="i"}
             <p>角色：{$key}</p>
             <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
@@ -94,6 +101,10 @@
             </table>
 
             {/volist}
+            {else /}
+            <p>角色：暂无角色信息</p><br style="line-height:110px;">
+            {/if}
+            <br>
             <p align="right">
                 <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>

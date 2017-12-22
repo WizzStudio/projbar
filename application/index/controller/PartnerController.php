@@ -50,6 +50,7 @@ class PartnerController extends BaseController
             if($num > 1) array_pop($user['role']);
             $userList[] = $user;
         }
+
         $this->assign([
             "userBase" => $userBase,
             "userList" => $userList,
