@@ -132,8 +132,6 @@ class ProfileController extends UserBaseController
             }
             $resultTags[] = $tag;
         }
-        print_r($checkTags);
-        return ;
 
         $exp = $userExpQuery->where('user_id',$userId)->find();
         $this->assign('exp',$exp['exp']);
