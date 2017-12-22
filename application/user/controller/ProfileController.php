@@ -225,7 +225,7 @@ class ProfileController extends UserBaseController
                 $expResult = $expQuery->insert(['user_id'=>$userId,'exp'=>$exp]);
             }
         }
-        $this->success('修改角色信息成功！');
+        $this->success('修改角色信息成功！','user/profile/center');
     }
 
     /**
