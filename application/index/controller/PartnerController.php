@@ -20,7 +20,7 @@ class PartnerController extends BaseController
         $tags = $tagQuery->select();
         $roles = $roleQuery->select();
         // TODO 按照信息完整度排序
-        $userBase = $userQuery->field('id,username,sex,nickname')->order('id','desc')->paginate(6);
+        $userBase = $userQuery->field('id,username,sex,nickname')->order(['list_order'=>'desc','id'=>'desc'])->paginate(6);
         $userList = [];
         foreach($userBase as $user){
             if(!$user['nickname']){

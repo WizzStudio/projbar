@@ -191,6 +191,7 @@ class ProfileController extends UserBaseController
         $level = $post['level'];
         $exp = $post['exp'];
         $tags = $post['tags'];
+        $userQuery = Db::name("user");
         $userSkillQuery = Db::name("user_skill");
         $tagQuery = Db::name("tag");
         $expQuery = Db::name("exp");
@@ -199,6 +200,7 @@ class ProfileController extends UserBaseController
         $data['user_id'] = $userId;
         $data['role_id'] = $roleId;
         $tagNum = count($tags);
+
         if($tagNum > 6){
             $this->error("标签不能超过六个");
         }
@@ -210,6 +212,7 @@ class ProfileController extends UserBaseController
             $result = $userSkillQuery->insert($data);
             if(!$result) $this->error('插入技能数据错误！');
         }
+
         if($tags){
             $tagDelete = $userTagQuery->where('user_id',$userId)->delete();
             foreach($tags as $tag){
@@ -225,6 +228,15 @@ class ProfileController extends UserBaseController
                 $expResult = $expQuery->insert(['user_id'=>$userId,'exp'=>$exp]);
             }
         }
+        $userSkillFind = $userSkillQuery->where('user_id',$userId)->value('id');
+        $userTagFind = $userTagQuery->where('user_id',$userId)->value('id');
+        $expFind = Db::name("exp")->where('user_id',$userId)->value('id');
+        $listOrder = 0;
+        if($userSkillFind)$listOrder += 1;
+        if($userTagFind)$listOrder += 1;
+        if($expFind)$listOrder+=1;
+        $listOrderResult = $userQuery->where('id',$userId)->update(['list_order'=>$listOrder,'update_time'=>time()]);
+
         $this->success('修改角色信息成功！','user/profile/center');
     }
 
