@@ -7,19 +7,38 @@
         {eq name="isNull" value="1"}<h1 align="center">Sorry,暂时没有找到</h1>{else/}
         {volist name="userList" id="user"}
         <div class="layui-col-md4 layui-col-xs12">
-          <div style="height:230px;padding:10px;background-color: #444;opacity: 0.86;color:#eee;">                                         
+        <div class="layui-box">
+          <div style="height:270px;padding:10px;background-color: #444;opacity: 0.86;color:#eee;">                                         
             <p>{$user['nickname']}&emsp;
             {switch name="user.sex"}
             {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
             {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
-            {default /}
+            {default /}<i class="layui-icon" style="color:rgba(216, 216, 110, 0.938)">&#xe607;</i>
             {/switch}
-            </p>
-            <p>标签：
-                {volist name="user['tags']" id="tag"}
-                {$tag}/
+            </p><br />
+            {if condition="$user['tags'] != []"}
+            <p>
+                {volist name="user['tags']" id="tag" key="k"}
+                <span 
+                {switch name="k"}
+                {case value="1"}class="layui-bg-red"{/case}
+                {case value="2"}class="layui-bg-orange"{/case}
+                {case value="3"}class="layui-bg-green"{/case}
+                {case value="4"}class="layui-bg-cyan"{/case}
+                {case value="5"}class="layui-bg-black"{/case}
+                {case value="6"}class="layui-bg-gray"{/case}
+                {default/}black
+                {/switch}
+                style="color:#eee;
+                ;padding:4px;">{$tag}</span>
                 {/volist}
             </p>
+            {else /}
+            <span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span><br />
+            {/if}
+            <br />
+            
+            {if condition="$user['role'] != []"}
             {volist name="user['role']" id="role" key="i"}
             <p>角色：{$key}</p>
             <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
@@ -59,10 +78,15 @@
             </table>
 
             {/volist}
-                <p>
-                    <a class="btn btn-primary" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
-                </p>
+            {else /}
+            <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
+            {/if}
+            <br>
+            <p align="right">
+                <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+            </p>
           </div>
+        </div>
         </div>
         {/volist}
         {/eq}
