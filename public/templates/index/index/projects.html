@@ -1,6 +1,6 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<div class="layui-word-aux" style="margin:10px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
+<div class="layui-word-aux" style="line-height:30px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
 <div class="layui-container-fluid" id="list">
     <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
         {volist name="projList" id="proj"}

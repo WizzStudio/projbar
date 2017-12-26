@@ -201,7 +201,7 @@ class IndexController extends BaseController
                     ->where('b.tag_id',$getTag)
                     ->join('__USER_TAG__ b','a.id=b.user_id')
                     ->distinct(true)
-                    ->order(['list_order'=>'desc','id'=>'desc'])
+                    ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                     ->paginate(6,false,[
                         'query' => request()->param()
                     ]);
@@ -211,7 +211,7 @@ class IndexController extends BaseController
                     ->field('a.*')
                     ->where('a.username|a.nickname','like','%'.$getKey.'%')
                     ->distinct(true)
-                    ->order(['list_order'=>'desc','id'=>'desc'])
+                    ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                     ->paginate(6,false,[
                         'query' => request()->param()
                     ]);

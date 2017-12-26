@@ -20,7 +20,7 @@ class PartnerController extends BaseController
         $tags = $tagQuery->select();
         $roles = $roleQuery->select();
         // 按照信息完整度排序
-        $userBase = $userQuery->field('id,username,sex,nickname')->order(['list_order'=>'desc','id'=>'desc'])->paginate(6);
+        $userBase = $userQuery->field('id,username,sex,nickname')->order(['list_order'=>'desc','last_login_time'=>'desc'])->paginate(6);
         $userList = [];
         foreach($userBase as $user){
             if(!$user['nickname']){
@@ -154,7 +154,7 @@ class PartnerController extends BaseController
                 ->join('__USER_SKILL__ b','a.id=b.user_id')
                 ->join('__ROLE__ c','b.role_id=c.id')
                 ->field('a.id,a.username,a.nickname,a.sex,c.name as role_name')
-                ->order(['list_order'=>'desc','id'=>'desc'])
+                ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                 // ->page($page,3)
                 ->distinct(true)
                 ->select();
