@@ -89,7 +89,7 @@ class IndexController extends BaseController
                         $has_join = 1;
                         $partners = $userProjQuery
                         ->alias('a')
-                        ->field('b.id,b.username,b.qq,b.email,b.sex,b.nickname,b.realname')
+                        ->field('b.id,b.username,b.qq,b.email,b.sex,b.nickname')
                         ->where('proj_id',$id)
                         ->join('__USER__ b','a.user_id=b.id')
                         ->select();
