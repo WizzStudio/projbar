@@ -142,7 +142,9 @@ layui.use(['form','layer','element'],function(){
                 }else if(data == 4){
                   layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000,offset: ['30vh']});
                 }else if(data.code == 0){
-                  layer.msg('您还未登录，请登录后再进行操作！',{icon:2,offset:['30vh']});
+                  layer.msg('您还未登录，请登录后再进行操作！',{icon:2,time:1500,offset:['30vh']},function(){
+                    window.location.href="{:url('user/public/login')}";
+                  });
                 }else{
                   layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
                 }

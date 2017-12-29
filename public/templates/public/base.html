@@ -12,7 +12,7 @@
     <link href="__STATIC__/layui/css/layui.css" rel="stylesheet">     
     <link href="__STATIC__/common/css/common.css" rel="stylesheet">
   </head>
-  <body style="margin-top:50px;background-color:#ddd;">
+  <body style="margin-top:50px;background-color:#eee;">
     {block name="navbar"}
     <!-- Fixed navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top mydark" role="navigation">
@@ -24,17 +24,17 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{:url('/')}">项慕吧 projbar</a>
+            <a class="navbar-brand" href="{:url('/')}"><span class="glyphicon glyphicon-fire"></span>&nbsp;项慕吧</a>
             <span class="navbar-brand glyphicon glyphicon-search" id="search"></span>
-            <a class="navbar-brand" href="{:url('user/action/release')}"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="navbar-brand" href="{:url('user/action/release')}"><span class="glyphicon glyphicon-pencil"></span></a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <!-- 可以加class="active"表示选中 -->
-              <li><a href="{:url('/')}">首页</a></li>
-              <li><a href="{:url('/')}">项目</a></li>
-              <li><a href="{:url('index/partner/lists')}">个人</a></li>
-              <li><a id="match">智能匹配</a></li>
+              <li><a href="{:url('/')}"><span class='glyphicon glyphicon-home'></span>&emsp;首页</a></li>
+              <li><a href="{:url('/')}"><span class='glyphicon glyphicon-th-list'></span>&emsp;项目</a></li>
+              <li><a href="{:url('index/partner/lists')}"><span class='glyphicon glyphicon-sunglasses'></span>&emsp;个人</a></li>
+              <li><a id="match"><span class='glyphicon glyphicon-cloud'></span>&emsp;智能匹配</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
              {$navRight}

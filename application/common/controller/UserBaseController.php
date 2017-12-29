@@ -22,8 +22,8 @@ class UserBaseController extends BaseController
                 $getUser = $userQuery->where('id',$result['user_id'])->find();
                 session('user', $getUser);
 
-                $navRight = "<li><a href=".url('user/profile/center').">个人中心</a></li>
-                <li><a id='logout'>注销</a></li>";
+                $navRight = "<li><a href=".url('user/profile/center')."><span class='glyphicon glyphicon-user'></span>&emsp;个人中心</a></li>
+                <li><a id='logout'><span class='glyphicon glyphicon-off'></span>&emsp;注销</a></li>";
                 $this->assign('navRight',$navRight);
                 
                 $data = [
