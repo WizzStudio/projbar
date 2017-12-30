@@ -101,7 +101,10 @@ h3{
        <a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a>
         {eq name="partner.is_leader" value="1"}（发起人）
         {else/}&emsp;
-        <button class="btn btn-xs btn-warning dismiss" data-pid="{$projBase.id}" data-uid="{$partner.id}">踢出该成员</button>
+            {eq name="isLeader" value="1"}
+            <button class="btn btn-xs btn-warning dismiss" data-pid="{$projBase.id}" data-uid="{$partner.id}">踢出该成员</button>
+            {else/}&emsp;
+            {/eq}
         {/eq}
     </b></p>
    <p>性别：{switch name="partner.sex"}
