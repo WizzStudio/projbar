@@ -129,7 +129,7 @@ class PublicController extends BaseController
         ]);
 
         if(!$validate->check($postData)){
-            $this->error($validate->getError());
+            $this->error($validate->getError(),'user/public/login');
         }
 
         $userModel = new User();
