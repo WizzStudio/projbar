@@ -124,12 +124,15 @@ class PublicController extends BaseController
             'password.require' => '密码不能为空',
             'password.min' => '密码不能小于6个字符',
             'password.max' => '密码不能大于32个字符',
-            // 'captcha.require' => '验证码不能为空',
-            // 'captcha.captcha' => '验证码不正确'
         ]);
 
         if(!$validate->check($postData)){
-            $this->error($validate->getError(),'user/public/login');
+            // $this->error($validate->getError(),'user/public/login');
+            return json([
+                "status" => 1,
+                "msg" => $validate->getError(),
+                "data" => ""
+            ]);
         }
 
         $userModel = new User();
@@ -142,19 +145,25 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                $this->success('登录成功，欢迎您！',$this->request->root()."/");
+                // $this->success('登录成功，欢迎您！',$this->request->root()."/");
+                return json(['status'=>0,'msg'=>'登录成功，欢迎您！','data'=>""]);
                 break;
             case 1:
-                $this->error('您的账户尚未注册', 'register');
+                // $this->error('您的账户尚未注册', 'register');
+                return json(['status'=>1,'msg'=>'您的账户尚未注册','data'=>""]);
                 break;
             case 2:
-                $this->error('登录密码错误');
+                return json(['status'=>1,'msg'=>'登录密码错误','data'=>""]);
+                // $this->error('登录密码错误');
                 break;
             case 3:
-                $this->error('您的账号暂时已被封锁，解封请联系我们');
+                // $this->error('您的账号暂时已被封锁，解封请联系我们');
+                return json(['status'=>1,'msg'=>'您的账号暂时已被封锁，解封请联系我们','data'=>""]);
                 break;
             default:
-                $this->error('未受理的请求');
+                // $this->error('未受理的请求');
+                return json(['status'=>1,'msg'=>'未受理的请求','data'=>""]);
+
         }
     }
 

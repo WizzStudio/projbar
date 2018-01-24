@@ -5,7 +5,7 @@
 <h1 align="center">登录</h1>
 <br />
 <div class="container">
-    <form action="{:url('dologin')}" method="post" >
+    <form action="#" method="post" id="login_form">
         <div class="form-group">
         <input type="text" class="form-control" name="account" placeholder="请输入邮箱/用户名">
         </div>
@@ -20,7 +20,7 @@
              alt="点击更换" title="点击更换" class="captcha" name="codeimage" id="codeimage" border="0"/>
         </div>
         </div>
-        <p><button type="submit" class="btn btn-primary btn-block">登录</button></p><br />
+        <p><button type="button" id="sub" class="btn btn-primary btn-block">登录</button></p><br />
         <p><a class="btn btn-success btn-block" href="{:url('user/public/register')}">还没有账号？去注册</a></p><br />
   <p><a class="btn btn-warning btn-block" href="{:url('user/public/find_pass')}">&emsp;忘记密码了？点击找回密码&emsp;</a></p>
     </form>
@@ -30,10 +30,32 @@
 {block name="free_js"}
 {__block__}
 <script>
-// layui.use('form',function(){
-//     $("#codeimage").on('click',function(){
-//         $(this).src='{:captcha_src()}?t='+Math.random();
-//     });
-// });
+layui.use(['element','layer'],function(){
+    var element = layui.element;
+    var layer = layui.layer;
+
+    //AJAX表单提交处理
+    $("#sub").on('click',function(){
+        $.ajax({
+            type: "POST",
+            url: '{:url("dologin")}',
+            data: $("#login_form").serialize(),
+            success: function(result){
+                if(result['status'] == 0){
+                    layer.msg(result['msg'],{icon:1, offset:'40vh',time: 1200},function(){
+                        window.location.href="{:url('/')}";
+                    });
+                }else{
+                    $("#codeimage").attr('src','{:captcha_src()}?t='+Math.random());
+                    layer.msg(result['msg'],{icon:2, offset:'40vh',time: 1600});
+                }
+            },
+            error: function(result){
+                alert(result);
+                window.location.href="{:url('user/public/login')}";
+            }
+        });
+    });
+});
 </script>
 {/block}
