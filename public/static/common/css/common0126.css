@@ -37,6 +37,12 @@
   background-color: #bbb;
   color: #eee;
 }
+.grad1{
+  background: -webkit-linear-gradient(#6aa4ec,#1b2b4e); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#6aa4ec,#1b2b4e); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#6aa4ec,#1b2b4e); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#6aa4ec,#1b2b4e); /* 标准的语法（必须放在最后） */
+}
 /* 颜色大改 */
 
 .layui-layer-molv .layui-layer-title{
