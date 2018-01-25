@@ -6,7 +6,7 @@
 
 /* 颜色大改 */
 .myblue{
-  background-color: #234d80;
+  background-color: #324b81;
   border-color: transparent;
   opacity: 0.86;
 }
@@ -20,17 +20,17 @@
    color:#ccc;
 }
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover{
-   background-color: #17355a;
-   border-color:#173355;
+   background-color: #1b3c64;
+   border-color:#1b3c64;
 }
 .navbar-inverse .navbar-toggle{
-  border-color:#234d80;
+  border-color:#324b81;
 }
 .mytag a:focus, a:hover{
   text-decoration: none;
 }
 .btn-myblue{
-  background-color: #2d63a5;
+  background-color: #2b406e;
   color: #eee;
 }
 .btn-light-grey{
