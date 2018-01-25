@@ -19,6 +19,14 @@
 .text-muted{
    color:#ccc;
 }
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover{
+   background-color: #17355a;
+   border-color:#173355;
+}
+.navbar-inverse .navbar-toggle{
+  border-color:#234d80;
+}
+
 /* 颜色大改 */
 
 .layui-layer-molv .layui-layer-title{
