@@ -478,10 +478,8 @@ function bar_get_proj_image()
     $maxNum = 7;
     $prefix = 'new';
     $imageId = rand(1,$maxNum);
-    if($id){
-        $beforeUrl = '/static/images/proj_images';
-        $result = $beforeUrl.'/'.$prefix.$id.'.jpg';
-    }
+    $beforeUrl = '/static/images/proj_images';
+    $result = $beforeUrl.'/'.$prefix.$imageId.'.jpg';
     return $result;
 }
 
