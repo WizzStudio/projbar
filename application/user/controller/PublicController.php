@@ -60,13 +60,14 @@ class PublicController extends BaseController
         
         $postData = $this->request->post();
         if(!$validate->check($postData)){
-            $this->error($validate->getError());
+            return json(['status'=>1,'msg'=>$validate->getError(),'data'=>""]);
         }
         
         if(!$isOpenRegister){
             $errMsg = bar_check_verify_code($postData['account'], $postData['verify_code']);
             if(!empty($errMsg)){
-                $this->error($errMsg);
+                // $this->error($errMsg);
+                return json(['status'=>1,'msg'=>$errMsg,'data'=>""]);
             }
         }
         
@@ -75,16 +76,20 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                $this->success('注册成功，欢迎加入项慕吧！', '/user/public/login');
+                // $this->success('注册成功，欢迎加入项慕吧！', '/user/public/login');
+                return json(['status'=>0,'msg'=>'注册成功，欢迎加入项慕吧！','data'=>""]);
                 break;
             case 1:
-                $this->error('该邮箱已被注册');
+                // $this->error('该邮箱已被注册');
+                return json(['status'=>1,'msg'=>'该邮箱已被注册','data'=>""]);
                 break;
             case 2:
-                $this->error('该用户名已被注册');
+                // $this->error('该用户名已被注册');
+                return json(['status'=>1,'msg'=>'该用户名已被注册','data'=>""]);
                 break;
             default:
-                $this->error('未受理的请求');
+                // $this->error('未受理的请求');
+                return json(['status'=>1,'msg'=>'未受理的请求','data'=>""]);
         }
 
     }
@@ -244,6 +249,19 @@ class PublicController extends BaseController
             }
         }else{
             $this->error('请求方式错误！');
+        }
+    }
+
+    /**
+     * 验证是否已登录
+     */
+    public function has_login()
+    {
+        $userId = bar_get_user_id();
+        if($userId){
+            return 1;
+        }else{
+            return 0;
         }
     }
 }

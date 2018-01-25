@@ -31,23 +31,38 @@
 <br />
 {/block}
 {block name="main"}
-<div class="layui-container-fluid" id="list">
-    <div class="layui-row layui-col-space12" id="main" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">
+<div class="fluid-container" style="margin-top:10px;margin-bottom:50px;">
+    <div class="row">
         {volist name="projList" id="proj"}
-        <div class="layui-col-md4 layui-col-xs12">
-            <div class="layui-box">
-                <a href={:url("index/index/view","id=$proj[id]")} style="color:#fff;">                        
-                    <div class="proj" style="background-image:url({$proj.image});border-radius:15px;"> 
-                    <p><b>{$proj.cate_name} : {$proj.name}</b></p>
-                    <p>{$proj.intro}</p>
-                    <!-- <p>查看详情 »»»&emsp;&emsp;</p> -->
-                    </div>
-                </a>        
+        <div class="col-md-6 col-sm-12">
+            <!-- content below -->
+            <a href={:url("index/index/view","id=$proj[id]")}>                        
+            <div class="proj">
+            <div class="proj-pic">
+                <div class="pic-img">
+                <img style="border-radius:8px;" src="{$proj.image}" alt="项目图片">
+                </div>
             </div>
+            <div class="proj-info">
+                <p class="proj-info-title">
+                {$proj.name}
+                </p>
+                <div class="proj-info-status">
+                    <span class="status-item status-icon">◈</span>
+                    <span class="status-item status-type">{$proj.cate_name}</span>
+                    <!-- <span class="status-item status-info status-on">招募中</span> -->
+                </div>
+                <div class="proj-info-main">
+                <p class="proj-intro">{$proj.intro}</p>
+                </div>
+            </div>
+            </div>
+            </a>
+            <!-- content above -->
         </div>
         {/volist}
     </div>
-    <div class="layui-container" align="center" id="paginate">{$projList->render()}</div>
+    <div class="container" align="center" id="paginate">{$projList->render()}</div>
 </div>
 {/block}
 {block name="free_js"}

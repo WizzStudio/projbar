@@ -473,11 +473,14 @@ function bar_has_action_today($fromId,$toId,$projId,$type)
  * @param $id 图片id
  * @return string 图片相对路径
  */
-function bar_get_proj_image($id=1)
+function bar_get_proj_image()
 {   
+    $maxNum = 7;
+    $prefix = 'new';
+    $imageId = rand(1,$maxNum);
     if($id){
         $beforeUrl = '/static/images/proj_images';
-        $result = $beforeUrl.'/bg'.$id.'.jpg';
+        $result = $beforeUrl.'/'.$prefix.$id.'.jpg';
     }
     return $result;
 }

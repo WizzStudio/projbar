@@ -1,0 +1,49 @@
+{extend name="templates/public/base.html" /}
+{block name="main"}
+<div class="fluid-container">
+  <div class="row">
+    {volist name="projList" id="proj"}
+    <div class="col-md-6 col-sm-12">
+        <!-- content below -->
+        <a href={:url("index/index/view","id=$proj[id]")}>                        
+        <div class="proj">
+          <div class="proj-pic">
+            <div class="pic-img">
+              <img style="border-radius:8px;" src="{$proj.image}" alt="项目图片">
+            </div>
+          </div>
+          <div class="proj-info">
+            <p class="proj-info-title">
+              {$proj.name}
+            </p>
+            <div class="proj-info-status">
+                <span class="status-item status-icon">￥</span>
+                <span class="status-item status-type">{$proj.cate_name}</span>
+                <!-- <span class="status-item status-info status-on">招募中</span> -->
+            </div>
+            <div class="proj-info-main">
+              <p class="proj-intro">{$proj.intro}</p>
+            </div>
+          </div>
+        </div>
+        </a>
+        <!-- content above -->
+    </div>
+    {/volist}
+  </div>
+  <div class="container" align="center" id="paginate">{$projList->render()}</div>
+</div>
+{/block}
+{block name="free_js"}
+{__block__}
+<script>
+    // 过多的字符串做省略号处理。
+    const PROJ_INTRO_MAX_LENGTH=60;
+    $(".proj-intro").each(function(){
+        projIntro = $(this).text();
+        if(projIntro.length > PROJ_INTRO_MAX_LENGTH){
+            $(this).text(projIntro.substr(0,PROJ_INTRO_MAX_LENGTH-1)+'...');
+        }
+    });
+</script>
+{/block}

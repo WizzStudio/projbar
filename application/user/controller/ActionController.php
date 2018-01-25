@@ -62,13 +62,12 @@ class ActionController extends UserBaseController
             $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
             $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
         }
-        $imageId = rand(1,12);
 
         $baseInfo['name'] = $post['name'];
         $baseInfo['cate_id'] = $post['category'];
         $baseInfo['intro'] = $post['intro'];
         $baseInfo['leader_id'] = $userId;
-        $baseInfo['image'] = bar_get_proj_image($imageId);
+        $baseInfo['image'] = bar_get_proj_image();
         $baseInfo['create_time'] = time();
 
         $projectModel = new Project();

@@ -5,7 +5,7 @@
 <h1 align="center">用户注册</h1>
 <br />
 <div class="container" style="width:86vw;">
-    <form action="{:url('doRegister')}" method="post" class="layui-form">
+    <form action="#" method="post" class="layui-form" id="register_form">
         <div class="layui-form-item">
         <input type="text" class="form-control" lay-verify="require" name="account" id="account" placeholder="请输入常用邮箱">
         </div>
@@ -33,7 +33,7 @@
         <div class="form-group">
           <p>
             <button type="button" class="btn btn-success" id="send">发送邮箱验证码</button>&emsp;
-            <button type="submit" class="btn btn-primary">确认注册</button>
+            <button type="button" class="btn btn-primary" id="sub">确认注册</button>
           </p>
         </div>
     </form>
@@ -46,6 +46,28 @@
 layui.use(['form','layer'],function(){
   var form = layui.form;
   var layer = layui.layer;
+
+  //AJAX表单提交
+  $("#sub").on('click',function(){
+    $.ajax({
+      type: "post",
+      url: "{:url('doRegister')}",
+      data: $("#register_form").serialize(),
+      success: function(result){
+        if(result['status'] == 0){
+            layer.msg(result['msg'],{icon:1, offset:'40vh',shade:0.5, time: 1200},function(){
+                window.location.href="{:url('user/public/login')}";
+            });
+        }else{
+            layer.msg(result['msg'],{icon:2,offset:'40vh',shade:0.5,time: 1600});
+        }
+      },
+      error: function(result){
+        alert(result);
+        window.location.href="{:url('user/public/register')}";
+      }
+    });
+  });
 
   var InterValObj; //timer变量，控制时间
   var count = 60; //间隔函数，1秒执行

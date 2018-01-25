@@ -7,6 +7,30 @@ use think\Db;
 class IndexController extends BaseController
 {   
     /**
+     * 测试
+     */
+    public function test()
+    {
+        $projQuery = Db::name("project");
+        $cateQuery = Db::name("category");
+        $roleQuery = Db::name("role");
+        $firstCates = $cateQuery->where('parent_id',0)->select();
+        $roles = $roleQuery->select();
+        $projList = $projQuery
+            ->alias('a')
+            ->join('__CATEGORY__ b','a.cate_id=b.id')
+            ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
+            ->order('id','desc')
+            ->paginate(9);
+        $this->assign([
+            'firstCates' => $firstCates,
+            'roles' => $roles,
+            'projList' => $projList
+        ]);
+        return $this->fetch();
+    }
+
+    /**
      * 首页+项目列表
      */
     public function index()
@@ -21,7 +45,7 @@ class IndexController extends BaseController
             ->join('__CATEGORY__ b','a.cate_id=b.id')
             ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
             ->order('id','desc')
-            ->paginate(9);
+            ->paginate(8);
         $this->assign([
             'firstCates' => $firstCates,
             'roles' => $roles,
@@ -130,6 +154,7 @@ class IndexController extends BaseController
 
     /**
      * 搜索项目/人才
+     * type:1项目/2人才
      */
     public function search()
     {
@@ -162,7 +187,7 @@ class IndexController extends BaseController
                     ->join('__CATEGORY__ c','a.cate_id=c.id')
                     ->distinct(true)
                     ->order('a.id','desc')
-                    ->paginate(9,false,[
+                    ->paginate(8,false,[
                         'query' => request()->param()
                     ]);
             }else{
@@ -173,7 +198,7 @@ class IndexController extends BaseController
                     ->join('__CATEGORY__ c','a.cate_id=c.id')
                     ->distinct(true)
                     ->order('a.id','desc')
-                    ->paginate(9,false,[
+                    ->paginate(8,false,[
                         'query' => request()->param()
                     ]);
             }
@@ -290,7 +315,7 @@ class IndexController extends BaseController
             ->join('__CATEGORY__ b','a.cate_id=b.id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name')
             ->distinct('a.id')
-            ->paginate(9,false,[
+            ->paginate(8,false,[
                 'query' => request()->param()
             ]);
         }else if(!$cid && $rid){
@@ -301,7 +326,7 @@ class IndexController extends BaseController
             ->join('__PROJ_SKILL__ b','a.id=b.proj_id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.role_id,c.name as cate_name')
             ->distinct('a.id')
-            ->paginate(9,false,[
+            ->paginate(8,false,[
                 'query' => request()->param()
             ]);
         }else if($cid && $rid){
@@ -315,7 +340,7 @@ class IndexController extends BaseController
             ->join('__PROJ_SKILL__ c','a.id=c.proj_id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name,c.role_id')
             ->distinct(true)
-            ->paginate(9,false,[
+            ->paginate(8,false,[
                 'query' => request()->param()
             ]);
         }
@@ -329,82 +354,5 @@ class IndexController extends BaseController
         ]);
         return $this->fetch();
     }
-
-    /**
-     * AJAX获取筛选后的项目
-     */
-    public function getFilterProj($cid)
-    {  
-        if($cid){
-            $projQuery =Db::name("project");
-            $cateQuery = Db::name("category");
-            $projList = $projQuery
-            ->alias('a')
-            ->where('cate_id',$cid)
-            ->whereOr('b.parent_id',$cid)
-            ->join('__CATEGORY__ b','a.cate_id=b.id')
-            ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
-            ->order('id','desc')
-            ->select();
-            return json($projList);
-        }else{
-            $this->redirect($this->request->root().'/');
-        }
-    }
-
-    /**
-     * AJAX联动异步筛选
-     */
-    public function getFilterResult($cid=0,$rid=0)
-    {   
-        $getData = $this->request->get();
-        print_r($getData);
-        return ;
-        if($cid || $rid){
-            $projQuery = Db::name("project");
-            $cateQuery = Db::name("category");
-            $projSkillQuery = Db::name("proj_skill");
-            if(!$cid && $rid){
-                $projList = $projQuery
-                    ->alias('a')
-                    ->where('role_id',$rid)
-                    ->join('__CATEGORY__ c','a.cate_id=c.id')
-                    ->join('__PROJ_SKILL__ b','a.id=b.proj_id')
-                    ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.role_id,c.name as cate_name')
-                    ->distinct('a.id')
-                    ->select();
-            }else if($cid && !$rid){
-                $projList = $projQuery
-                    ->alias('a')
-                    ->where('cate_id',$cid)
-                    ->whereOr('b.parent_id',$cid)
-                    ->join('__CATEGORY__ b','a.cate_id=b.id')
-                    ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name')
-                    ->distinct('a.id')
-                    ->select();
-            }else if($cid && $rid){
-                $projList = $projQuery
-                ->alias('a')
-                ->where(function($query)use($cid){
-                    $query->where('cate_id',$cid)->whereOr('b.parent_id',$cid);
-                })
-                ->where('role_id',$rid)
-                ->join('__CATEGORY__ b','a.cate_id=b.id')
-                ->join('__PROJ_SKILL__ c','a.id=c.proj_id')
-                ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name,c.role_id')
-                ->distinct('a.id')
-                ->select();
-            }
-            return json($projList);
-        }else{
-            $projQuery = Db::name("project");
-            $projList = $projQuery
-            ->alias('a')
-            ->join('__CATEGORY__ b','a.cate_id=b.id')
-            ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
-            ->order('id','desc')
-            ->select();
-            return json($projList);
-        }
-    }
+    
 }
