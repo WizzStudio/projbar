@@ -135,7 +135,7 @@
                               </select>  
                            </div>
                            <div class="layui-container">
-                             <button class="layui-btn btn-block" lay-submit id="test" lay-filter="mySubmit">搜索</button>
+                             <button class="layui-btn btn-block btn-myblue" lay-submit id="test" lay-filter="mySubmit">搜索</button>
                            </div>
                          </form>
                          `
@@ -183,7 +183,7 @@
                     $.each(data,function(i,item){
                       // alert(item.id+' and '+item.name);
 
-                      testString += "<a class='btn btn-success btn-block' href={:url('user/match/partners')}"+"?pid="+item.id+">"+item.name+"</a>";
+                      testString += "<a class='btn btn-block btn-myblue' href={:url('user/match/partners')}"+"?pid="+item.id+">"+item.name+"</a>";
                     });
                       layer.open({
                         type: 1,

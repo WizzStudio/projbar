@@ -29,17 +29,18 @@
     <div class="layui-row layui-col-space12" style="margin:10px;">                                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
+    <a href={:url("index/partner/view","id=$user[id]")}>
     <div class="layui-box">
-      <div style="height:270px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
-        <p>{$user['nickname']}&emsp;
+      <div style="height:240px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
+        <p style="height:30px;">{$user['nickname']}&emsp;
             {switch name="user.sex"}
             {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
             {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
             {default /}<i class="layui-icon" style="color:rgba(216, 216, 110, 0.938)">&#xe607;</i>
             {/switch}
-        </p><br />
+        </p>
         {if condition="$user['tags'] != []"}
-        <p>
+        <p class="mytag" style="height:30px;">
             {volist name="user['tags']" id="tag" key="k"}
             <span 
             {switch name="k"}
@@ -56,9 +57,8 @@
             {/volist}
         </p>
         {else /}
-        <span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span><br />
+        <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span></p>
         {/if}
-        <br />
 
             {if condition="$user['role'] != []"}
             {volist name="user['role']" id="role" key="i"}
@@ -106,12 +106,12 @@
             {else /}
             <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
             {/if}
-            <br>
             <p align="right">
-                <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+                <a class="layui-btn btn-myblue" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>
       </div>
     </div><!--layui-box-->
+    </a>
     </div>
     {/volist}
     </div>

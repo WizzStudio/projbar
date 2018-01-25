@@ -26,7 +26,17 @@
 .navbar-inverse .navbar-toggle{
   border-color:#234d80;
 }
-
+.mytag a:focus, a:hover{
+  text-decoration: none;
+}
+.btn-myblue{
+  background-color: #2d63a5;
+  color: #eee;
+}
+.btn-light-grey{
+  background-color: #bbb;
+  color: #eee;
+}
 /* 颜色大改 */
 
 .layui-layer-molv .layui-layer-title{
