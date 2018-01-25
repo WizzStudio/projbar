@@ -3,6 +3,24 @@
     border-color: transparent;
     opacity: 0.86;
 }
+
+/* 颜色大改 */
+.myblue{
+  background-color: #234d80;
+  border-color: transparent;
+  opacity: 0.86;
+}
+.navbar-brand{
+    color: #ddd!important;
+}
+.navbar-inverse .navbar-nav>li>a{
+    color: #ddd!important;
+}
+.text-muted{
+   color:#ccc;
+}
+/* 颜色大改 */
+
 .layui-layer-molv .layui-layer-title{
     background-color: #333!important;
 }

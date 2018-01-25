@@ -87,6 +87,7 @@ class User extends Model
                 session('user', $result);
                 $sessionId = session_id();
                 cookie('PHPSESSID',$sessionId,14*24*3600);
+                
                 $data = [
                     'last_login_time' => time(),
                     'last_login_ip' => get_client_ip(0, true)
