@@ -62,7 +62,10 @@
 
             {if condition="$user['role'] != []"}
             {volist name="user['role']" id="role" key="i"}
-            <p>角色：{$key}</p>
+            <p>
+            <span class="glyphicon glyphicon-user"></span>&nbsp;    
+            {$key}
+            </p>
             <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
                 <colgroup>
                   <col width="300">

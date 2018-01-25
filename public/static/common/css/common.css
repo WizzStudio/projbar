@@ -130,3 +130,8 @@
   .status-off{
     color: grey;
   }
+
+/* 筛选栏去边框 */
+.layui-form-pane .layui-input{
+    border-width: 0px;
+}
