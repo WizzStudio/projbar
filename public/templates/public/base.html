@@ -10,7 +10,7 @@
     
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/layui/css/layui.css" rel="stylesheet">     
-    <link href="__STATIC__/common/css/common0126.css" rel="stylesheet">
+    <link href="__STATIC__/common/css/common0126-1.css" rel="stylesheet">
   </head>
   <body style="margin-top:50px;background-color:rgb(230, 230, 230);">
     {block name="navbar"}
@@ -106,6 +106,7 @@
               ,area: ['95vw','70vh']
               ,title: '搜索项目'
               ,shade: 0.6//遮罩透明度
+              ,closeBtn: 2
               ,shadeClose: true  
               ,anim: 0 //0-6的动画形式，-1不开启
               ,content: `<form class="layui-form"action={:url('index/index/search')} method="get">
@@ -132,6 +133,10 @@
                                 <option value="14">算法</option>
                                 <option value="15">机器学习</option>
                                 <option value="16">运维</option>
+                                <option value="17">数模编程</option>
+                                <option value="18">数模建模</option>
+                                <option value="19">数模论文</option>
+                                <option value="20">商业策划</option>
                               </select>  
                            </div>
                            <div class="layui-container">

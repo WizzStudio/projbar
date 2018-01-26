@@ -20,11 +20,11 @@
    color:#ccc;
 }
 .navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover{
-   background-color: #1b3c64;
-   border-color:#1b3c64;
+   background-color: #54529e;
+   border-color: transparent;
 }
 .navbar-inverse .navbar-toggle{
-  border-color:#324b81;
+  border-color: transparent;
 }
 .mytag a:focus, a:hover{
   text-decoration: none;
@@ -38,10 +38,10 @@
   color: #eee;
 }
 .grad1{
-  background: -webkit-linear-gradient(#6aa4ec,#1b2b4e); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(#6aa4ec,#1b2b4e); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(#6aa4ec,#1b2b4e); /* Firefox 3.6 - 15 */
-  background: linear-gradient(#6aa4ec,#1b2b4e); /* 标准的语法（必须放在最后） */
+  background: -webkit-linear-gradient(#869af0,#1b1a3d); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#869af0,#1b1a3d); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#869af0,#1b1a3d); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#869af0,#1b1a3d); /* 标准的语法（必须放在最后） */
 }
 /* 颜色大改 */
 

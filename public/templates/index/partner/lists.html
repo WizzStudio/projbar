@@ -25,8 +25,8 @@
 </form>
 {/block}
 {block name="main"}
-<div class="layui-container-fluid">
-    <div class="layui-row layui-col-space12" style="margin:10px;">                                
+<div class="layui-container-fluid" style="margin:10px 0 50px 0;">
+    <div class="layui-row layui-col-space12">                                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
     <a href={:url("index/partner/view","id=$user[id]")}>

@@ -548,3 +548,20 @@ function bar_get_release_auth($userId)
         return 0;
     }
 }
+
+/**
+ * TODO
+ * 发布项目流程数据库失败后回滚
+ * @param int $projId
+ */
+function bar_release_rollback($projId)
+{   
+    $refArray = ['project','proj_tag','proj_skill','user_proj'];
+    foreach($refArray as $ref){
+        $query = Db::name($ref);
+        if($query->where('id',$projId)->find()){
+            $query->where('id',$projId)->delete();
+        }
+    }
+    return 0;
+}

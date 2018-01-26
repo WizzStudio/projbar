@@ -11,13 +11,13 @@ class Project extends Model
      */
     public function doRelease($data,$tags,$baseInfo,$roleNumber)
     {
-        $projectQuery = Db::name("project");
+        $projQuery = Db::name("project");
         $userProjQuery = Db::name("user_proj");
         $projTagQuery = Db::name("proj_tag");
         $projSkillQuery = Db::name("proj_skill");
         $userId = bar_get_user_id();
 
-        $projId = Db::name("project")->insertGetId($baseInfo);
+        $projId = $projQuery->insertGetId($baseInfo);
         if($projId){
             foreach($tags as $tag){
                 $projTagResult = $projTagQuery->insert([

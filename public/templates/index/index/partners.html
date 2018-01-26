@@ -1,20 +1,23 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <div class="layui-word-aux" style="line-height:30px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
-<div class="layui-container-fluid">
-  <div class="layui-row layui-col-space12" style="margin-left:10px;margin-right:10px;margin-bottom:10px;">                
+<div class="layui-container-fluid" style="margin:10px 0 50px 0;">
+  <div class="layui-row layui-col-space12">                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
-      <div style="height:270px;padding:10px;background-color: #444;opacity: 0.86;color:#eee;border-radius:15px;">                     
-        <p>{$user['nickname']}&emsp;
-        {switch name="user.sex"}
-        {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
-        {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
-        {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
-        {/switch}
-        </p>
-        <br />
-        <p>{volist name="user['tags']" id="tag" key="k"}
+        <a href={:url("index/partner/view","id=$user[id]")}>
+        <div class="layui-box">
+          <div style="height:240px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
+            <p style="height:30px;">{$user['nickname']}&emsp;
+                {switch name="user.sex"}
+                {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
+                {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
+                {default /}<i class="layui-icon" style="color:rgba(216, 216, 110, 0.938)">&#xe607;</i>
+                {/switch}
+            </p>
+            {if condition="$user['tags'] != []"}
+            <p class="mytag" style="height:30px;">
+                {volist name="user['tags']" id="tag" key="k"}
                 <span 
                 {switch name="k"}
                 {case value="1"}class="layui-bg-red"{/case}
@@ -26,52 +29,65 @@
                 {default/}black
                 {/switch}
                 style="color:#eee;
-                ;padding:5px;">{$tag.name}</span>
+                ;padding:4px;font-size:11px;">{$tag}</span>
                 {/volist}
-        </p><br />
-        {volist name="user['role']" id="role" key="i"}
-        <p>角色：{$key}</p>
-        <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
-            <colgroup>
-              <col width="300">
-              <col width="750">
-            </colgroup>
-            <thead>
-            </thead>
-            <tbody>
-              {volist name="role" id="level"}
-              <tr height="10">
-                <td style="color:#eee;">{$key}</td>
-                <td>
-                    {switch name="level"}
-                    {case value="1"}
-                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
-                        <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
-                    </div>
-                    {/case}
-                    {case value="2"}
-                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
-                        <div class="layui-progress-bar layui-bg-blue" lay-percent="2/3"></div>
-                    </div>
-                    {/case}
-                    {case value="3"}
-                    <div class="layui-progress layui-progress-big" style="background-color:inherit;">
-                        <div class="layui-progress-bar" lay-percent="100%"></div>
-                    </div>
-                    {/case}
-                    {default /}
-                    {/switch}
-                </td>
-              </tr>
-              {/volist}
-            </tbody>
-        </table>
-
-        {/volist}
-            <p align="right">
-                <a class="layui-btn" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
             </p>
-      </div>
+            {else /}
+            <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span></p>
+            {/if}
+    
+                {if condition="$user['role'] != []"}
+                {volist name="user['role']" id="role" key="i"}
+                <p>
+                <span class="glyphicon glyphicon-user"></span>&nbsp;    
+                {$key}
+                </p>
+                <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
+                    <colgroup>
+                      <col width="300">
+                      <col width="750">
+                    </colgroup>
+                    <thead>
+                    </thead>
+                    <tbody>
+                      {volist name="role" id="level"}
+                      <tr height="10">
+                        <td>{$key}</td>
+                        <td>
+                            {switch name="level"}
+                            {case value="1"}
+                            <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                                <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
+                            </div>
+                            {/case}
+                            {case value="2"}
+                            <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="2/3"></div>
+                            </div>
+                            {/case}
+                            {case value="3"}
+                            <div class="layui-progress layui-progress-big" style="background-color:inherit;">
+                                <div class="layui-progress-bar" lay-percent="100%"></div>
+                            </div>
+                            {/case}
+                            {default /}
+                            {/switch}
+                        </td>
+                      </tr>
+                      {/volist}
+                    </tbody>
+                </table>
+    
+                {/volist}
+                {else /}
+                <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
+                {/if}
+                <p align="right">
+                    <a class="layui-btn btn-myblue" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+                </p>
+          </div>
+        </div><!--layui-box-->
+        </a>
     </div>
     {/volist}
   </div> 
