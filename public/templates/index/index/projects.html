@@ -1,10 +1,10 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <div class="layui-word-aux" style="line-height:30px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
-<div class="fluid-container" style="margin-top:10px;margin-bottom:40px;">
+<div class="container-fluid" style="margin-top:10px;margin-bottom:40px;">
     <div class="row">
         {volist name="projList" id="proj"}
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-6 col-sm-12" style="padding:0 2px 0 2px;">
             <!-- content below -->
             <a href={:url("index/index/view","id=$proj[id]")}>                        
             <div class="proj">

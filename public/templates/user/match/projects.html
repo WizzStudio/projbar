@@ -1,10 +1,10 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <h2 align="center" style="padding:15px;">为您推荐项目</h1>
-    <div class="fluid-container" style="margin-top:10px;margin-bottom:50px;">
+    <div class="container-fluid" style="margin-top:10px;margin-bottom:50px;">
         <div class="row">
             {volist name="projList" id="proj"}
-            <div class="col-md-6 col-sm-12">
+            <div class="col-md-6 col-sm-12" style="padding:0 2px 0 2px;">
                 <!-- content below -->
                 <a href={:url("index/index/view","id=$proj[id]")}>                        
                 <div class="proj">

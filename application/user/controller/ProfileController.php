@@ -13,6 +13,51 @@ use app\common\model\Tag;
 class ProfileController extends UserBaseController
 {
     /**
+     * 编辑角色信息-测试页
+     */
+    public function test()
+    {
+        $userId = bar_get_user_id();
+        $userSkillQuery = Db::name("user_skill");
+        $userTagQuery = Db::name("user_tag");
+        $userExpQuery = Db::name("exp");
+        $roleQuery = Db::name("role");
+        $tagQuery = Db::name("tag");
+        $roles = $roleQuery->select();
+        $allTags = $tagQuery->select();
+        $roleId = '';
+        $skillList = $userSkillQuery->where('user_id',$userId)->select();
+        if(!empty($skillList)){
+            $roleId = $skillList[0]['role_id'];
+        }
+        
+        $checkTags = $userTagQuery
+            ->alias('a')
+            ->field('b.*')
+            ->where(['user_id' => $userId])
+            ->join('__TAG__ b','a.tag_id=b.id')
+            ->select();
+        foreach($allTags as $tag){
+            $tag['checked'] = 0;
+            foreach($checkTags as $checkTag){
+                if($checkTag['id'] == $tag['id']){
+                    $tag['checked'] = 1;
+                }
+            }
+            $resultTags[] = $tag;
+        }
+
+        $exp = $userExpQuery->where('user_id',$userId)->find();
+        $this->assign('exp',$exp['exp']);
+        $this->assign('roles',$roles);
+        $this->assign('roleId',$roleId);
+        $this->assign('skillList',$skillList);
+        $this->assign('resultTags',$resultTags);
+
+        return $this->fetch();
+    }
+
+    /**
      * 个人信息首页
      */
     public function center()
@@ -166,13 +211,17 @@ class ProfileController extends UserBaseController
 
             $postData = $this->request->post();
             if(!$validate->check($postData)){
-                $this->error($validate->getError());
+                // $this->error($validate->getError());
+                $errMsg = $validate->getError();
+                return json(['status'=>1,'msg'=>$errMsg]);
             }
             $userModel = new User();
             if($userModel->doBaseEdit($postData)){
-                $this->success("个人资料修改成功！",'user/profile/center');
+                // $this->success("个人资料修改成功！",'user/profile/center');
+                return json(['status'=>0,'msg'=>'个人资料修改成功！']);
             }else{
-                $this->error("没有修改新的信息");
+                // $this->error("没有修改新的信息");
+                return json(['status'=>1,'msg'=>'没有任何信息的更新']);
             }
         }else{
             $this->error('请求方式错误');
@@ -184,60 +233,37 @@ class ProfileController extends UserBaseController
      */
     public function edit_role_handle()
     {
-        $userId = bar_get_user_id();
+        if(!$this->request->isPost()){
+            $this->error("请求方式错误");
+        }
         $post = $this->request->post();
-        $roleId = $post['role'];
-        $skill = $post['skill'];
-        $level = $post['level'];
-        $exp = $post['exp'];
-        $tags = $post['tags'];
-        $userQuery = Db::name("user");
-        $userSkillQuery = Db::name("user_skill");
-        $tagQuery = Db::name("tag");
-        $expQuery = Db::name("exp");
-        $userTagQuery = Db::name("user_tag");
-        $expQuery = Db::name("exp");
-        $data['user_id'] = $userId;
-        $data['role_id'] = $roleId;
-        $tagNum = count($tags);
-
+        $succ = ['status'=>0,'msg'=>'ok'];
+        $err = ['status'=>1,'msg'=>'failed'];
+        if(!$post['role']){
+            $err['msg'] = '请选择您能够担任的角色';
+            return json($err);
+        }
+        if(!$post['skill'][0]){
+            $err['msg'] = '请填写至少一个技能';
+            return json($err);
+        }
+        $tagNum = count($post['tags']);
         if($tagNum > 6){
-            $this->error("标签不能超过六个");
-        }
-        $userSkillResult = $userSkillQuery->where('user_id',$userId)->select();
-        if($userSkillResult) $userSkillDelete = $userSkillQuery->where('user_id',$userId)->delete();
-        for($i=0;$i<3;$i++){
-            $data['name'] = $skill[$i];
-            $data['level'] = $level[$i];
-            $result = $userSkillQuery->insert($data);
-            if(!$result) $this->error('插入技能数据错误！');
+            $err['msg'] = '标签不能超过6个！';
+            return json($err);
         }
 
-        if($tags){
-            $tagDelete = $userTagQuery->where('user_id',$userId)->delete();
-            foreach($tags as $tag){
-                $result = $userTagQuery->insert(['user_id'=>$userId,'tag_id'=>$tag]);
-                if(!$result)$this->error('插入标签数据错误！');
-            }
-        }
-        if($exp){
-            $expFind = $expQuery->where('user_id',$userId)->find();
-            if($expFind){
-                $expResult = $expQuery->where('user_id',$userId)->update(['exp'=>$exp]);
-            }else{
-                $expResult = $expQuery->insert(['user_id'=>$userId,'exp'=>$exp]);
-            }
-        }
-        $userSkillFind = $userSkillQuery->where('user_id',$userId)->value('id');
-        $userTagFind = $userTagQuery->where('user_id',$userId)->value('id');
-        $expFind = Db::name("exp")->where('user_id',$userId)->value('id');
-        $listOrder = 0;
-        if($userSkillFind)$listOrder += 1;
-        if($userTagFind)$listOrder += 1;
-        if($expFind)$listOrder+=1;
-        $listOrderResult = $userQuery->where('id',$userId)->update(['list_order'=>$listOrder,'update_time'=>time()]);
+        //TODO 对于简介信息的关键字和联系方式过滤
 
-        $this->success('修改角色信息成功！','user/profile/center');
+        $userModel = new User();
+        $log = $userModel->doRoleEdit($post);
+        if($log == 0){
+            $succ['msg'] = '更新个人技能信息成功，您现在可以申请加入项目啦～';
+            return json($succ);
+        }else{
+            $err['msg'] = '数据库错误';
+            return json($err);
+        }
     }
 
     /**

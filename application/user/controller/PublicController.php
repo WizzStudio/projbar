@@ -264,4 +264,20 @@ class PublicController extends BaseController
             return 0;
         }
     }
+
+    /**
+     * 判定是否可以给予发布项目权利
+     */
+    public function release_auth()
+    {
+        $userId = bar_get_user_id();
+        if($userId){
+            if(!bar_get_release_auth($userId)){
+                return json(['status'=>1,'msg'=>'您今天的发布项目次数已经达到上限，请明天再来']);
+            }
+            return json(['status'=>0,'msg'=>'ok']);
+        }else{
+            return json(['status'=>2,'msg'=>'您还未登录，请登录后再进行“项目发布”操作']);
+        }
+    }
 }

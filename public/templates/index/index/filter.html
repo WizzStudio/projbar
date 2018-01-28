@@ -30,10 +30,10 @@
 </form>
 {/block}
 {block name="main"}
-<div class="fluid-container" style="margin:10px 0 50px 0;">
+<div class="container-fluid" style="margin:10px 0 50px 0;">
     <div class="row">
         {volist name="projList" id="proj"}
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-6 col-sm-12" style="padding:0 2px 0 2px;">
             <!-- content below -->
             <a href={:url("index/index/view","id=$proj[id]")}>                        
             <div class="proj">

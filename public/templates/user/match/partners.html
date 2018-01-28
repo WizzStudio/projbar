@@ -2,7 +2,7 @@
 {block name="main"}
 <br />
 <i>为您创建的项目<a href={:url('index/index/view',"id=$projId")}><b>{$projName}</b></a>推荐的人才如下：</i>
-<div class="layui-container-fluid" style="margin:10px 0 50px 0;">
+<div class="container-fluid" style="margin:10px 0 50px 0;">
   <div class="layui-row layui-col-space12">                                                
         {eq name="isNull" value="1"}<h1 align="center">Sorry,暂时没有找到</h1>{else/}
         {volist name="userList" id="user"}

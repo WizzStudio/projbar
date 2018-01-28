@@ -1,7 +1,7 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <div class="layui-word-aux" style="line-height:30px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
-<div class="layui-container-fluid" style="margin:10px 0 50px 0;">
+<div class="container-fluid" style="margin:10px 0 50px 0;">
   <div class="layui-row layui-col-space12">                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">

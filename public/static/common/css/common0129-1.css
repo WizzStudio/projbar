@@ -3,12 +3,21 @@
     border-color: transparent;
     opacity: 0.86;
 }
+.btn-white{
+  background-color: #eee;
+  color:#3b5998;
+  border-color:#3b5998;
+}
+.deep-grey{
+   background-color:#2a2a2a;
+   border-color: transparent;
+}
 
 /* 颜色大改 */
 .myblue{
-  background-color: #323e81;
+  background-color: #3b5998;
   border-color: transparent;
-  opacity: 0.86;
+  opacity: 0.9;
 }
 .navbar-brand{
     color: #ddd!important;
@@ -30,7 +39,7 @@
   text-decoration: none;
 }
 .btn-myblue{
-  background-color: #323e81;
+  background-color: #3b5998;
   color: #eee;
 }
 .btn-light-grey{
@@ -92,7 +101,6 @@
     display: flex;
     flex-flow: row;
     height: 120px;
-    /* margin-top: -14px; */
     padding: 0px 10px 0px 10px;
     border-bottom: 1px solid #e9e9e9;
     box-sizing: content-box;
@@ -116,6 +124,7 @@
   .proj-pic .pic-img img{
     height: 100%;
     width: 100%;
+    border-radius: 15px;
     object-fit: contain; 
   }
   

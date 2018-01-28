@@ -510,15 +510,6 @@ function bar_get_user_token($uid)
     }
 }
 
-/**
- * 查看用户是否今日是否还能发布项目
- * @param int $userId 尝试发布项目的用户ID
- */
-function bar_get_release_permission($userId)
-{
-    $projQuery = Db::name("project");
-    
-}
 
 /**
  * 获取修改密码授权
@@ -556,12 +547,15 @@ function bar_get_release_auth($userId)
  */
 function bar_release_rollback($projId)
 {   
+    $errorLog = 0;
     $refArray = ['project','proj_tag','proj_skill','user_proj'];
     foreach($refArray as $ref){
         $query = Db::name($ref);
         if($query->where('id',$projId)->find()){
-            $query->where('id',$projId)->delete();
+            $result = $query->where('id',$projId)->delete();
+            if(!$result) $errorLog++;
         }
     }
-    return 0;
+    return $errorLog;
 }
+

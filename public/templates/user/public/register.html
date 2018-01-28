@@ -4,36 +4,30 @@
 <br />
 <h1 align="center">用户注册</h1>
 <br />
-<div class="container" style="width:86vw;">
+<div class="container layui-box" style="width:86vw;">
     <form action="#" method="post" class="layui-form" id="register_form">
         <div class="layui-form-item">
-        <input type="text" class="form-control" lay-verify="require" name="account" id="account" placeholder="请输入常用邮箱">
+        <input type="text" class="layui-input" name="account" id="account" placeholder="输入常用邮箱">
         </div>
         <div class="layui-form-item">
-        <input type="text" class="form-control" lay-verify="require" name="username" placeholder="唯一用户名, 可用作登录（英文/数字/下划线）">
+        <input type="text" class="layui-input" name="username" placeholder="唯一用户名, 可用作登录（英文/数字/下划线）">
         </div>
         <div class="layui-form-item">
-          <input type="text" class="form-control" lay-verify="require" name="nickname" placeholder="昵称，用于对外显示和检索">
+          <input type="text" class="layui-input" name="nickname" placeholder="昵称，用于对外显示和检索">
         </div>
         <div class="layui-form-item">
-        <input type="password" class="form-control" lay-verify="require" name="password" placeholder="请输入密码(4-16位)">
+        <input type="password" class="layui-input" name="password" placeholder="输入密码(4-16位)">
         </div>
         <div class="layui-form-item">
-          <input type="password" class="form-control" lay-verify="require" name="repassword" placeholder="请确认你的密码">
+          <input type="password" class="layui-input" name="repassword" placeholder="确认密码">
         </div>
         <div class="layui-form-item">
-          <input type="text" class="form-control" lay-verify="require" name="verify_code" placeholder="请输入接收到的邮箱验证码" />        </div>
-        <!-- <div class="form-group">
-        <input type="text" class="form-control" name="captcha" id="captcha" placeholder="验证码">
-        <br />
-        <div class="code-img">
-            <img src="{:captcha_src()}" alt="点击更换" title="点击更换" onclick="this.src='{:captcha_src()}?time='+Math.random()" class="captcha" name="codeimage" id="codeimage" border="0"/>
+            <input type="text" class="layui-input" name="verify_code" placeholder="邮箱验证码" />    
         </div>
-        </div> -->
         <div class="form-group">
           <p>
-            <button type="button" class="btn btn-success" id="send">发送邮箱验证码</button>&emsp;
-            <button type="button" class="btn btn-primary" id="sub">确认注册</button>
+            <button type="button" class="btn btn-success" id="send">发送邮箱验证码</button>&nbsp;
+            <button type="button" class="btn btn-primary btn-white" style="width:50%" id="sub">确认注册</button>
           </p>
         </div>
     </form>

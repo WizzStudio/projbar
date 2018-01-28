@@ -8,7 +8,16 @@ use app\common\model\Project;
 use app\common\controller\UserBaseController;
 
 class ActionController extends UserBaseController
-{
+{   
+    /**
+     * 测试发布
+     */
+    public function test_del($id='')
+    {
+       $log = bar_release_rollback($id);
+       return $log;
+    }
+
     /**
      * 发布项目
      */
@@ -22,7 +31,7 @@ class ActionController extends UserBaseController
         $roles = $roleQuery->select();
         $userId = bar_get_user_id();
         if(!bar_get_release_auth($userId)){
-            $this->error('您今天的发布项目次数已经达到上限，请明天再来');
+            return json(['status'=>1,'msg'=>'您今天的发布项目次数已经达到上限，请明天再来','data'=>'']);
         }   
         foreach($parentCates as $cate){
             $childCates = $cateQuery->where('parent_id',$cate['id'])->field('id,parent_id,name')->select();
@@ -43,53 +52,48 @@ class ActionController extends UserBaseController
     {   
         $validate = new Validate([
             'name' => 'require|min:2|max:25',
-            'intro' => 'require|max:160'
+            'category' => 'require',
+            'intro' => 'require|max:160',
+
         ]);
+
+        $success = ["status"=>0,'msg'=>'成功！','data'=>''];
+        $error = ["status"=>1,'msg'=>'错误！','data'=>''];
+
         $post = $request->post();
         if(!$validate->check($post)){
-            $this->error($validate->getError());
+            $error = ['status'=>1,'msg'=>$validate->getError(),'data'=>''];
+            return json($error);
         }  
         $tags = isset($post['tags'])?$post['tags']:[];
         $tagNum = count($tags);
         if($tagNum > 6){
-            $this->error('标签不能超过六个');
-        }      
-        $roleNumber = count($post['role']);
-        $userId = bar_get_user_id();
-        for($i=0;$i<$roleNumber;$i++){
-            $roleId = $post['role'][$i];
-            $data[$roleId][$post['skill1'][$i]] = $post['level1'][$i];
-            $data[$roleId][$post['skill2'][$i]] = $post['level2'][$i];
-            $data[$roleId][$post['skill3'][$i]] = $post['level3'][$i];
+            $error['msg'] = '标签不能超过六个';
+            return json($error);
         }
 
-        $baseInfo['name'] = $post['name'];
-        $baseInfo['cate_id'] = $post['category'];
-        $baseInfo['intro'] = $post['intro'];
-        $baseInfo['leader_id'] = $userId;
-        $baseInfo['image'] = bar_get_proj_image();
-        $baseInfo['create_time'] = time();
-
         $projectModel = new Project();
-        $log = $projectModel->doRelease($data,$tags,$baseInfo,$roleNumber);
+        $log = $projectModel->doRelease($post);
         switch($log){
             case 0:
-                $this->success('项目发布成功!','/');
-                break;
+                $success['msg'] = '项目发布成功，当收到“加入项目申请”时，项慕吧会发邮件通知您，请注意查收。';
+                return json($success);
             case 1:
-                $this->error('项目基本信息添加失败！');
-                break;
+                $error['msg'] = '项目基本信息添加失败！';
+                return json($error);
             case 2:
-                $this->error('项目标签添加失败！');
+                $error['msg'] = '项目标签添加失败！';
+                return json($error);
                 break;
             case 3:
-                $this->error('项目需求角色信息添加失败！');
-                break;
+                $error['msg'] = '项目需求角色信息添加失败！';
+                return json($error);
             case 4:
-                $this->error('添加发起人到成员列表失败！');
-                break;
+                $error['msg'] = '添加发起人到成员列表失败！';
+                return json($error);
             default:
-                $this->error('未受理的请求');
+                $error['msg'] = '未受理的请求';
+                return json($error);
         }
     }
 

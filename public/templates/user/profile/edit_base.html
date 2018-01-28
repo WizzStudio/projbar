@@ -1,9 +1,10 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
+<br />
 <h1 align="center">编辑基本信息</h1>
 <div class="layui-container" style="width:80vw;">
     <div class="layui-box">
-    <form class="layui-form" action="{:url('editBase')}" method="post">
+    <form class="layui-form" action="#" method="post" id="form">
         <div class="layui-form-item">
             手机：<input type="text" class="layui-input" name="mobile" placeholder="手机号" value="{$user.mobile}">
         </div>
@@ -26,9 +27,35 @@
         <div class="layui-form-item">
             额外(100字以内补充说明)：<input type="text" class="layui-input" name="extra" placeholder="额外信息(100字以内)" value="{$user.extra}">
         </div>
-        <button type="submit" class="btn btn-primary btn-block">确认修改</button>
+        <button type="button" id="sub" class="btn btn-primary btn-block">确认修改</button>
     </form>
     </div>
 </div>
 <br />
+{/block}
+{block name="free_js"}
+<script>
+layui.use('form',function(){
+    var form = layui.form;
+    $("#sub").on('click',function(){
+        $.ajax({
+            type: 'post',
+            url: '{:url("editBase")}',
+            data: $("#form").serialize(),
+            success: function(result){
+                if(result['status'] == 0){
+                    layer.msg(result['msg'],{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
+                        window.location.href='{:url("user/profile/center")}';
+                    });
+                }else{
+                    layer.msg(result['msg'],{icon:2, offset:'40vh',shade:0.5,time: 1500});
+                }
+            },
+            error: function(result){
+                layer.msg(result,{icon:2, offset:'40vh',shade:0.5,time: 1600});
+            }
+        });
+    });
+});
+</script>
 {/block}

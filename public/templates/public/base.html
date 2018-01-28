@@ -10,7 +10,7 @@
     
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/layui/css/layui.css" rel="stylesheet">     
-    <link href="__STATIC__/common/css/common0126-3.css" rel="stylesheet">
+    <link href="__STATIC__/common/css/common0129-1.css" rel="stylesheet">
   </head>
   <body style="margin-top:50px;background-color:rgb(230, 230, 230);">
     {block name="navbar"}
@@ -26,7 +26,7 @@
             </button>
             <a class="navbar-brand" href="{:url('/')}"><span class="glyphicon glyphicon-fire"></span>&nbsp;项慕吧&nbsp;</a>
             <span class="navbar-brand glyphicon glyphicon-search" id="search"></span>
-            <span class="navbar-brand glyphicon glyphicon-pencil" id="release"></span>
+            <a class="navbar-brand" id="release" href="#"><span class="glyphicon glyphicon-pencil"></span><span style="font-size:16px;">&nbsp;发布</span></a>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -52,13 +52,12 @@
     {block name="main"}
     <h1 align="center">Base Main Templates</h1>
     {/block}
-    <footer class="footer myblue p-footer" style="height:40vh;">
-      <div class="layui-container">
-        <br />
+    <footer class="footer deep-grey p-footer" style="margin-top:80px;height:24vh;">
+      <div class="layui-container" style="padding:10px;">
         <p class="text-muted">
-          <a class="text-muted" href="{:url('index/public/about')}">关于项慕吧</a>&emsp;
-          <a class="text-muted" href="{:url('index/public/contact')}">联系我们</a>&emsp;
-          <a class="text-muted" id="work">合作伙伴</a>
+          <a class="text-muted" href="{:url('index/public/about')}">关于项慕吧</a>&nbsp;|
+          <a class="text-muted" href="{:url('index/public/contact')}">联系我们</a>&nbsp;|
+          <a class="text-muted" href="{:url('index/public/contact')}">开发人员</a>
         </p>
         <p class="text-muted">
           <a class="text-muted" href="http://portal.helloyzy.cn">CTG门户</a>
@@ -67,9 +66,8 @@
           |
           <a class="text-muted" href="http://tgblog.helloyzy.cn">CTG博客</a>
         </p>
-        <p class="text-muted">Copyright © 2017-2018 项慕吧 / projbar.cn</p>
+        <p class="text-muted">Copyright © 2017-2018 项慕吧 / projbar.cn </p>
         <p class="text-muted"><b>Great Things Start From Tiny</b></p>
-        <p class="text-muted">CTG Production</p>
         <p class="text-muted">陕ICP备17020688号-2</p>
       </div>
     </footer>
@@ -86,11 +84,14 @@
           
           //发布项目
           $("#release").on('click',function(){
-            $.get('{:url("user/public/has_login")}',function(data,status){
-              if(data == 0){
-                layer.msg("您还未登录，请登录后再进行“项目发布”操作～",{icon:6,offset:'40vh',shade:0.5,time:1600},function(){
+            $.get('{:url("user/public/release_auth")}',function(data,status){
+              if(data['status'] == 2){
+                layer.msg(data['msg'],{icon:6,offset:'40vh',shade:0.5,time:1600},function(){
                   window.location.href="{:url('user/public/login')}";
                 });
+              }else if(data['status'] == 1){
+                layer.msg(data['msg'],{icon:5,offset:'40vh',shade:0.5,time:1500});
+                window.location.href="{:url('/')}";
               }else{
                 window.location.href="{:url('user/action/release')}";
               }
