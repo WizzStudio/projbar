@@ -111,7 +111,6 @@ layui.use('form',function(){
     });
     
     //加减角色按钮状态判定
-    $(document).ready(function(){
         skillNum = $(".skill_item").length;
         if(skillNum == 3){
             $("#skill_add").addClass("layui-btn-disabled");
@@ -163,7 +162,6 @@ layui.use('form',function(){
                 $(this).attr("disabled",true);
             }
         });
-    });
 });
 </script>
 {/block}
