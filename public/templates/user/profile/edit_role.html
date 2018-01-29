@@ -119,49 +119,50 @@ layui.use('form',function(){
         }
         if(skillNum == 1){
             $("#skill_del").addClass("layui-btn-disabled");
-            $("skill_del").attr("disabled",true);
+            $("#skill_del").attr("disabled",true);
         }
 
         //添加技能
-    $("#skill_add").on('click',function(){
-        beforeNum = $(this).parent().nextAll(".skill_item").length;
-        var appendSkill = `
-        <div class="layui-form-item skill_item">
-            <div class="col-lg-5 col-xs-7">
-                <input type="hidden" name="uk_id[]" value="" />
-                <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+        $("#skill_add").on('click',function(){
+            beforeNum = $(this).parent().nextAll(".skill_item").length;
+            var appendSkill = `
+            <div class="layui-form-item skill_item">
+                <div class="col-lg-5 col-xs-7">
+                    <input type="hidden" name="uk_id[]" value="" />
+                    <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+                </div>
+                <div class="col-lg-4 col-xs-5">
+                    <select name="level[]" class="form-control level">
+                        <option value="1">入门</option>
+                        <option value="2">熟练</option>
+                        <option value="3">精通</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-lg-4 col-xs-5">
-                <select name="level[]" class="form-control level">
-                    <option value="1">入门</option>
-                    <option value="2">熟练</option>
-                    <option value="3">精通</option>
-                </select>
-            </div>
-        </div>
-        `;
-        $(this).parent().parent().children().last().before(appendSkill);
-        afterNum = beforeNum + 1;
-        $(this).next().removeClass("layui-btn-disabled");
-        $(this).next().attr("disabled",false);
-        if(afterNum >= 3){
-            $(this).addClass("layui-btn-disabled");
-            $(this).attr("disabled",true);
-        }
-        form.render();
-    });
-    //删除技能
-    $("#skill_del").on('click',function(){
-        beforeNum = $(this).parent().nextAll(".skill_item").length;
-        $(this).parent().parent().children().last().prev().remove();
-        afterNum = beforeNum - 1;
-        $(this).prev().removeClass("layui-btn-disabled");
-        $(this).prev().attr("disabled",false);
-        if(afterNum <= 1){
-            $(this).addClass("layui-btn-disabled");
-            $(this).attr("disabled",true);
-        }
-    });
+            `;
+            $(this).parent().parent().children().last().before(appendSkill);
+            afterNum = beforeNum + 1;
+            $(this).next().removeClass("layui-btn-disabled");
+            $(this).next().attr("disabled",false);
+            if(afterNum >= 3){
+                $(this).addClass("layui-btn-disabled");
+                $(this).attr("disabled",true);
+            }
+            form.render();
+        });
+        //删除技能
+        $("#skill_del").unbind('click');
+        $("#skill_del").on('click',function(){
+            beforeNum = $(this).parent().nextAll(".skill_item").length;
+            $(this).parent().parent().children().last().prev().remove();
+            afterNum = beforeNum - 1;
+            $(this).prev().removeClass("layui-btn-disabled");
+            $(this).prev().attr("disabled",false);
+            if(afterNum <= 1){
+                $(this).addClass("layui-btn-disabled");
+                $(this).attr("disabled",true);
+            }
+        });
     });
 });
 </script>
