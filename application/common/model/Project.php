@@ -45,6 +45,7 @@ class Project extends Model
         foreach($projData['role'] as $role){
             $type = $role['type'];
             foreach($role['skill'] as $i=>$skill){
+                if(!$skill) continue;
                 $level = $role['level'][$i];
                 $insertSkill = [
                     'proj_id' => $projId,
