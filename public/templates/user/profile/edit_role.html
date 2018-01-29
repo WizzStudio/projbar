@@ -52,7 +52,7 @@
             </div>
             {/volist}
             {/if}
-            <div class="skill_end"></div>
+            <div id="skill_end"></div>
         </div> <!-- role -->
         <hr />
         <div id="tag">
@@ -153,7 +153,8 @@ layui.use('form',function(){
         $("#skill_del").unbind('click');
         $("#skill_del").on('click',function(){
             beforeNum = $(this).parent().nextAll(".skill_item").length;
-            $(this).parent().parent().children().last().prev().remove();
+            $("#skill_end").prev().remove();
+            // $(this).parent().parent().children().last().prev().remove();
             afterNum = beforeNum - 1;
             $(this).prev().removeClass("layui-btn-disabled");
             $(this).prev().attr("disabled",false);
