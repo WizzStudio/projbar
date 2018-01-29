@@ -2,7 +2,7 @@
 {block name="cascade"}
 <form class="layui-form layui-form-pane" action="{:url('index/partner/filter')}" method="get">
     <div class="layui-row">
-        <div class="layui-input-inline layui-col-xs5">
+        <div class="layui-input-inline layui-col-xs4">
         <select name="role" id="role" lay-filter="selectRole">
             <option value="">角色职能</option>
             {volist name="roles" id="role"}
@@ -10,7 +10,7 @@
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs5">
+        <div class="layui-input-inline layui-col-xs4">
         <select name="tag" id="tag" lay-filter="selectTag">
             <option value="">个人标签</option>
             {volist name="tags" id="tag"}
@@ -18,8 +18,8 @@
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs2">
-            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
+        <div class="layui-input-inline layui-col-xs4">
+            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a>&nbsp;筛选</button>            
         </div>
     </div>
 </form>
@@ -128,10 +128,12 @@ layui.use(['form','layer','element'],function(){
 
     form.on('select(selectRole)',function(data){
         $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
     });
 
     form.on('select(selectTag)',function(data){
         $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
     });
 });
 </script>

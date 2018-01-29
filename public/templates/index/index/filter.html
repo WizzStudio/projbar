@@ -24,7 +24,7 @@
     </select>
     </div>
     <div class="layui-inpuy-inline layui-col-xs3">
-    <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
+    <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a>&nbsp;筛选</button>            
     </div>
 </div>
 </form>
@@ -98,12 +98,14 @@ layui.use('form',function(){
                 form.render();
             }
         );
-        $("#filter_icon").attr("style","color: #ef5b25;")
+        $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
         }
     });
 
     form.on('select(typeRole)',function(data){
-        $("#filter_icon").attr('style',"color: #ef5b25");
+        $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
     });
 });
 </script>

@@ -26,7 +26,7 @@
         </select>
         </div>
         <div class="layui-input-inline layui-col-xs3">
-        <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
+        <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a>&nbsp;筛选</button>            
         </div>
     </div>
     </form>
@@ -86,7 +86,8 @@
                 form.render('select');
             }
         );
-        $("#filter_icon").attr("style","color: #ef5b25;")
+        $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
         }
         var cid1 = $("#type1").val();
         var cid2 = $("#type2").val();
@@ -142,6 +143,7 @@
             }
         );
         $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
     });
 
     //省略简介

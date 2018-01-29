@@ -2,7 +2,7 @@
 {block name="cascade"}
 <form class="layui-form layui-form-pane" action="{:url('index/partner/filter')}" method="get">
     <div class="layui-row">
-        <div class="layui-input-inline layui-col-xs5">
+        <div class="layui-input-inline layui-col-xs4">
         <select name="role" id="role">
             <option value="">角色职能</option>
             {volist name="allRoles" id="role"}
@@ -10,7 +10,7 @@
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs5">
+        <div class="layui-input-inline layui-col-xs4">
         <select name="tag" id="tag">
             <option value="">个人标签</option>
             {volist name="allTags" id="allTag"}
@@ -18,8 +18,8 @@
             {/volist}
         </select>
         </div>
-        <div class="layui-input-inline layui-col-xs2">
-            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a></button>            
+        <div class="layui-input-inline layui-col-xs4">
+            <button class="layui-input" id="filter" lay-submit style="text-align:center;"><a id="filter_icon" class="glyphicon glyphicon-filter"></a>&nbsp;筛选</button>            
         </div>
     </div>
 </form>
@@ -31,7 +31,7 @@
     <div class="layui-col-md4 layui-col-xs12">
         <a href={:url("index/partner/view","id=$user[id]")}>
         <div class="layui-box">
-          <div style="height:240px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
+          <div style="height:220px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
             <p style="height:30px;">{$user['nickname']}&emsp;
                 {switch name="user.sex"}
                 {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
@@ -107,7 +107,7 @@
                 <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
                 {/if}
                 <p align="right">
-                    <a class="layui-btn btn-myblue" href={:url("index/partner/view","id=$user[id]")}>查看详情 »</a>&emsp;&emsp;
+                    查看详情&emsp;»
                 </p>
           </div>
         </div><!--layui-box-->
@@ -123,6 +123,16 @@
 layui.use(['element','form'],function(){
     var form = layui.form;
     var element = layui.element;
+
+    form.on('select(selectRole)',function(data){
+        $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
+    });
+
+    form.on('select(selectTag)',function(data){
+        $("#filter_icon").attr("style","color: #ef5b25;");
+        $("#filter").attr("style","color: #ef5b25;");
+    });
 });
 </script>
 {/block}
