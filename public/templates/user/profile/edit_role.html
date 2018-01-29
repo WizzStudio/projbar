@@ -121,9 +121,8 @@ layui.use('form',function(){
             $("#skill_del").addClass("layui-btn-disabled");
             $("skill_del").attr("disabled",true);
         }
-    });
 
-    //添加技能
+        //添加技能
     $("#skill_add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".skill_item").length;
         var appendSkill = `
@@ -162,6 +161,7 @@ layui.use('form',function(){
             $(this).addClass("layui-btn-disabled");
             $(this).attr("disabled",true);
         }
+    });
     });
 });
 </script>
