@@ -88,7 +88,7 @@ layui.use(['form','layer'],function(){
   var form = layui.form;
   var layer = layui.layer;
   form.render();
-  var n=2,m=1;
+  var n=2,m=0;
 
   $(".level").attr("disabled",true);
   form.render();
@@ -118,6 +118,7 @@ layui.use(['form','layer'],function(){
 
   //添加角色
   $("#add").on('click',function(){
+    m = m + 1;
     var appendTxt = `
     <div class="role">
         <label class="control-label">角色${n}</label>
@@ -138,7 +139,7 @@ layui.use(['form','layer'],function(){
             <button type="button" disabled="true" class="skill_del layui-btn layui-btn-warm layui-btn-xs layui-btn-disabled" style="width:80px;"><b>—</b></button>
         </label>    
         <div class="layui-form-item">
-          <div class="col-lg-6 col-xs-7">
+          <div class="col-lg-5 col-xs-7">
             <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
           </div>
           <div class="col-lg-4 col-xs-5">
@@ -151,7 +152,6 @@ layui.use(['form','layer'],function(){
       </div><!--role-->
     `;
     n = n + 1;
-    m = m + 1;
     $("#delete").removeClass("layui-btn-disabled");
     if(n == 5){$("#add").addClass("layui-btn-disabled");}
     $("#end").before(appendTxt);
@@ -183,11 +183,11 @@ layui.use(['form','layer'],function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         var appendSkill = `
         <div class="layui-form-item">
-            <div class="col-lg-6 col-xs-7">
-                <input lay-verify="required" type="text" name="role[0][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+            <div class="col-lg-5 col-xs-7">
+                <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
             </div>
             <div class="col-lg-4 col-xs-5">
-                <select name="role[0][level][]" class="form-control level">
+                <select name="role[${m}][level][]" class="form-control level">
                 <option value="">先填技能</option>
                 </select>
             </div>
@@ -274,12 +274,13 @@ layui.use(['form','layer'],function(){
     });
 
     //添加技能
+    $(".skill_add").unbind('click');
     $(".skill_add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         var appendSkill = `
         <div class="layui-form-item">
-            <div class="col-lg-6 col-xs-7">
-                <input lay-verify="required" type="text" name="role[0][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+            <div class="col-lg-5 col-xs-7">
+                <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
             </div>
             <div class="col-lg-4 col-xs-5">
                 <select name="role[0][level][]" class="form-control level">
@@ -317,6 +318,7 @@ layui.use(['form','layer'],function(){
         form.render();
     });
     //删除技能
+    $(".skill_del").unbind('click');
     $(".skill_del").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         $(this).parent().parent().children().last().prev().remove();
