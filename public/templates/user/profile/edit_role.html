@@ -7,7 +7,7 @@
     <div class="layui-word-aux" style="margin-left:-5px;">选择一个合适您的角色，并最多添加三个技能</div>
     <form class="layui-form" id="form" action=# method="post" role="form">
         <div id="role">
-            <label class="control-label">角色</label>
+            <div class="layui-form-item">角色</div>
             <div class="layui-form-item">
                 <div class="col-md-9 col-xs-11 column">
                 <select name="role" class="form-control">
@@ -17,10 +17,10 @@
                 </select>
                 </div>
             </div>
-            <label class="control-label">技能&特长&emsp;
+            <div class="layui-form-item">技能&特长&emsp;
                 <button type="button" id="skill_add" class="layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
                 <button type="button" id="skill_del" class="layui-btn layui-btn-warm layui-btn-xs" style="width:80px;"><b>—</b></button>
-            </label>
+            </div>
             {if condition="$skillList == []"}
             <div class="layui-form-item skill_item">
                 <div class="col-lg-5 col-xs-7">
@@ -38,7 +38,7 @@
             {else/}
             {volist name="skillList" id="skill"}
             <div class="layui-form-item skill_item">
-                <div class="col-md-5 col-xs-6 column">
+                <div class="col-md-5 col-xs-7 column">
                     <input type="hidden" name="uk_id[]" value="{$skill.id}" />
                     <input name="skill[]" value="{$skill.name}" type="text" class="form-control skill" placeholder="技能名称(必填)" />
                 </div>
@@ -52,7 +52,7 @@
             </div>
             {/volist}
             {/if}
-            <div id="skill_end"></div>
+            <div id="skill_end"><br /></div>
         </div> <!-- role -->
         <hr />
         <div id="tag">
@@ -153,8 +153,7 @@ layui.use('form',function(){
         $("#skill_del").unbind('click');
         $("#skill_del").on('click',function(){
             beforeNum = $(this).parent().nextAll(".skill_item").length;
-            $("#skill_end").prev().remove();
-            // $(this).parent().parent().children().last().prev().remove();
+            $(this).parent().parent().children().last().prev().remove();
             afterNum = beforeNum - 1;
             $(this).prev().removeClass("layui-btn-disabled");
             $(this).prev().attr("disabled",false);

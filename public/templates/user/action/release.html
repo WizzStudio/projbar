@@ -38,7 +38,7 @@
     <h3>角色需要</h3>
     <hr />    
     <div class="role">
-    <label class="control-label">角色1</label>
+    <div class="layui-form-item">角色1</div>
     <div class="layui-form-item">
       <div class="col-lg-8 col-xs-8">
       <select name="role[0][type]" class="form-inline form-control" lay-verify="required">
@@ -49,10 +49,10 @@
       </select>        
       </div>
     </div>
-    <label class="control-label">需求技能&emsp;
-        <button type="button" class="skill_add layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
-        <button type="button" disabled="true" class="skill_del layui-btn layui-btn-warm layui-btn-xs layui-btn-disabled" style="width:80px;"><b>—</b></button>
-    </label>
+    <div class="layui-form-item">需求技能&emsp;
+        <button type="button" class="skill-add layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
+        <button type="button" class="skill-del layui-btn layui-btn-warm layui-btn-xs layui-btn-disabled" style="width:80px;"><b>—</b></button>
+    </div>
     <div class="layui-form-item">
       <div class="col-lg-5 col-xs-7">
         <input lay-verify="required" type="text" name="role[0][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
@@ -121,7 +121,7 @@ layui.use(['form','layer'],function(){
     m = m + 1;
     var appendTxt = `
     <div class="role">
-        <label class="control-label">角色${n}</label>
+        <div class="layui-form-item">角色${n}</div>
         <div class="layui-form-item">
           <div class="col-lg-8 col-xs-8">
           <select lay-verify="required" name="role[${m}][type]" class="form-inline form-control">
@@ -134,10 +134,10 @@ layui.use(['form','layer'],function(){
           <div class="col-lg-4 col-xs-4 column">
           </div>
         </div>
-        <label class="control-label">需求技能&emsp;
-            <button type="button" class="skill_add layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
-            <button type="button" disabled="true" class="skill_del layui-btn layui-btn-warm layui-btn-xs layui-btn-disabled" style="width:80px;"><b>—</b></button>
-        </label>    
+        <div class="layui-form-item">需求技能&emsp;
+            <button type="button" class="skill-add layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
+            <button type="button" disabled="true" class="skill-del layui-btn layui-btn-warm layui-btn-xs layui-btn-disabled" style="width:80px;"><b>—</b></button>
+        </div>    
         <div class="layui-form-item">
           <div class="col-lg-5 col-xs-7">
             <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
@@ -178,8 +178,8 @@ layui.use(['form','layer'],function(){
     });
 
     //添加技能
-    $(".skill_add").unbind('click');
-    $(".skill_add").on('click',function(){
+    $(".skill-add").unbind('click');
+    $(".skill-add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         var appendSkill = `
         <div class="layui-form-item">
@@ -224,8 +224,8 @@ layui.use(['form','layer'],function(){
         form.render();
     });
     //删除技能
-    $(".skill_del").unbind('click');
-    $(".skill_del").on('click',function(){
+    $(".skill-del").unbind('click');
+    $(".skill-del").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         $(this).parent().parent().children().last().prev().remove();
         afterNum = beforeNum - 1;
@@ -274,8 +274,8 @@ layui.use(['form','layer'],function(){
     });
 
     //添加技能
-    $(".skill_add").unbind('click');
-    $(".skill_add").on('click',function(){
+    $(".skill-add").unbind('click');
+    $(".skill-add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         var appendSkill = `
         <div class="layui-form-item">
@@ -317,9 +317,10 @@ layui.use(['form','layer'],function(){
         });
         form.render();
     });
+
     //删除技能
-    $(".skill_del").unbind('click');
-    $(".skill_del").on('click',function(){
+    $(".skill-del").unbind('click');
+    $(".skill-del").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
         $(this).parent().parent().children().last().prev().remove();
         afterNum = beforeNum - 1;
@@ -329,6 +330,7 @@ layui.use(['form','layer'],function(){
             $(this).addClass("layui-btn-disabled");
             $(this).attr("disabled",true);
         }
+        form.render();
     });
 });
 </script>
