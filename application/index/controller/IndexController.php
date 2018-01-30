@@ -5,30 +5,7 @@ use app\common\controller\BaseController;
 use think\Db;
 
 class IndexController extends BaseController
-{   
-    /**
-     * 测试
-     */
-    public function test()
-    {
-        $projQuery = Db::name("project");
-        $cateQuery = Db::name("category");
-        $roleQuery = Db::name("role");
-        $firstCates = $cateQuery->where('parent_id',0)->select();
-        $roles = $roleQuery->select();
-        $projList = $projQuery
-            ->alias('a')
-            ->join('__CATEGORY__ b','a.cate_id=b.id')
-            ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
-            ->order('id','desc')
-            ->paginate(9);
-        $this->assign([
-            'firstCates' => $firstCates,
-            'roles' => $roles,
-            'projList' => $projList
-        ]);
-        return $this->fetch();
-    }
+{
 
     /**
      * 首页+项目列表
@@ -43,6 +20,7 @@ class IndexController extends BaseController
         $projList = $projQuery
             ->alias('a')
             ->join('__CATEGORY__ b','a.cate_id=b.id')
+            ->where('a.status',1)
             ->field('a.id,a.name,a.image,a.cate_id,a.intro,b.name as cate_name')
             ->order('id','desc')
             ->paginate(8);
@@ -181,6 +159,7 @@ class IndexController extends BaseController
                 $projList = $projQuery
                     ->alias('a')
                     ->field('a.*,c.name as cate_name')
+                    ->where('a.status',1)
                     ->where('a.name','like','%'.$getKey.'%')
                     ->where('b.tag_id',$getTag)
                     ->join('__PROJ_TAG__ b','a.id=b.proj_id')
@@ -195,6 +174,7 @@ class IndexController extends BaseController
                     ->alias('a')
                     ->field('a.*,c.name as cate_name')
                     ->where('a.name','like','%'.$getKey.'%')
+                    ->where('a.status',1)
                     ->join('__CATEGORY__ c','a.cate_id=c.id')
                     ->distinct(true)
                     ->order('a.id','desc')
@@ -223,6 +203,7 @@ class IndexController extends BaseController
                     ->alias('a')
                     ->field('a.*')
                     ->where('a.username|a.nickname','like','%'.$getKey.'%')
+                    ->where('a.status',1)
                     ->where('b.tag_id',$getTag)
                     ->join('__USER_TAG__ b','a.id=b.user_id')
                     ->distinct(true)
@@ -235,6 +216,7 @@ class IndexController extends BaseController
                     ->alias('a')
                     ->field('a.*')
                     ->where('a.username|a.nickname','like','%'.$getKey.'%')
+                    ->where('a.status',1)
                     ->distinct(true)
                     ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                     ->paginate(6,false,[
@@ -250,9 +232,7 @@ class IndexController extends BaseController
                     ->where('user_id',$user['id'])
                     ->join('__TAG__ b','a.tag_id=b.id')
                     ->select();
-                // foreach($tags as $tag){
-                //     $user['tags'][] = $tag['name'];
-                // }
+
                 $user['tags'] = $tags;
                 $skills = $userSkillQuery
                     ->where('user_id',$user['id'])
@@ -313,6 +293,7 @@ class IndexController extends BaseController
             ->where('cate_id',$cid)
             ->whereOr('b.parent_id',$cid)
             ->join('__CATEGORY__ b','a.cate_id=b.id')
+            ->where('a.status',1)
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name')
             ->distinct('a.id')
             ->paginate(8,false,[
@@ -322,6 +303,7 @@ class IndexController extends BaseController
             $projList = $projQuery
             ->alias('a')
             ->where('role_id',$rid)
+            ->where('a.status',1)
             ->join('__CATEGORY__ c','a.cate_id=c.id')
             ->join('__PROJ_SKILL__ b','a.id=b.proj_id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.role_id,c.name as cate_name')
@@ -336,6 +318,7 @@ class IndexController extends BaseController
                 $query->where('cate_id',$cid)->whereOr('b.parent_id',$cid);
             })
             ->where('role_id',$rid)
+            ->where('a.status',1)
             ->join('__CATEGORY__ b','a.cate_id=b.id')
             ->join('__PROJ_SKILL__ c','a.id=c.proj_id')
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name,c.role_id')

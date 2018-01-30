@@ -13,51 +13,6 @@ use app\common\model\Tag;
 class ProfileController extends UserBaseController
 {
     /**
-     * 编辑角色信息-测试页
-     */
-    public function test()
-    {
-        $userId = bar_get_user_id();
-        $userSkillQuery = Db::name("user_skill");
-        $userTagQuery = Db::name("user_tag");
-        $userExpQuery = Db::name("exp");
-        $roleQuery = Db::name("role");
-        $tagQuery = Db::name("tag");
-        $roles = $roleQuery->select();
-        $allTags = $tagQuery->select();
-        $roleId = '';
-        $skillList = $userSkillQuery->where('user_id',$userId)->select();
-        if(!empty($skillList)){
-            $roleId = $skillList[0]['role_id'];
-        }
-        
-        $checkTags = $userTagQuery
-            ->alias('a')
-            ->field('b.*')
-            ->where(['user_id' => $userId])
-            ->join('__TAG__ b','a.tag_id=b.id')
-            ->select();
-        foreach($allTags as $tag){
-            $tag['checked'] = 0;
-            foreach($checkTags as $checkTag){
-                if($checkTag['id'] == $tag['id']){
-                    $tag['checked'] = 1;
-                }
-            }
-            $resultTags[] = $tag;
-        }
-
-        $exp = $userExpQuery->where('user_id',$userId)->find();
-        $this->assign('exp',$exp['exp']);
-        $this->assign('roles',$roles);
-        $this->assign('roleId',$roleId);
-        $this->assign('skillList',$skillList);
-        $this->assign('resultTags',$resultTags);
-
-        return $this->fetch();
-    }
-
-    /**
      * 个人信息首页
      */
     public function center()

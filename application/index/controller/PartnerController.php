@@ -20,7 +20,11 @@ class PartnerController extends BaseController
         $tags = $tagQuery->select();
         $roles = $roleQuery->select();
         // 按照信息完整度排序
-        $userBase = $userQuery->field('id,username,sex,nickname')->order(['list_order'=>'desc','last_login_time'=>'desc'])->paginate(6);
+        $userBase = $userQuery
+            ->field('id,username,sex,nickname')
+            ->where('status',1)
+            ->order(['list_order'=>'desc','last_login_time'=>'desc'])
+            ->paginate(6);
         $userList = [];
         foreach($userBase as $user){
             if(!$user['nickname']){
@@ -130,7 +134,7 @@ class PartnerController extends BaseController
     }
 
     /**
-     * 获得筛选后的人才列表(有问题！！！！！)
+     * 获得筛选后的人才列表
      */
     public function filter()
     {
@@ -153,6 +157,7 @@ class PartnerController extends BaseController
                 ->alias('a')
                 ->join('__USER_SKILL__ b','a.id=b.user_id')
                 ->join('__ROLE__ c','b.role_id=c.id')
+                ->where('a.status',1)
                 ->field('a.id,a.username,a.nickname,a.sex,c.name as role_name')
                 ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                 // ->page($page,3)

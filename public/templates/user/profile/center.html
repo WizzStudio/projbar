@@ -14,59 +14,124 @@
 }
 </style>
 <div class="layui-container-fluid">
-    <div style="background-repeat:no-repeat;background-size:cover; color:#eee;padding:20px;background-image:url(/static/images/proj_images/center4.jpg)">
-    <br /><h1 align="center">个人中心</h1><br />
-      <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;color:#eee!important;font-weight:800!important;">
-          <colgroup>
-            <col width="300">
-            <col width="700">
-          </colgroup>
-          <tbody>
-            <tr>
-              <td>用户名：</td>
-              <td>{$user['username']}</td>
-            </tr>
-            <tr>
-              <td>昵称：</td>
-              <td>{$user['nickname']}</td>
-            </tr>
-            <tr>
-              <td>性别：</td>
-              <td>
-                {switch name="user.sex"}
-                {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
-                {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
-                {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
-                {/switch}
-              </td>
-            </tr>
-            <tr>
-              <td>手机：</td>
-              <td>{$user['mobile']}</td>
-            </tr>
-            <tr>
-              <td>QQ：</td>
-              <td> {$user['qq']}</td>
-            </tr>
-            <tr>
-              <td>邮箱：</td>
-              <td>{$user['email']}</td>
-            </tr>
-            <tr>
-              <td>额外：</td>
-              <td>{$user['extra']}</td>
-            </tr>
-          </tbody>
-      </table>
-        <br />
-        <p align="center">
-          <a class="btn btn-primary btn-block" style="width:80vw;" href="{:url('edit_base')}">编辑基础信息</a>
-          <a class="btn btn-warning btn-block" style="width:80vw;" href="{:url('pass_update')}">修改密码</a>
-        </p>
-    </div>
-    <br />
+  <br /><h2 align="center">—— 个人中心 ——</h2>
+  <div class="layui-container">
+  <table class="layui-table" lay-even lay-skin="nob">
+    <colgroup>
+      <col width=20%>
+      <col width=80%>
+    </colgroup>
+    <tbody>
+      <tr>
+        <td>用户名：</td>
+        <td>{$user.username}</td>
+      </tr>
+      <tr>
+        <td>昵称：</td>
+        <td>{$user.nickname}&emsp;
+          {switch name="user.sex"}
+              {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
+              {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
+              {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
+          {/switch}
+        </td>
+      </tr>
+      <tr>
+        <td>QQ:</td>
+        <td>{$user.qq}</td>
+      </tr>
+      <tr>
+        <td>邮箱：</td>
+        <td>{$user.email}</td>
+      </tr>
+      <tr>
+        <td><a href="{:url('pass_update')}" class="layui-btn btn-block layui-btn-warm">修改密码</a></td>
+        <td><a href="{:url('edit_base')}" class="layui-btn btn-block btn-myblue">编辑基础信息</a></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  {volist name="roleInfoList" id="roleInfo"}
+  <div class="layui-container">
+  <table class="layui-table" lay-even lay-skin="nob">
+    <colgroup>
+      <col width=34%>
+      <col width=65%>
+    </colgroup>
+    <thead>
+      <tr>
+        <td colspan="2"><span class="glyphicon glyphicon-education"></span>&nbsp;担任角色：{$key}</td>
+      </tr>
+    </thead>
+    <tbody>
+      {volist name="roleInfo" id="skill"}
+      <tr>
+        <td>{$skill.name}</td>
+        <td>
+          {switch name="skill['level']"}
+          {case value="1"}
+          <div class="layui-progress layui-progress-big">
+              <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
+          </div>
+          {/case}
+          {case value="2"}
+          <div class="layui-progress layui-progress-big">
+              <div class="layui-progress-bar layui-bg-blue" lay-percent="2/3"></div>
+          </div>
+          {/case}
+          {case value="3"}
+          <div class="layui-progress layui-progress-big">
+              <div class="layui-progress-bar" lay-percent="100%"></div>
+          </div>
+          {/case}
+          {default /}
+          {/switch}
+        </td>
+      </tr>
+      {/volist}
+      <tr>
+        <th colspan="2"><span class="glyphicon glyphicon-tags"></span>&nbsp;个人标签</th>
+      </tr>
+      <tr>
+        <td colspan="2">
+          {volist name="tags" id="tag" key="k"}
+          <span 
+          {switch name="k"}
+          {case value="1"}class="layui-bg-red"{/case}
+          {case value="2"}class="layui-bg-orange"{/case}
+          {case value="3"}class="layui-bg-green"{/case}
+          {case value="4"}class="layui-bg-cyan"{/case}
+          {case value="5"}class="layui-bg-black"{/case}
+          {case value="6"}class="layui-bg-gray"{/case}
+          {default/}black
+          {/switch}
+          style="color:#eee;
+          ;padding:5px;font-size:11px;">{$tag['name']}</span>
+          {/volist}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><span class="glyphicon glyphicon-list-alt"></span>&nbsp;项目&实践经历</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div class="bg-warning my-exp" style="border-radius:15px;padding:10px;">
+            <p>
+              {$exp}
+              <br /><br />
+            </p>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><a href="{:url('edit_role')}" class="layui-btn btn-block btn-myblue">编辑技能信息</a></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  {/volist}
 </div>
-<br />
+
 <div class="layui-collapse" lay-filter="test">
   <div class="layui-colla-item">
     <h2 class="layui-colla-title">通知消息</h2>
@@ -120,63 +185,6 @@
         {/switch}
     {/volist}
     {if condition="empty($msgs)"}<p>暂无消息</p>{/if}
-    </div>
-  </div>
-  <div class="layui-colla-item">
-    <h2 class="layui-colla-title">技能信息(人才依据信息完整度排序)</h2>
-    <div class="layui-colla-content">
-      {volist name="roleInfoList" id="roleInfo"}
-      <p style="color:grey;">{$key}</p>    
-          <table class="layui-table" lay-skin="nob">
-              <colgroup>
-                <col width="150">
-                <col width="900">
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>技能</th>
-                  <th>等级（入门/熟练/精通）</th>
-                </tr>
-              </thead>
-              <tbody>
-                  {volist name="roleInfo" id="skill"}
-                  <tr>
-                      <td>{$skill.name}</td>
-                      <td>
-                          {switch name="skill['level']"}
-                          {case value="1"}
-                          <div class="layui-progress layui-progress-big">
-                              <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
-                          </div>
-                          {/case}
-                          {case value="2"}
-                          <div class="layui-progress layui-progress-big">
-                              <div class="layui-progress-bar layui-bg-blue" lay-percent="2/3"></div>
-                          </div>
-                          {/case}
-                          {case value="3"}
-                          <div class="layui-progress layui-progress-big">
-                              <div class="layui-progress-bar" lay-percent="100%"></div>
-                          </div>
-                          {/case}
-                          {default /}
-                          {/switch}
-                      </td>
-                  </tr>
-                  {/volist}
-              </tbody>
-          </table>
-        {/volist}
-        <p style="color:grey;">个人标签</p>      
-        <p>
-        {volist name="tags" id="tag"}
-        {$tag['name']}&nbsp;/
-        {/volist}
-        </p>
-        <p style="color:grey;">项目/实践经历</p>            
-        <p>{$exp}</p>
-        <br />
-        <p><a class="btn btn-primary" href="{:url('edit_role')}">编辑角色信息</a></p>
     </div>
   </div>
   <div class="layui-colla-item">

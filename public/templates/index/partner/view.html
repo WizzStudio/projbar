@@ -6,21 +6,35 @@
 }
 </style>
 <div class="layui-container" style="padding-top:10px;">
-  <h1 align="center">{$user.nickname}</h1><br/>
-  <h3>基础信息</h3><br />
-  <p>昵称：{$user['nickname']}&emsp;
-      {switch name="user.sex"}
-      {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
-      {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
-      {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
-      {/switch}
-  </p>
-  <p>邮箱：建立合作关系后在我的项目->详情中查看</p>
-  <hr />
+  <legend align="center" style="font-size:36px;border-color:#bbb;">{$user.nickname}</legend><br/>
+  <h3>基础信息</h3>
+  <table class="layui-table" lay-even lay-skin="nob">
+    <colgroup>
+      <col width="35%">
+      <col width="65%">
+    </colgroup>
+      <tbody>
+      <tr>
+        <td>昵称：</td>
+        <td>
+          {$user['nickname']}&emsp;
+          {switch name="user.sex"}
+          {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
+          {case value="2"}<i class="layui-icon" style="color:rgb(245, 94, 194)">&#xe661;</i>{/case}
+          {default /}<i class="layui-icon" style="color:grey">&#xe607;</i>
+          {/switch}
+        </td>
+      </tr>
+      <tr>
+        <td>QQ和邮箱：</td>
+        <td>建立合作关系后在我的项目->详情中查看</td>
+      </tr>
+      </tbody>
+  </table>
   <h3>角色信息</h3>
   {volist name="roleInfoList" id="roleInfo"}
   <p style="color:grey;text-align:center;">{$key}</p>    
-      <table class="layui-table" lay-skin="nob">
+      <table class="layui-table" lay-even lay-skin="nob">
           <colgroup>
             <col width="250">
             <col width="800">
@@ -81,9 +95,12 @@
   </p>
   <hr />
   <h3>项目经历</h3>
+  <div class="bg-warning my-exp" style="border-radius:15px;padding:10px;margin:10px 0 20px 0;">
   <p>
     {$exp.exp}
+    <br /><br />
   </p>
+  </div>
   <p>
     {eq name="status" value="0"}
     <button class="layui-btn btn-block btn-myblue" id="invite">邀请加入</button>      

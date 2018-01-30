@@ -10,9 +10,9 @@
     
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/layui/css/layui.css" rel="stylesheet">     
-    <link href="__STATIC__/common/css/common0129-1.css" rel="stylesheet">
+    <link href="__STATIC__/common/css/common0131-1.css" rel="stylesheet">
   </head>
-  <body style="margin-top:50px;background-color:rgb(230, 230, 230);">
+  <body style="margin-top:50px;background-color:#e6e6e6;">
     {block name="navbar"}
     <!-- Fixed navbar -->
     <nav class="navbar navbar-inverse navbar-fixed-top myblue grad1" role="navigation">
@@ -169,13 +169,36 @@
           shadeClose: true,
           content:`
           <div style="padding:20px;">
-            <a class="btn btn-primary btn-block" href="{:url('user/match/projects')}">匹配项目</a>
-            <button class="btn btn-primary btn-block" id="chooseProj">匹配人才</button>
+            <button class="btn btn-primary btn-block btn-myblue" id="matchProj">匹配项目</button>
+            <button class="btn btn-primary btn-block btn-myblue" id="matchUser">匹配人才</button>
           </div>
           `,
           success: function(layero,index){
             var lastindex= index;
-            $("#chooseProj").on('click',function(){
+            //匹配项目
+            $("#matchProj").on('click',function(){
+              $.ajax({
+                type:"get",
+                url: '{:url("user/public/has_login")}',
+                success: function(result){
+                  if(result == 1){
+                    window.location.href='{:url("user/match/projects")}';
+                  }else{
+                    layer.msg('请登录后再进行该操作～',{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
+                      window.location.href="{:url('user/public/login')}";
+                    });
+                  }
+                },
+                error: function(result){
+                  console.log(result);
+                    layer.msg('未知错误',{icon:5,offset:'40vh',shade:0.5,time:1600},function(){
+                  });
+                }
+              });
+            });
+
+            //匹配人才
+            $("#matchUser").on('click',function(){
               var testString = '';
               var begin = '<div style="padding:20px;">';
               var end = '</div>'
@@ -183,8 +206,9 @@
                 "{:url('user/public/myprojects')}",
                 function(data,status){
                   if(data == 1){
-                    layer.msg('请登录后再进行操作',{offset:['40vh'],time:2000,anim: 6});
-                    layer.close(index);
+                    layer.msg('请登录后再进行该操作～',{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
+                      window.location.href="{:url('user/public/login')}";
+                    });
                   }else{
                     $.each(data,function(i,item){
                       // alert(item.id+' and '+item.name);
@@ -193,7 +217,7 @@
                     });
                       layer.open({
                         type: 1,
-                        offset: ['30vh'],
+                        offset: ['20vh'],
                         title: '请选择项目进行推荐匹配',
                         skin: 'layui-layer-molv',
                         closeBtn: 2,

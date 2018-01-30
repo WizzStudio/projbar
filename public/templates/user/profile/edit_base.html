@@ -2,7 +2,7 @@
 {block name="main"}
 <br />
 <h1 align="center">编辑基本信息</h1>
-<div class="layui-container" style="width:80vw;">
+<div class="layui-container" style="margin-top:10px;width:80vw;">
     <div class="layui-box">
     <form class="layui-form" action="#" method="post" id="form">
         <div class="layui-form-item">
@@ -27,6 +27,7 @@
         <div class="layui-form-item">
             额外(100字以内补充说明)：<input type="text" class="layui-input" name="extra" placeholder="额外信息(100字以内)" value="{$user.extra}">
         </div>
+        <br />
         <button type="button" id="sub" class="btn btn-primary btn-block">确认修改</button>
     </form>
     </div>
