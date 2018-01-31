@@ -143,24 +143,31 @@ layui.use(['layer','element'],function(){
     $("#apply").on('click',function(){
         layer.confirm("确认要申请加入该项目吗？",{icon: 3,offset:['30vh']},function(index){
             $("#apply").attr("disabled","true");
-            $("#apply").text("今日已发出申请");
             layer.close(index);
-            layer.msg('发起申请成功！',{icon: 1, time:2000,offset:['30vh']});
+            var index = layer.load(0, {offset:['40vh'],shade: 0.5});
             $.get(
                 '{:url("user/action/apply","id=$projBase[id]")}',
                 function(data,status){
+                    layer.close(index);
                     if(data != 0){
                         if(data == 1){
                             layer.msg('发起申请失败',{icon: 2,time:2000,offset:['30vh']});
                         }else if(data == 2){
                             layer.msg('发起申请成功，但由于内部错误，向对方发送通知邮件失败，如果一直遇到此问题请反馈给我们',{icon:4,offset:['30vh']});
                         }else if(data.code == 0){
-                            layer.msg('您还未登录，请登录后再进行操作！',{icon:2,time:1500,offset:['30vh']},function(){
+                            layer.msg('您还未登录，请登录后再进行操作！',{icon:6,time:1500,shade:0.5,offset:['30vh']},function(){
                                 window.location.href="{:url('user/public/login')}";
+                            });
+                        }else if(data == 4){
+                            layer.msg('您的“技能信息”尚未完善，请完善后再申请项目～',{icon:6,time:1500,offset:['30vh']},function(){
+                                window.location.href="{:url('user/profile/edit_role')}";
                             });
                         }else{
                             layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000,offset:['30vh']});
                         }
+                    }else{
+                        layer.msg('发起申请成功！',{icon: 1, time:2000,offset:['30vh']});
+                        $("#apply").text("今日已发出申请");
                     }
                 }
             );

@@ -1,13 +1,14 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<div class="layui-word-aux" style="line-height:30px;">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;<b>{$tagName}</b>&nbsp;的结果如下：</div>
+<p style="line-height:10px;">&nbsp;</p>
+<div class="layui-word-aux">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;“{$tagName}”&nbsp;的结果如下：</div>
 <div class="container-fluid" style="margin:10px 0 50px 0;">
   <div class="layui-row layui-col-space12">                
     {volist name="userList" id="user"}
     <div class="layui-col-md4 layui-col-xs12">
         <a href={:url("index/partner/view","id=$user[id]")}>
         <div class="layui-box">
-          <div style="height:220px;padding:10px;background-color:#fff;opacity: 0.86;border-radius:15px;">                                         
+          <div class="user-box">                                         
             <p style="height:30px;">{$user['nickname']}&emsp;
                 {switch name="user.sex"}
                 {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
@@ -29,7 +30,7 @@
                 {default/}black
                 {/switch}
                 style="color:#eee;
-                ;padding:4px;font-size:11px;">{$tag}</span>
+                ;padding:4px;font-size:11px;">{$tag.name}</span>
                 {/volist}
             </p>
             {else /}
@@ -82,9 +83,11 @@
                 {else /}
                 <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
                 {/if}
-                <p align="right">
-                    查看详情&emsp;»
-                </p>
+          </div>
+          <div class="user-view-more">
+            <p>
+                查看详情&emsp;»
+            </p>
           </div>
         </div><!--layui-box-->
         </a>

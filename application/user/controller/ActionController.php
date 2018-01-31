@@ -107,8 +107,14 @@ class ActionController extends UserBaseController
             $userId = bar_get_user_id();
             if(!$userId) return 9;
             $name = empty(session('user.nickname')) ? session('user.username') : session('user.nickname'); 
+            $userQuery = Db::name("user");
             $msgQuery = Db::name("message");
             $projQuery = Db::name("project");
+            $infoNum = $userQuery->where('id',$userId)->value('list_order');
+            if($infoNum < 2){
+                //信息不够完善
+                return 4;
+            }
             $projBase = $projQuery->where('id',$id)->find();
             $has_apply_today = bar_has_action_today($userId,$projBase['leader_id'],$projBase['id'],1);
             if($has_apply_today){
@@ -482,12 +488,5 @@ class ActionController extends UserBaseController
         }
     }
 
-    /**
-     * 测试
-     */
-    public function test(){
-        $userId = bar_get_user_id();
-        $num = bar_get_release_auth($userId);
-        return ;
-    }
+    
 }

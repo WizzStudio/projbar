@@ -202,6 +202,7 @@ class PublicController extends BaseController
         }
     }
 
+
     /**
      * AJAX:获取用户创建的项目列表
      */
@@ -212,8 +213,11 @@ class PublicController extends BaseController
         }
         $projQuery = Db::name("project");
         $myProjects = $projQuery->where("leader_id",$userId)->field('id,cate_id,name')->select();
+        if($myProjects ==  []) return 2;
         return json($myProjects);
     }
+
+    
 
     /**
      * 找回密码页

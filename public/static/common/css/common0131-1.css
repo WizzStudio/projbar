@@ -17,7 +17,6 @@
 .myblue{
   background-color: #3b5998;
   border-color: transparent;
-  opacity: 0.9;
 }
 .navbar-brand{
     color: #ddd!important;
@@ -47,10 +46,10 @@
   color: #eee;
 }
 .grad1{
-  background: -webkit-linear-gradient(#86a7f0,#1a233d); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(#86a7f0,#1a233d); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(#86a7f0,#1a233d); /* Firefox 3.6 - 15 */
-  background: linear-gradient(#86a7f0,#1a233d); /* 标准的语法（必须放在最后） */
+  background: -webkit-linear-gradient(#accbee,#3b4998); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#accbee,#3b4998); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#accbee,#3b4998); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#a1c4ec,#3b4b98); /* 标准的语法（必须放在最后） */
 }
 /* 颜色大改 */
 
@@ -189,4 +188,19 @@
 
 .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form{
   border-color:#3b5998!important;
+}
+
+.user-box{
+  height:180px;
+  padding:10px;
+  background-color:#fff;
+  opacity: 0.86;
+}
+.user-view-more{
+  background-color:#fff;
+  opacity:0.86;
+  margin-top:0px;
+  padding:10px;
+  color:#666;
+  text-align:right;
 }

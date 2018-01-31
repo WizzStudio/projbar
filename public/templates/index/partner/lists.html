@@ -31,7 +31,7 @@
     <div class="layui-col-md4 layui-col-xs12">
     <a href={:url("index/partner/view","id=$user[id]")}>
     <div class="layui-box">
-      <div class="newbox" style="height:190px;padding:10px;background-color:#fff;opacity: 0.86;">                                         
+      <div class="user-box">                                         
         <p style="height:30px;">{$user['nickname']}&emsp;
             {switch name="user.sex"}
             {case value="1"}<i class="layui-icon" style="color:rgba(0, 162, 255, 0.651);">&#xe662;</i>{/case}
@@ -107,8 +107,8 @@
             <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
             {/if}
       </div>
-      <div style="background-color:#fff;opacity:0.86;margin-top:0px;padding:10px;">
-        <p align="right" style="color:#666;">
+      <div class="user-view-more">
+        <p>
             查看详情&emsp;»
         </p>
       </div>

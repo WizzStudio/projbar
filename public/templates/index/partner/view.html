@@ -120,55 +120,72 @@ layui.use(['form','layer','element'],function(){
     var element = layui.element;
     
     $("#invite").on('click',function(){
-        layer.open({
-          type: 1,
-          title: '请选择邀请加入的项目(登录后的功能)',
-          offset: ['30vh'],
-          skin: 'layui-layer-molv', //加上边框
-          closeBtn: 2,
-          shadeClose: true,
-          area: ['90vw'], //宽高
-          content: `
-            <div style="padding:15px;">
-              {volist name="myProjects" id="myproject"}
-                <button class="btn btn-success btn-block invite-btn" {eq name="$myproject['has_invite_today']" value="1"}disabled=true{/eq}
-                 data-uid="{$user['id']}" data-pid="{$myproject['id']}">
-                  {$myproject.cate_name}：{$myproject.name}
-                </button>
-              {/volist}
-            </div>
-          `,
-          success: function(layero, index){
-            form.render();
-            $(".invite-btn").on('click',function(){
-            uid = $(this).attr('data-uid');
-            pid = $(this).attr('data-pid');
-            $(this).attr("disabled",true);
-            $(this).text($(this).text()+"(今日已经邀请过ta加入此项目了)");
-            $.get(
-              "{:url('user/action/invite')}"+"?uid="+uid+"&pid="+pid,
-              function(data,status){
-                if(data == 0){
-                  layer.msg('发起邀请成功！',{icon: 1,time: 2000,offset: ['30vh']});
-                }else if(data == 1){
-                  layer.msg('不能邀请自己！',{icon: 2,time: 2000,offset: ['30vh']});
-                }else if(data == 2){
-                  layer.msg('不能邀请已经在项目中的成员',{icon: 2,time: 2000,offset: ['30vh']});
-                }else if(data == 3){
-                  layer.msg('内部错误，如果持续出现请联系我们',{icon: 2,time: 2000});
-                }else if(data == 4){
-                  layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000,offset: ['30vh']});
-                }else if(data.code == 0){
-                  layer.msg('您还未登录，请登录后再进行操作！',{icon:2,time:1500,offset:['30vh']},function(){
-                    window.location.href="{:url('user/public/login')}";
-                  });
-                }else{
-                  layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
-                }
+        $.ajax({
+          type: "get",
+          url: '{:url("user/public/myprojects")}',
+          success: function(result){            
+            console.log(result);
+            if(result == 1){
+              layer.msg('您还未登录，请登录后再进行操作！',{icon:6,time:1500,shade:0.5,offset:['30vh']},function(){
+                window.location.href="{:url('user/public/login')}";
+              });
+            }else if(result == 2){
+              layer.msg('您还没有发布项目，请发布后再进行邀请~',{icon:6, offset:'40vh',shade:0.5,time: 1500},function(){
+                window.location.href="{:url('user/action/release')}";
+              });
+            }else{
+              layer.open({
+                type: 1,
+                title: '请选择邀请加入的项目',
+                offset: ['25vh'],
+                skin: 'layui-layer-molv', //加上边框
+                closeBtn: 2,
+                shadeClose: true,
+                area: ['90vw'], //宽高
+                content: `
+                <div style="padding:15px;">
+                  {volist name="myProjects" id="myproject"}
+                    <button class="btn btn-success btn-block invite-btn" {eq name="$myproject['has_invite_today']" value="1"}disabled=true{/eq}
+                    data-uid="{$user['id']}" data-pid="{$myproject['id']}">
+                      {$myproject.cate_name}：{$myproject.name}
+                    </button>
+                  {/volist}
+                </div>
+              `,
+              success: function(layero, index){
+                form.render();
+                $(".invite-btn").on('click',function(){
+                uid = $(this).attr('data-uid');
+                pid = $(this).attr('data-pid');
+                $(this).attr("disabled",true);
+                $(this).text($(this).text()+"(今日已经邀请过ta加入此项目了)");
+                $.get(
+                  "{:url('user/action/invite')}"+"?uid="+uid+"&pid="+pid,
+                  function(data,status){
+                    if(data == 0){
+                      layer.msg('发起邀请成功！',{icon: 1,time: 2000,offset: ['30vh']});
+                    }else if(data == 1){
+                      layer.msg('不能邀请自己！',{icon: 2,time: 2000,offset: ['30vh']});
+                    }else if(data == 2){
+                      layer.msg('不能邀请已经在项目中的成员',{icon: 2,time: 2000,offset: ['30vh']});
+                    }else if(data == 3){
+                      layer.msg('内部错误，如果持续出现请联系我们',{icon: 2,time: 2000});
+                    }else if(data == 4){
+                      layer.msg('今日已经邀请过ta加入该项目了噢',{icon: 3,time: 2000,offset: ['30vh']});
+                    }else if(data.code == 0){
+                      layer.msg('您还未登录，请登录后再进行操作！',{icon:2,time:1500,offset:['30vh']},function(){
+                        window.location.href="{:url('user/public/login')}";
+                      });
+                    }else{
+                      layer.msg('未捕获的错误，如果持续出现请联系我们',{icon: 2,time: 2000});
+                    }
+                  }
+                );
+                layer.close(index);
+                });
               }
-            );
-            layer.close(index);
-            });
+              });
+            }
           }
         });
 
