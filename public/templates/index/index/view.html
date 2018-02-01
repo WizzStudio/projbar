@@ -96,6 +96,9 @@ h3{
   <br />
   {eq name="has_join" value="1"}
   <h3>成员通讯信息(项目内人员可见)</h3><br />
+  <table class="layui-table">
+      
+  </table>
   {volist name="partners" id="partner"}
    <p><b>       
        <a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a>

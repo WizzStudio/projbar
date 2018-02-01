@@ -43,7 +43,7 @@ layui.use(['element','layer'],function(){
             success: function(result){
                 if(result['status'] == 0){
                     layer.msg(result['msg'],{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
-                        window.location.href="{:url('/')}";
+                        window.location.href="{:url('user/profile/center')}";
                     });
                 }else{
                     $("#codeimage").attr('src','{:captcha_src()}?t='+Math.random());
