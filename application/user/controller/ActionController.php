@@ -64,14 +64,28 @@ class ActionController extends UserBaseController
         if(!$validate->check($post)){
             $error = ['status'=>1,'msg'=>$validate->getError(),'data'=>''];
             return json($error);
-        }  
-        $tags = isset($post['tags'])?$post['tags']:[];
-        $tagNum = count($tags);
-        if($tagNum > 6){
-            $error['msg'] = '标签不能超过六个';
+        }
+        if(!isset($post['tags'])){
+            $error['msg'] = '您的项目至少需要打一个标签';
             return json($error);
         }
-
+        foreach($post['role'] as $role){
+            $skillErr = 0;
+            if($role['skill'] == [""]){
+                $skillErr++;
+            }
+        }
+        if($skillErr > 0){
+            $error['msg'] = '至少需要一个角色，并至少需要一个技能~';
+            return json($error);
+        }
+        // $tags = isset($post['tags'])?$post['tags']:[];
+        $tags = $post['tags'];
+        $tagNum = count($tags);
+        if($tagNum > 6){
+            $error['msg'] = '标签不能超过六个~';
+            return json($error);
+        }
         $projectModel = new Project();
         $log = $projectModel->doRelease($post);
         switch($log){

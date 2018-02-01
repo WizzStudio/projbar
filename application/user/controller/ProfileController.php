@@ -202,10 +202,12 @@ class ProfileController extends UserBaseController
             $err['msg'] = '请填写至少一个技能';
             return json($err);
         }
-        $tagNum = count($post['tags']);
-        if($tagNum > 6){
-            $err['msg'] = '标签不能超过6个！';
-            return json($err);
+        if(isset($post['tags'])){
+            $tagNum = count($post['tags']);
+            if($tagNum > 6){
+                $err['msg'] = '标签不能超过6个！';
+                return json($err);
+            }   
         }
 
         //TODO 对于简介信息的关键字和联系方式过滤

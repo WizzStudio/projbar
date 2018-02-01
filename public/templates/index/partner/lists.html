@@ -57,7 +57,7 @@
             {/volist}
         </p>
         {else /}
-        <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span></p>
+        <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;font-size:11px;color:#eee;">暂无标签</span></p>
         {/if}
 
             {if condition="$user['role'] != []"}
@@ -104,7 +104,7 @@
 
             {/volist}
             {else /}
-            <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
+            <p><span class="glyphicon glyphicon-user"></span>&nbsp;暂无角色</p><p style="line-height:110px;">&emsp;</p>
             {/if}
       </div>
       <div class="user-view-more">

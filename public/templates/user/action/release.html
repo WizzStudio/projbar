@@ -105,12 +105,11 @@ layui.use(['form','layer'],function(){
               window.location.href="{:url('/')}";
             });
         }else{
-          console.log(result);
-          layer.msg(result['msg'],{icon:2,offset:'40vh',shade:0.5,time: 1500});
+          layer.msg(result['msg'],{icon:5,offset:'40vh',shade:0.5,time: 1500});
         }
       },
       error: function(result){
-        alert('test');
+        console.log(result);
         layer.msg('未知错误！',{icon:2,offset:'40vh',shade:0.5,time: 1500});
       }
     });

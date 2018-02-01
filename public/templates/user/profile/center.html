@@ -51,19 +51,17 @@
     </tbody>
   </table>
   </div>
-  {volist name="roleInfoList" id="roleInfo"}
   <div class="layui-container">
   <table class="layui-table" lay-even lay-skin="nob">
     <colgroup>
       <col width=34%>
       <col width=65%>
     </colgroup>
-    <thead>
+    <tbody>
+      {volist name="roleInfoList" id="roleInfo"}
       <tr>
         <td colspan="2"><span class="glyphicon glyphicon-education"></span>&nbsp;担任角色：{$key}</td>
       </tr>
-    </thead>
-    <tbody>
       {volist name="roleInfo" id="skill"}
       <tr>
         <td>{$skill.name}</td>
@@ -123,15 +121,14 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <td colspan="2"><a href="{:url('edit_role')}" class="layui-btn btn-block btn-myblue">编辑技能信息</a></td>
-      </tr>
+    {/volist}
+    <tr>
+      <td colspan="2">
+        <a href="{:url('edit_role')}" class="btn btn-block btn-success">编辑技能信息</a>
+      </td>
+    </tr>
     </tbody>
   </table>
-  </div>
-  {/volist}
-  <div class="layui-container">
-    <a href="{:url('edit_role')}" class="btn btn-block btn-success">填写技能信息</a>
   </div>
 </div>
 
