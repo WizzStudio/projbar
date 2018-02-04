@@ -84,9 +84,11 @@
 {/block}
 {block name="free_js"}
 {__block__}
+<script src="__STATIC__/common/js/common.js"></script>
 <script>
 layui.use('form',function(){
     var form = layui.form;
+    toUrl = getQueryVariable("ref");
     //AJAX表单提交
     $("#sub").on('click',function(){
         $.ajax({
@@ -96,7 +98,11 @@ layui.use('form',function(){
             success: function(result){
                 if(result['status'] == 0){
                     layer.msg(result['msg'],{icon:1,offset:'40vh',shade:0.5,time: 1500},function(){
-                        window.location.href="{:url('/')}";
+                        if(toUrl){
+                            window.location.href=toUrl;
+                        }else{
+                            window.location.href="{:url('/')}";
+                        }
                     });
                 }else{
                     console.log(result);

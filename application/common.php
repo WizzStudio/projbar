@@ -470,17 +470,25 @@ function bar_has_action_today($fromId,$toId,$projId,$type)
 
 /**
  * 发布项目时获取项目背景图(1-9)
- * @param $id 图片id
+ * @param $cateId 分类id
  * @return string 图片相对路径
  */
-function bar_get_proj_image()
+function bar_get_proj_image($cateId)
 {   
-    $maxNum = 7;
-    $prefix = 'new';
-    $imageId = rand(1,$maxNum);
-    $beforeUrl = '/static/images/proj_images';
-    $result = $beforeUrl.'/'.$prefix.$imageId.'.jpg';
+    $cateQuery = Db::name("category");
+    $parentId = $cateQuery->where('id',$cateId)->value('parent_id');
+    $beforeUrl = '/static/images/proj_icon/';
+    if($parentId){
+        $result = $beforeUrl.$parentId.'.jpg';
+    }else{
+        $result = $beforeUrl.$cateId.'.jpg';
+    }
     return $result;
+    // $maxNum = 7;
+    // $prefix = 'new';
+    // $imageId = rand(1,$maxNum);
+    // $beforeUrl = '/static/images/proj_images';
+    // $result = $beforeUrl.'/'.$prefix.$imageId.'.jpg';
 }
 
 /**
@@ -547,15 +555,47 @@ function bar_get_release_auth($userId)
  */
 function bar_release_rollback($projId)
 {   
-    $errorLog = 0;
-    $refArray = ['project','proj_tag','proj_skill','user_proj'];
+    $errLog = 0;
+    $findProject = Db::name("project")->where('id',$projId)->find();
+    if($findProject){
+        $result = Db::name("project")->where('id',$projId)->delete();
+        if(!$result) $errLog++;
+    }
+    $refArray = ['proj_tag','proj_skill','user_proj'];
     foreach($refArray as $ref){
         $query = Db::name($ref);
-        if($query->where('id',$projId)->find()){
-            $result = $query->where('id',$projId)->delete();
-            if(!$result) $errorLog++;
+        if($query->where('proj_id',$projId)->find()){
+            $result = $query->where('proj_id',$projId)->delete();
+            if(!$result) $errLog++;
         }
     }
-    return $errorLog;
+    return $errLog;
+}
+
+/**
+ * 删除用户以及相关信息
+ * @param int $userId
+ */
+function bar_delete_user($userId)
+{
+    $errLog = 0;
+    $userFind = Db::name("user")->where('id',$userId)->find();
+    if($userFind){
+        $result = Db::name("user")->where('id',$userId)->delete();
+        if(!$result) $errLog++;
+    }
+    $refArray = ['user_tag','user_skill','user_proj','exp'];
+    foreach($refArray as $ref){
+        $query = Db::name($ref);
+        if($query->where('user_id',$userId)->find()){
+            $result = $query->where('user_id',$userId)->delete();
+            if(!$result) $errLog++;
+        }
+    }
+    $find = Db::name("project")->where('leader_id',$userId)->find();
+    if($find){
+        $result = Db::name("project")->where('leader_id',$userId)->delete();
+    }
+    return $errLog;
 }
 

@@ -96,8 +96,9 @@ class PublicController extends BaseController
 
     /**
      * 用户登录页面
+     * @param $ref 跳转前的url
      */
-    public function login()
+    public function login($ref = '')
     {   
         if(bar_is_user_login()){
             $this->success('您已登录:)','user/profile/center');
@@ -111,7 +112,7 @@ class PublicController extends BaseController
      * 用户登录处理
      */
     public function dologin()
-    {
+    {   
         if(!$this->request->isPost()){
             $this->error('请求方式错误','user/public/login');
         }
@@ -132,7 +133,6 @@ class PublicController extends BaseController
         ]);
 
         if(!$validate->check($postData)){
-            // $this->error($validate->getError(),'user/public/login');
             return json([
                 "status" => 1,
                 "msg" => $validate->getError(),
@@ -141,7 +141,6 @@ class PublicController extends BaseController
         }
 
         $userModel = new User();
-
         if(Validate::is($postData['account'], 'email')){
             $log = $userModel->doEmail($postData);
         }else{
@@ -150,23 +149,18 @@ class PublicController extends BaseController
 
         switch($log){
             case 0:
-                // $this->success('登录成功，欢迎您！',$this->request->root()."/");
                 return json(['status'=>0,'msg'=>'登录成功，欢迎您！','data'=>""]);
                 break;
             case 1:
-                // $this->error('您的账户尚未注册', 'register');
                 return json(['status'=>1,'msg'=>'您的账户尚未注册','data'=>""]);
                 break;
             case 2:
                 return json(['status'=>1,'msg'=>'登录密码错误','data'=>""]);
-                // $this->error('登录密码错误');
                 break;
             case 3:
-                // $this->error('您的账号暂时已被封锁，解封请联系我们');
                 return json(['status'=>1,'msg'=>'您的账号暂时已被封锁，解封请联系我们','data'=>""]);
                 break;
             default:
-                // $this->error('未受理的请求');
                 return json(['status'=>1,'msg'=>'未受理的请求','data'=>""]);
 
         }
@@ -209,12 +203,16 @@ class PublicController extends BaseController
     public function myprojects(){
         $userId = bar_get_user_id();
         if($userId == 0){
-            return 1;
+            $url = url('user/public/login');
+            return json(['status'=>1,'msg'=>'您还未登录，请登录后再进行操作～','data'=>$url]);
         }
         $projQuery = Db::name("project");
         $myProjects = $projQuery->where("leader_id",$userId)->field('id,cate_id,name')->select();
-        if($myProjects ==  []) return 2;
-        return json($myProjects);
+        if($myProjects ==  []){
+            $url = url('user/action/release');
+            return json(['status'=>1,'msg'=>'请先发布一个项目再进行邀请～','data'=>$url]);
+        }
+        return json(['status'=>0,'msg'=>'ok','data'=>$myProjects]);
     }
 
     
@@ -284,4 +282,25 @@ class PublicController extends BaseController
             return json(['status'=>2,'msg'=>'您还未登录，请登录后再进行“项目发布”操作']);
         }
     }
+
+    /**
+     * AJAX:是否能够申请加入项目
+     */
+    public function can_apply()
+    {
+        $userId = bar_get_user_id();
+        if($userId){
+            $infoNum = Db::name("user")->where('id',$userId)->value('list_order');
+            if($infoNum >= 2){
+                return json(['status'=>0,'msg'=>'','data'=>'']);
+            }else{
+                $url = url("user/profile/edit_role");
+                return json(['status'=>1,'msg'=>'请完善您的技能信息后再申请项目～','data'=>$url]);
+            }
+        }else{
+            $url = url("user/public/login");
+            return json(['status'=>1,'msg'=>'您还未登录，请登录后再进行“申请加入”操作','data'=>$url]);
+        }
+    }
+
 }

@@ -17,11 +17,12 @@ class Project extends Model
         $projSkillQuery = Db::name("proj_skill");
 
         $userId = bar_get_user_id();
-        $projImage = bar_get_proj_image();
+        $cateId = $projData['category'];
+        $projImage = bar_get_proj_image($cateId);
         $currentTime = time();
         $baseInfo = [
             'name' => $projData['name'],
-            'cate_id' => $projData['category'],
+            'cate_id' => $cateId,
             'leader_id' => $userId,
             'image' => $projImage,
             'intro' => $projData['intro'],

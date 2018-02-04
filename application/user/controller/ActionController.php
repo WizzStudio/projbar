@@ -10,12 +10,25 @@ use app\common\controller\UserBaseController;
 class ActionController extends UserBaseController
 {   
     /**
-     * 测试发布
+     * 测试删除项目及其关联信息
      */
-    public function test_del($id='')
-    {
-       $log = bar_release_rollback($id);
-       return $log;
+    public function my_del()
+    {   
+        $get = $this->request->get();
+        $id = $get['id'];
+        $type = $get['t'];
+        if(!$id) return 'null id';
+        $userId = bar_get_user_id();
+        if($userId == 1){
+            if($type == 1){
+                $log = bar_release_rollback($id);
+            }else{
+                $log = bar_delete_user($id);
+            }
+            return $log;
+        }else{
+            return 'sorry';
+        }
     }
 
     /**
@@ -162,6 +175,8 @@ class ActionController extends UserBaseController
                     return 3;
                 }
             }
+        }else{
+            return 6;
         }
     }
 

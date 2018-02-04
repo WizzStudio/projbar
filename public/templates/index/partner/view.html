@@ -124,16 +124,7 @@ layui.use(['form','layer','element'],function(){
           type: "get",
           url: '{:url("user/public/myprojects")}',
           success: function(result){            
-            console.log(result);
-            if(result == 1){
-              layer.msg('您还未登录，请登录后再进行操作！',{icon:6,time:1500,shade:0.5,offset:['30vh']},function(){
-                window.location.href="{:url('user/public/login')}";
-              });
-            }else if(result == 2){
-              layer.msg('您还没有发布项目，请发布后再进行邀请~',{icon:6, offset:'40vh',shade:0.5,time: 1500},function(){
-                window.location.href="{:url('user/action/release')}";
-              });
-            }else{
+            if(result.status == 0){
               layer.open({
                 type: 1,
                 title: '请选择邀请加入的项目',
@@ -158,10 +149,13 @@ layui.use(['form','layer','element'],function(){
                 uid = $(this).attr('data-uid');
                 pid = $(this).attr('data-pid');
                 $(this).attr("disabled",true);
-                $(this).text($(this).text()+"(今日已经邀请过ta加入此项目了)");
+                // $(this).text($(this).text()+"(今日已经邀请过ta加入此项目了)");
+                layer.close(index);
+                var newIndex = layer.load(0, {offset:['40vh'],shade: 0.5});
                 $.get(
                   "{:url('user/action/invite')}"+"?uid="+uid+"&pid="+pid,
                   function(data,status){
+                    layer.close(newIndex);
                     if(data == 0){
                       layer.msg('发起邀请成功！',{icon: 1,time: 2000,offset: ['30vh']});
                     }else if(data == 1){
@@ -181,9 +175,13 @@ layui.use(['form','layer','element'],function(){
                     }
                   }
                 );
-                layer.close(index);
                 });
               }
+              });
+            }else{
+              layer.msg(result.msg,{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
+                ref = window.location.href;
+                window.location.href=result.data+'?ref='+ref+'&type=2';
               });
             }
           }

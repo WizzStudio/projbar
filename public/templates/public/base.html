@@ -158,82 +158,75 @@
 
       });
       $("#match").on('click',function(){
-        layer.open({
-          type: 1,
-          skin: 'layui-layer-molv',
-          offset: ['30vh'],
-          area: ['80vw'],
-          title: '智能匹配选项',
-          shade: 0.6,//遮罩透明度
-          closeBtn: 2,
-          shadeClose: true,
-          content:`
-          <div style="padding:20px;">
-            <button class="btn btn-primary btn-block btn-myblue" id="matchProj">匹配项目</button>
-            <button class="btn btn-primary btn-block btn-myblue" id="matchUser">匹配人才</button>
-          </div>
-          `,
-          success: function(layero,index){
-            var lastindex= index;
-            //匹配项目
-            $("#matchProj").on('click',function(){
-              $.ajax({
-                type:"get",
-                url: '{:url("user/public/has_login")}',
-                success: function(result){
-                  if(result == 1){
-                    window.location.href='{:url("user/match/projects")}';
-                  }else{
-                    layer.msg('请登录后再进行该操作～',{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
-                      window.location.href="{:url('user/public/login')}";
-                    });
-                  }
-                },
-                error: function(result){
-                  console.log(result);
-                    layer.msg('未知错误',{icon:5,offset:'40vh',shade:0.5,time:1600},function(){
-                  });
-                }
+        $.get(
+          '{:url("user/public/has_login")}',
+          function(data,status){
+            if(data == 0){
+              layer.msg('您还未登录，请登录后再进行操作！',{icon:6,time:1500,shade:0.5,offset:['30vh']},function(){
+                ref = window.location.href;
+                window.location.href='{:url("user/public/login")}'+'?ref='+ref;
               });
-            });
+            }else if(data == 1){
+              layer.open({
+                type: 1,
+                skin: 'layui-layer-molv',
+                offset: ['30vh'],
+                area: ['80vw'],
+                title: '智能匹配选项',
+                shade: 0.6,//遮罩透明度
+                closeBtn: 2,
+                shadeClose: true,
+                content:`
+                <div style="padding:20px;">
+                  <button class="btn btn-primary btn-block btn-myblue" id="matchProj">匹配项目</button>
+                  <button class="btn btn-primary btn-block btn-myblue" id="matchUser">匹配人才</button>
+                </div>
+                `,
+                success: function(layero,index){
+                  var lastindex= index;
+                  //匹配项目
+                  $("#matchProj").on('click',function(){
+                     window.location.href='{:url("user/match/projects")}';
+                  });
 
-            //匹配人才
-            $("#matchUser").on('click',function(){
-              var testString = '';
-              var begin = '<div style="padding:20px;">';
-              var end = '</div>'
-              $.get(
-                "{:url('user/public/myprojects')}",
-                function(data,status){
-                  if(data == 1){
-                    layer.msg('请登录后再进行该操作～',{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
-                      window.location.href="{:url('user/public/login')}";
-                    });
-                  }else{
-                    $.each(data,function(i,item){
-                      // alert(item.id+' and '+item.name);
-
-                      testString += "<a class='btn btn-block btn-myblue' href={:url('user/match/partners')}"+"?pid="+item.id+">"+item.name+"</a>";
-                    });
-                      layer.open({
-                        type: 1,
-                        offset: ['20vh'],
-                        title: '请选择项目进行推荐匹配',
-                        skin: 'layui-layer-molv',
-                        closeBtn: 2,
-                        shade: 0.6,
-                        shadeClose: true,
-                        area: ['80vw'],
-                        content: begin+testString+end,
-                        success: function(layero,index){
-                          layer.close(lastindex);
-                        }
-                    });
-                  }//else
-              }); //ajax_get
-            }); //chooseProj.onclick
-          } //match点击回调
-        }); //智能匹配的layer.open
+                  //匹配人才
+                  $("#matchUser").on('click',function(){
+                    var testString = '';
+                    var begin = '<div style="padding:20px;">';
+                    var end = '</div>'
+                    $.get(
+                      "{:url('user/public/myprojects')}",
+                      function(data,status){
+                        if(data.status != 0){
+                          layer.msg(data.msg,{icon:6,offset:'40vh',shade:0.5,time:1500},function(){
+                            window.location.href=data.data;
+                          });
+                        }else{
+                          $.each(data.data,function(i,item){
+                            testString += "<a class='btn btn-block btn-myblue' href={:url('user/match/partners')}"+"?pid="+item.id+">"+item.name+"</a>";
+                          });
+                            layer.open({
+                              type: 1,
+                              offset: ['20vh'],
+                              title: '请选择项目进行推荐匹配',
+                              skin: 'layui-layer-molv',
+                              closeBtn: 2,
+                              shade: 0.6,
+                              shadeClose: true,
+                              area: ['80vw'],
+                              content: begin+testString+end,
+                              success: function(layero,index){
+                                layer.close(lastindex);
+                              }
+                          });
+                        }//else
+                    }); //ajax_get
+                  }); //chooseProj.onclick
+                } //match点击回调
+              }); //智能匹配的layer.open    
+            }
+          }
+        );
       }); //$("#match").onclick
       
     </script>

@@ -29,10 +29,13 @@
 {/block}
 {block name="free_js"}
 {__block__}
+<script src="__STATIC__/common/js/common.js"></script>
 <script>
 layui.use(['element','layer'],function(){
     var element = layui.element;
     var layer = layui.layer;
+    toType = getQueryVariable("type");
+    toUrl = getQueryVariable("ref");
 
     //AJAX表单提交处理
     $("#sub").on('click',function(){
@@ -42,15 +45,51 @@ layui.use(['element','layer'],function(){
             data: $("#login_form").serialize(),
             success: function(result){
                 if(result['status'] == 0){
-                    layer.msg(result['msg'],{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
-                        window.location.href="{:url('user/profile/center')}";
-                    });
+                    if(toType){
+                        if(toType == 1){
+                            $.get(
+                                '{:url("user/public/can_apply")}',
+                                function(data,status){
+                                    if(data.status == 0){
+                                        layer.msg('登录成功，即将跳转到登录前页面～',{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
+                                            window.location.href=toUrl;
+                                        });
+                                    }else{
+                                        layer.msg('登录成功，'+data.msg,{icon: 1,time:1800,shade:0.5,offset:['30vh']},function(){
+                                            window.location.href=data.data+'?ref='+toUrl+'&type=1'; 
+                                        });  
+                                    }
+                                }
+                            );
+                        }else{
+                            $.get(
+                                '{:url("user/public/myprojects")}',
+                                function(data,status){
+                                    if(data.status == 0){
+                                        layer.msg('登录成功，即将跳转到登录前页面～',{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
+                                            window.location.href=toUrl;
+                                        });
+                                    }else{
+                                        layer.msg('登录成功，'+data.msg,{icon: 6,time:1800,offset:['30vh']},function(){
+                                            window.location.href=data.data+'?ref='+toUrl+'&type=2';
+                                        });
+                                    }
+                                }
+                            );
+                        }
+                    }else{
+                        layer.msg(result['msg'],{icon:1, offset:'40vh',shade:0.5,time: 1200},function(){
+                            window.location.href="{:url('/')}";
+                        });
+                    }
                 }else{
+                    console.log(result);
                     $("#codeimage").attr('src','{:captcha_src()}?t='+Math.random());
-                    layer.msg(result['msg'],{icon:2, offset:'40vh',shade:0.5,time: 1600});
+                    layer.msg(result['msg'],{icon:5, offset:'40vh',shade:0.5,time: 1600});
                 }
             },
             error: function(result){
+                console.log(result);
                 alert(result);
                 window.location.href="{:url('user/public/login')}";
             }
