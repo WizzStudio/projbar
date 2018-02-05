@@ -19,10 +19,10 @@
   border-color: transparent;
 }
 .navbar-brand{
-    color: #ddd!important;
+    color: #eee!important;
 }
 .navbar-inverse .navbar-nav>li>a{
-    color: #ddd!important;
+    color: #eee!important;
 }
 .text-muted{
    color:#ccc;
@@ -44,6 +44,13 @@
 .btn-light-grey{
   background-color: #bbb;
   color: #eee;
+}
+.grad1{
+    color: #eee!important;
+    background: -webkit-linear-gradient(left top, #566DA0 , #405690); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(bottom right, #566DA0, #405690); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(bottom right, #566DA0, #405690); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to bottom right, #566DA0, #405690); /* 标准的语法 */
 }
 .grad2{
   background: #3b5998;
