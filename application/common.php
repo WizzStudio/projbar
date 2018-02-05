@@ -479,16 +479,15 @@ function bar_get_proj_image($cateId)
     $parentId = $cateQuery->where('id',$cateId)->value('parent_id');
     $beforeUrl = '/static/images/proj_icon/';
     if($parentId){
-        $result = $beforeUrl.$parentId.'.jpg';
+        if($cateId <= 12){
+            $result = $beforeUrl.$cateId.'.jpg';
+        }else{
+            $result = $beforeUrl.$parentId.'.jpg';
+        }
     }else{
         $result = $beforeUrl.$cateId.'.jpg';
     }
     return $result;
-    // $maxNum = 7;
-    // $prefix = 'new';
-    // $imageId = rand(1,$maxNum);
-    // $beforeUrl = '/static/images/proj_images';
-    // $result = $beforeUrl.'/'.$prefix.$imageId.'.jpg';
 }
 
 /**
