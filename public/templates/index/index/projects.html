@@ -38,4 +38,15 @@
 {/block}
 {block name="free_js"}
 {__block__}
+<script>
+    $(document).ready(function(){
+        const PROJ_INTRO_MAX_LENGTH=60;
+        $(".proj-intro").each(function(){
+            projIntro = $(this).text();
+            if(projIntro.length > PROJ_INTRO_MAX_LENGTH){
+                $(this).text(projIntro.substr(0,PROJ_INTRO_MAX_LENGTH-1)+'...');
+            }
+        });
+    });
+</script>
 {/block}

@@ -69,6 +69,15 @@
 <script>
 layui.use('form',function(){
     var form = layui.form;
+
+    const PROJ_INTRO_MAX_LENGTH=60;
+        $(".proj-intro").each(function(){
+            projIntro = $(this).text();
+            if(projIntro.length > PROJ_INTRO_MAX_LENGTH){
+                $(this).text(projIntro.substr(0,PROJ_INTRO_MAX_LENGTH-1)+'...');
+            }
+        });
+
     console.log(1);
     if($("#cate1").val()){
         data = $("#cate1").val();
