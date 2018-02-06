@@ -20,4 +20,12 @@ class PublicController extends BaseController
     {
         return $this->fetch();
     }
+
+    /**
+     * 开发人员
+     */
+    public function developer()
+    {
+        return $this->fetch();
+    }
 }
