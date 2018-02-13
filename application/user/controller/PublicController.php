@@ -181,7 +181,7 @@ class PublicController extends BaseController
             $message = htmlspecialchars_decode($emailTemplate['template']);
             $view = new View();
             $message = $view->display($message, ['code' => $code]);
-            $subject = $emailTemplate['subject'];
+            $subject = $view->display($emailTemplate['subject'],['code' => $code]);
             $result = bar_send_email($account,$subject,$message);
             if(!$result['error']){
                 bar_verify_code_log($account,$code);
