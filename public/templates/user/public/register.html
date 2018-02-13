@@ -54,6 +54,8 @@ layui.use(['form','layer'],function(){
             });
         }else{
             layer.msg(result['msg'],{icon:2,offset:'40vh',shade:0.5,time: 1600});
+            $("#send").attr("disabled","false");
+            $("#send").text("发送邮箱验证码");
         }
       },
       error: function(result){
