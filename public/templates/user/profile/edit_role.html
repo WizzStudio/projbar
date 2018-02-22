@@ -1,9 +1,9 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <br />
-<h2 align="center">编辑角色信息</h2><br>
+<h3 align="center">编辑角色信息</h3><br>
 <div class="layui-container" style="margin-bottom:20px;">
-    <h3>角色信息</h3>
+    <b>角色信息</b>
     <div class="layui-word-aux" style="margin-left:-5px;">选择一个合适您的角色，并最多添加三个技能</div>
     <form class="layui-form" id="form" action=# method="post" role="form">
         <div id="role">
@@ -57,7 +57,7 @@
         <hr />
         <div id="tag">
             <div class="layui-form-item">
-              <h3>个人标签</h3>
+              <b>个人标签</b>
               <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签，这将成为自动匹配的重要依据</div>
               <div class="layui-col-md12 layui-col-xs12">
                 {volist name="resultTags" id="tag"}
@@ -70,7 +70,7 @@
         <hr />
         <div id="exp">
             <div class="layui-form-item">
-              <h3>项目/实践经历</h3>
+              <b>项目/实践经历</b>
               <div class="layui-word-aux">经历是您申请加入项目时的一张名片，请务必认真填写，若无项目经历也可填个人经验和能力描述。</div>
               <div class="layui-col-md12 layui-col-xs12">
                 <textarea class="form-control" name="exp" rows="9">{$exp}</textarea>

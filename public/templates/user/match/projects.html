@@ -1,7 +1,7 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
-<h2 align="center" style="padding:15px;">为您推荐项目</h1>
-    <div class="container-fluid" style="margin-top:10px;margin-bottom:50px;">
+<h3 align="center" style="padding:10px;">为您推荐项目</h1>
+    <div class="container-fluid" style="margin-bottom:50px;">
         <div class="row">
             {volist name="projList" id="proj"}
             <div class="col-md-6 col-sm-12" style="padding:0 2px 0 2px;">
@@ -38,7 +38,7 @@
 {__block__}
 <script>
 $(document).ready(function(){
-    const PROJ_INTRO_MAX_LENGTH=60;
+    const PROJ_INTRO_MAX_LENGTH=56;
     $(".proj-intro").each(function(){
         projIntro = $(this).text();
         if(projIntro.length > PROJ_INTRO_MAX_LENGTH){

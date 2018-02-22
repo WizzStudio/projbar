@@ -1,11 +1,11 @@
 {extend name="templates/public/base.html" /}
 {block name="main"}
 <br>
-<h2 align="center" style="border-bottom:1px solid #ccc;">发布项目</h2>
+<h3 align="center" style="border-bottom:1px solid #ccc;">发布项目</h3>
 <div class="layui-container" style="padding:20px;margin-bottom:20px;">
 <form class="layui-form" action="#" method="post" id="form">
     <div class="layui-form-item">
-      <h3>基础信息</h3><br />
+      <!-- <h4>基础信息</h4><br /> -->
       <label class="control-label">项目名称</label>
       <input type="text" name="name" autocomplete="off" placeholder="请输入项目名称" class="layui-input" />
     </div>
@@ -27,7 +27,7 @@
     </div>
     <hr />
     <div class="layui-form-item" id="tag">
-      <h3>项目标签</h3> 
+      <b>项目标签</b> 
       <div class="layui-word-aux">您最多能选择六个标签,这将成为自动匹配的重要依据</div>      
       <div class="col-md-8 col-xs-12 column" pane>
         {volist name="tags" id="tag"}
@@ -35,7 +35,7 @@
         {/volist}
       </div>
     </div>
-    <h3>角色需要</h3>
+    <b>角色需要</b>
     <hr />    
     <div class="role">
     <div class="layui-form-item">角色1</div>
