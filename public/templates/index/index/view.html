@@ -95,6 +95,7 @@ h3{
     {/volist}
   <!-- </div> -->
   <br />
+  {eq name="isLeader" value="1"}
   <a class="layui-btn layui-btn-sm btn-block btn-myblue" href='{:url("user/action/edit","id=$baseInfo[id]")}'>修改项目信息</a>
   <hr />
 
@@ -124,6 +125,7 @@ h3{
     <br />  
     {eq name="isLeader" value="1"}
     <button class="btn btn-danger btn-block" id="delete">删除该项目以及相关信息</button>
+    {/eq}
     {else/}
     <button class="btn btn-danger btn-block" id="quit">退出该项目</button>
     {/eq}
