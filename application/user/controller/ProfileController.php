@@ -7,7 +7,6 @@ use think\Db;
 use app\common\controller\UserBaseController;
 use think\Request;
 use app\common\model\User;
-use app\common\model\UserSkill;
 use app\common\model\Tag;
 
 class ProfileController extends UserBaseController

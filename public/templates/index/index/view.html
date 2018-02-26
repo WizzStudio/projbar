@@ -95,6 +95,9 @@ h3{
     {/volist}
   <!-- </div> -->
   <br />
+  <a class="layui-btn layui-btn-sm btn-block btn-myblue" href='{:url("user/action/edit","id=$baseInfo[id]")}'>修改项目信息</a>
+  <hr />
+
   {eq name="has_join" value="1"}
   <h3>成员通讯信息(项目内人员可见)</h3><br />
   {volist name="partners" id="partner"}

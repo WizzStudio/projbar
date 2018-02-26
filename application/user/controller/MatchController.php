@@ -80,7 +80,6 @@ class MatchController extends UserBaseController
                 }
                 $userQuery = Db::name("user");
                 $userTagQuery = Db::name("user_tag");
-                $userSkillQuery = Db::name("user_skill");
                 $sortData = array_count_values($data);
                 arsort($sortData);
                 $userIds = array_keys($sortData);
