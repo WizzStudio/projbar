@@ -14,49 +14,20 @@ class PartnerController extends BaseController
     {
         $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
-        $userSkillQuery = Db::name("user_skill");
         $tagQuery = Db::name("tag");
         $roleQuery = Db::name("role");
         $tags = $tagQuery->select();
         $roles = $roleQuery->select();
         // 按照信息完整度排序
-        $userBase = $userQuery
-            ->field('id,username,sex,nickname')
+        $userBaseList = $userQuery
+            ->field('id,username,sex,nickname,role')
             ->where('status',1)
             ->order(['list_order'=>'desc','last_login_time'=>'desc'])
             ->paginate(6);
-        $userList = [];
-        foreach($userBase as $user){
-            if(!$user['nickname']){
-                $user['nickname'] = $user['username'];
-            }
-            $user['tags'] = [];
-            $user['role'] = [];
-            $tagSelect = $userTagQuery
-                ->alias('a')
-                ->field('b.id,b.name')
-                ->where(['user_id' => $user['id']])
-                ->join('__TAG__ b','a.tag_id=b.id')
-                ->select();
-            foreach($tagSelect as $tag){
-                $user['tags'][] = $tag['name'];
-            }
-            $skillSelect = $userSkillQuery
-                ->alias('a')
-                ->join('__ROLE__ b','a.role_id=b.id')
-                ->where(['user_id' => $user['id']])
-                ->field('a.*,b.name as role_name')
-                ->select();
-            foreach($skillSelect as $skill){
-                $user['role'][$skill['role_name']][$skill['name']] = $skill['level'];
-            }
-            $num = count($user['role']);
-            if($num > 1) array_pop($user['role']);
-            $userList[] = $user;
-        }
+        $userList = bar_user_list_splice($userBaseList);
 
         $this->assign([
-            "userBase" => $userBase,
+            "userBaseList" => $userBaseList,
             "userList" => $userList,
             "roles" => $roles,
             "tags" => $tags,
@@ -75,36 +46,18 @@ class PartnerController extends BaseController
             if($userId == $id) $status = 1;
             $userQuery = Db::name("user");
             $userTagQuery = Db::name("user_tag");
-            $userSkillQuery = Db::name("user_skill");
-            $expQuery = Db::name("exp");
             $projQuery = Db::name("project");
             $userBase = $userQuery->where("id",$id)->find();
+            $userBase['role'] = json_decode($userBase['role'],true);
+            $userBase['role']['role_name'] = Db::name("role")->where('id',$userBase['role']['type'])->value('name');
             
-            $roleInfo = [];
-            $exp = '';
-
-            $userSkillList = $userSkillQuery->where("user_id",$id)->select();
-            if(!empty($userSkillList)){
-                foreach($userSkillList as $skill){
-                    $roleIds[] = $skill['role_id'];
-                }
-                $roleIds = array_unique($roleIds);
-                foreach($roleIds as $roleId){
-                    $roleName = Db::name("role")->where('id',$roleId)->value('name');                    
-                    foreach($userSkillList as $skill){
-                        if($skill['role_id'] == $roleId){
-                            $roleInfo[$roleName][] = $skill;
-                        }
-                    }
-                }
-            }
             $tags = $userTagQuery
             ->alias('a')
             ->field('b.*')
             ->where(['user_id' => $id])
             ->join('__TAG__ b','a.tag_id=b.id')
             ->select();
-            $exp = $expQuery->where('user_id',$id)->find();
+
             $resultMyProjects = [];
             $myProjects = $projQuery
                 ->alias('a')
@@ -121,9 +74,7 @@ class PartnerController extends BaseController
             $this->assign([
                 'status' => $status,
                 'user' => $userBase,
-                'roleInfoList' => $roleInfo,
                 'tags' => $tags,
-                'exp' => $exp,
                 'myProjects' => $resultMyProjects
             ]);
             return $this->fetch();
@@ -139,121 +90,52 @@ class PartnerController extends BaseController
     public function filter()
     {
         $getData = $this->request->get();
-        $page = isset($getData['page'])?$getData['page']:1;
         $rid = isset($getData['role'])?$getData['role']:'';        
         $tid = isset($getData['tag'])?$getData['tag']:'';
+
         $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
         $tagQuery = Db::name("tag");
-        $userSkillQuery = Db::name("user_skill");
         $roleQuery = Db::name("role");
         $allTags = $tagQuery->select();
         $allRoles = $roleQuery->select();
-        
+
         if(!$rid && !$tid){
             return $this->redirect(url('index/partner/lists'));
-        }else{
-            $userBaseList = $userQuery
+        }else if($rid && !$tid){
+            $userIds = $userQuery
+                ->where('role_id',$rid)
+                ->column('id');
+            $userList = $userQuery->where('id','in',$userIds)->select();
+        }else if(!$rid && $tid){
+            $userIds = $userTagQuery
+                ->where('tag_id',$tid)
+                ->distinct('user_id')
+                ->column('user_id');
+        }else if($rid && $tid){
+            $userIds = $userQuery
                 ->alias('a')
-                ->join('__USER_SKILL__ b','a.id=b.user_id')
-                ->join('__ROLE__ c','b.role_id=c.id')
-                ->where('a.status',1)
-                ->field('a.id,a.username,a.nickname,a.sex,c.name as role_name')
-                ->order(['list_order'=>'desc','last_login_time'=>'desc'])
-                // ->page($page,3)
-                ->distinct(true)
-                ->select();
-            // print_r($userBaseList);
-            // return ;
-            $roleInfoList = [];
-            $exp = '';
-            $userList = [];
-
-            foreach($userBaseList as $user){
-                $user['tags'] = [];
-                $user['role'] = [];
-                //只有角色无标签
-                if($rid && !$tid){
-                    $skills = $userSkillQuery
-                        ->where('user_id',$user['id'])
-                        ->where('role_id',$rid)
-                        ->select();
-                    if(!$skills) continue;
-                    foreach($skills as $skill){
-                        $roleName = Db::name("role")->where('id',$skill['role_id'])->value('name');
-                        $user['role'][$roleName][$skill['name']] = $skill['level'];
-                    }
-                    $num = count($user['role']);
-                    if($num > 1) array_pop($user['role']);
-                    $tags = $userTagQuery
-                    ->alias('a')
-                    ->field('b.id,b.name')
-                    ->where('user_id',$user['id'])
-                    ->join('__TAG__ b','a.tag_id=b.id')
-                    ->select();
-                    foreach($tags as $tag){
-                        $user['tags'][] = $tag['name'];
-                    }
-                //只有标签无角色
-                }else if(!$rid && $tid){
-                    $hasSameTag = $userTagQuery
-                    ->where('user_id',$user['id'])
-                    ->where('tag_id',$tid)
-                    ->find();
-                    if(!$hasSameTag)continue;
-                    $tagResult = $userTagQuery
-                        ->alias('a')
-                        ->join('__TAG__ b','a.tag_id=b.id')
-                        ->where('a.user_id',$user['id'])
-                        ->field('b.name')
-                        ->select();
-                    foreach($tagResult as $tag){
-                        $user['tags'][] = $tag['name'];
-                    }
-                    $skills = $userSkillQuery
-                        ->where('user_id',$user['id'])
-                        ->select();
-                    foreach($skills as $skill){
-                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
-                    }
-                    $num = count($user['role']);
-                    if($num > 1) array_pop($user['role']);
-                }else if($rid && $tid){
-                    $hasSameTag = $userTagQuery
-                    ->where('user_id',$user['id'])
-                    ->where('tag_id',$tid)
-                    ->find();
-                    if(!$hasSameTag)continue;
-                    $tagResult = $userTagQuery
-                    ->alias('a')
-                    ->join('__TAG__ b','a.tag_id=b.id')
-                    ->where('a.user_id',$user['id'])
-                    ->field('b.name')
-                    ->select();
-                    foreach($tagResult as $tag){
-                       $user['tags'][] = $tag['name'];
-                    }
-                    $skills = $userSkillQuery
-                    ->where('user_id',$user['id'])
-                    ->where('role_id',$rid)
-                    ->select();
-                    if(!$skills) continue;
-                    foreach($skills as $skill){
-                        $user['role'][$skill['role_id']][$skill['name']] = $skill['level'];
-                    }
-                }
-                $userList[] = $user;
-            }
+                ->join('__USER_TAG__ b','a.id=b.user_id')
+                ->where('a.role_id',$rid)
+                ->where('b.tag_id',$tid)
+                ->distinct('a.id')
+                ->column('a.id');
         }
+        $userBaseList = $userQuery
+            ->where('id','in',$userIds)
+            ->order(['list_order'=>'desc','last_login_time'=>'desc'])
+            ->paginate(6);
+        $userList = bar_user_list_splice($userBaseList);
 
         $this->assign([
-            'rid' => $rid,
-            'tid' => $tid,
             'userBaseList' => $userBaseList,
-            "userList" => $userList,
-            "allRoles" => $allRoles,
-            "allTags" => $allTags
+            'userList' => $userList,
+            'allRoles' => $allRoles,
+            'allTags' => $allTags,
+            'tid' => $tid,
+            'rid' => $rid,
         ]);
+
         return $this->fetch();
     }
 }

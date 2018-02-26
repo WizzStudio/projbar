@@ -8,7 +8,7 @@ h3{
 <div class="layui-container">
   <!-- <div class="jumbotron"> -->
     <br />
-    <h3 style="color:black">{$projBase['name']}</h3>
+    <h3 style="color:black">{$baseInfo['name']}</h3>
     <hr />
     <h3 style="color:grey;">基础信息</h3><br />
     <table class="layui-table" lay-even lay-skin="nob">
@@ -18,7 +18,7 @@ h3{
         </colgroup>
         <tr>
             <td>类型</td>
-            <td>{$projBase.cate_name}</td>
+            <td>{$baseInfo.cate_name}</td>
         </tr>
         <tr>
             <td>发起人</td>
@@ -28,7 +28,7 @@ h3{
             <td>邮箱</td>
             <td>确认合作关系后在下方可见</td>
         </tr>
-        <tr><td colspan="2">简介：{$projBase.intro}</td></tr>
+        <tr><td colspan="2">简介：{$baseInfo.intro}</td></tr>
     </table>
     <h3>项目标签</h3>
     <br />
@@ -50,8 +50,8 @@ h3{
     </p>
     <hr />
     <h3>需求角色</h3>
-    {volist name="roleInfoList" id="roleInfo"}
-    <p style="color:grey;text-align:center;">{$key}</p>    
+    {volist name="baseInfo.need" id="role" key="k"}
+    <p style="color:grey;text-align:center;">{$role.role_name}</p>    
         <table class="layui-table" lay-skin="nob">
             <colgroup>
               <col width="300">
@@ -64,11 +64,12 @@ h3{
               </tr>
             </thead>
             <tbody>
-                {volist name="roleInfo" id="skill"}
+                {volist name="role.skill" id="skill" key="s"}
+                {php}$l = $s - 1;{/php}
                 <tr>
-                    <td>{$skill.name}</td>
+                    <td>{$skill}</td>
                     <td>
-                        {switch name="skill['level']"}
+                        {switch name="role.level[$l]"}
                         {case value="1"}
                         <div class="layui-progress layui-progress-big">
                             <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
@@ -96,16 +97,13 @@ h3{
   <br />
   {eq name="has_join" value="1"}
   <h3>成员通讯信息(项目内人员可见)</h3><br />
-  <table class="layui-table">
-      
-  </table>
   {volist name="partners" id="partner"}
    <p><b>       
        <a href={:url('index/partner/view',"id=$partner[id]")}>{$partner.nickname}</a>
         {eq name="partner.is_leader" value="1"}（发起人）
         {else/}&emsp;
             {eq name="isLeader" value="1"}
-            <button class="btn btn-xs btn-warning dismiss" data-pid="{$projBase.id}" data-uid="{$partner.id}">踢出该成员</button>
+            <button class="btn btn-xs btn-warning dismiss" data-pid="{$baseInfo.id}" data-uid="{$partner.id}">踢出该成员</button>
             {else/}&emsp;
             {/eq}
         {/eq}
@@ -153,7 +151,7 @@ layui.use(['layer','element'],function(){
                         layer.close(index);
                         var index = layer.load(0, {offset:['40vh'],shade: 0.5});
                         $.get(
-                            '{:url("user/action/apply","id=$projBase[id]")}',
+                            '{:url("user/action/apply","id=$baseInfo[id]")}',
                             function(data,status){
                                 layer.close(index);
                                 if(data == 0){
@@ -185,12 +183,12 @@ layui.use(['layer','element'],function(){
                     '已删除该项目，祝您在新的起点能走的更好。',
                     {icon: 1, time:1500,offset:['40vh']},
                     function(){
-                        window.location.href="{:url('user/profile/center')}";
+                        window.location.href="{:url('/')}";
                     }
                 );
 
                 $.get(
-                    '{:url("user/action/delete","id=$projBase[id]")}',
+                    '{:url("user/action/delete","id=$baseInfo[id]")}',
                     function(data,status){
                         console.log(data);
                         if(data != 0){
@@ -217,7 +215,7 @@ layui.use(['layer','element'],function(){
                 );
 
                 $.get(
-                    '{:url("user/action/quit","id=$projBase[id]")}',
+                    '{:url("user/action/quit","id=$baseInfo[id]")}',
                     function(data,status){
                         console.log(data);
                         if(data != 0){

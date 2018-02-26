@@ -92,7 +92,7 @@ class ActionController extends UserBaseController
             $error['msg'] = '至少需要一个角色，并至少需要一个技能~';
             return json($error);
         }
-        // $tags = isset($post['tags'])?$post['tags']:[];
+
         $tags = $post['tags'];
         $tagNum = count($tags);
         if($tagNum > 6){
@@ -121,6 +121,99 @@ class ActionController extends UserBaseController
             default:
                 $error['msg'] = '未受理的请求';
                 return json($error);
+        }
+    }
+
+    /**
+     * 修改项目信息
+     */
+    public function edit($id='')
+    {
+        if(!$id) $this->error("该项目不存在");
+        $userId = bar_get_user_id();
+        $projQuery = Db::name("project");
+        $projTagQuery = Db::name("proj_tag");
+        $roleQuery = Db::name("role");
+        $tagQuery = Db::name("tag");
+        $cateQuery = Db::name("category");
+
+        $projBaseInfo = $projQuery->where('id',$id)->find();
+        if($projBaseInfo['leader_id']!=$userId){ return $this->error("这不是你拥有的项目");}
+
+        $projBaseInfo['need'] = json_decode($projBaseInfo['need'],true);
+
+        $allParentCate = $cateQuery->where("parent_id",0)->select();
+        $allRole = $roleQuery->select();
+        $allTag = $tagQuery->select();
+
+        foreach($allParentCate as $parentCate){
+            $childCate = $cateQuery->where('parent_id',$parentCate['id'])->select();
+            $cateList[$parentCate['name']] = $childCate;
+        }
+
+        $projTagId = $projTagQuery->where('proj_id',$id)->column('tag_id');
+
+        $this->assign([
+            'baseInfo' => $projBaseInfo,
+            'cateList' => $cateList,
+            'tags' => $allTag,
+            'projTagId' => $projTagId,
+            'roles' => $allRole
+        ]);
+
+        return $this->fetch();
+    }
+
+    /**
+     * 修改项目信息处理
+     */
+    public function edit_handle()
+    {   
+        $validate = new Validate([
+            'name' => 'require|min:2|max:25',
+            'category' => 'require',
+            'intro' => 'require|max:160',
+        ]);
+
+        $success = ["status"=>0,'msg'=>'成功！','data'=>''];
+        $error = ["status"=>1,'msg'=>'错误！','data'=>''];
+
+        $post = $this->request->post();
+        if(!$validate->check($post)){
+            $error['msg'] = $validate->getError();
+            return json($error);
+        }
+
+        if(!isset($post['tags'])){
+            $error['msg'] = '您的项目至少需要打一个标签';
+            return json($error);
+        }
+
+        foreach($post['role'] as $role){
+            $skillErr = 0;
+            if($role['skill'] == [""]){
+                $skillErr++;
+            }
+        }
+        if($skillErr > 0){
+            $error['msg'] = '至少需要一个角色，并至少需要一个技能~';
+            return json($error);
+        }
+
+        $tags = $post['tags'];
+        $tagNum = count($tags);
+        if($tagNum > 6){
+            $error['msg'] = '标签不能超过六个~';
+            return json($error);
+        }
+        $projectModel = new Project();
+        $log = $projectModel->doUpdate($post);
+        if($log == 0){
+            $success['msg'] = '项目信息修改成功！';
+            return json($success);
+        }else{
+            $error['msg'] = '内部错误';
+            return json($error);
         }
     }
 
@@ -416,7 +509,6 @@ class ActionController extends UserBaseController
         $projQuery = Db::name("project");
         $userProjQuery = Db::name("user_proj");
         $projTagQuery = Db::name("proj_tag");
-        $projSkillQuery = Db::name("proj_skill");
         
         $proj = $projQuery->where('id',$id)->find();
         if($userId != $proj['leader_id']){
@@ -427,9 +519,8 @@ class ActionController extends UserBaseController
         if($projResult){
             $projTagResult = $projTagQuery->where('proj_id',$id)->delete();
             if($projTagResult || !$projTagFind){
-                $projSkillResult = $projSkillQuery->where('proj_id',$id)->delete();
                 $userProjResult = $userProjQuery->where('proj_id',$id)->delete();
-                if($projSkillResult && $userProjResult){
+                if($userProjResult){
                     return 0;
                 }else{
                     return 3;
@@ -440,23 +531,6 @@ class ActionController extends UserBaseController
         }else{
             return 1;
         }
-    }
-
-    /**
-     * 修改项目信息(TODO)分离一下，在模型层处理数据
-     */
-    public function edit($id='')
-    {  
-        if($id='') return -1;
-        $userId = bar_get_user_id();
-        $projQuery = Db::name("proj");
-        $cateQuery = Db::name("category");
-        $projTagQuery = Db::name("proj_tag");
-        $projSkillQuery = Db::name("proj_skill");
-        $roleQuery = Db::name("role");
-        $tagQuery = Db::name("tag");
-        
-        $this->redirect($this->request->root().'/');
     }
 
     /**

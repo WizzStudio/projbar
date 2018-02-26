@@ -598,3 +598,30 @@ function bar_delete_user($userId)
     return $errLog;
 }
 
+/**
+ * 用户信息拼接形成列表
+ * @param $userBaseList
+ * @return $userList
+ */
+function bar_user_list_splice($userBaseList){
+    $userTagQuery = Db::name("user_tag");
+    $roleQuery = Db::name("role");
+    $userList = [];
+    foreach($userBaseList as $user){
+        $user['tags'] = [];
+        $tagSelect = $userTagQuery
+            ->alias('a')
+            ->field('b.id,b.name')
+            ->where(['user_id' => $user['id']])
+            ->join('__TAG__ b','a.tag_id=b.id')
+            ->select();
+        foreach($tagSelect as $tag){
+            $user['tags'][] = $tag['name'];
+        }
+        $user['role'] = json_decode($user['role'],true);
+        $user['role']['role_name'] = $roleQuery->where('id',$user['role']['type'])->value('name');
+        $userList[] = $user;
+    }
+    return $userList;
+}
+

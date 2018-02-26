@@ -3,6 +3,7 @@ namespace app\index\controller;
 
 use app\common\controller\BaseController;
 use think\Db;
+use app\common\model\Project;
 
 class IndexController extends BaseController
 {
@@ -36,98 +37,80 @@ class IndexController extends BaseController
      * 查看项目详情
      */
     public function view($id='')
-    {   
-        if($id){
-            $userId = bar_get_user_id();
-            $projQuery = Db::name("project");
-            $userProjQuery = Db::name("user_proj");
-            $userQuery = Db::name("user");
-            $projTagQuery = Db::name("proj_tag");
-            $projSkillQuery = Db::name("proj_skill");
-            $projBase = $projQuery
-                ->alias('a')
-                ->join('__CATEGORY__ b','a.cate_id=b.id')
-                ->field('a.*,b.name as cate_name')
-                ->where('a.id',$id)
-                ->find();
-            $isLeader = 0;
-            if($userId == $projBase['leader_id'])$isLeader = 1;
-            $has_join = 0;
-            $has_apply_today = 0;
-            if($userId == $projBase['leader_id']){
-                $has_join = 1;
-            }
-            if($projBase){
-                $tags = $projTagQuery
+    {
+        if(!$id) return $this->error("该项目不存在");
+        $userId = bar_get_user_id();
+        $projQuery = Db::name("project");
+        $projTagQuery = Db::name("proj_tag");
+        $roleQuery = Db::name("role");
+        $tagQuery = Db::name("tag");
+        $userQuery = Db::name("user");
+        $userProjQuery = Db::name("user_proj");
+        $cateQuery = Db::name("category");
+
+        $isLeader = 0;
+        $hasApplyToday = 0;
+        $hasJoin = 0;
+        $resultPartners = [];
+
+        $projBaseInfo = $projQuery->where('id',$id)->find();
+        if($projBaseInfo == []){
+            return $this->error("该项目不存在");
+        }
+        $projBaseInfo['need'] = json_decode($projBaseInfo['need'],true);
+        $cateName = $cateQuery->where('id',$projBaseInfo['cate_id'])->value("name");
+        $projBaseInfo['cate_name'] = $cateName;
+
+        $finalBaseInfo = $projBaseInfo;
+        unset($finalBaseInfo['need']);
+        foreach($projBaseInfo['need'] as $role){
+            $roleName = $roleQuery->where('id',$role['type'])->value('name');
+            $role['role_name'] = $roleName;
+            $finalBaseInfo['need'][] = $role;
+        }
+        $tags = $projTagQuery
                 ->alias('a')
                 ->field('b.*')
                 ->where(['proj_id' => $id])
                 ->join('__TAG__ b','a.tag_id=b.id')
                 ->select();
-                
-                $projSkillList = $projSkillQuery
-                    ->where('proj_id',$id)
-                    ->select();
-                if(!empty($projSkillList)){
-                    foreach($projSkillList as $skill){
-                        $roleIds[] = $skill['role_id'];
-                    }
-                    $roleIds = array_unique($roleIds);
-                    foreach($roleIds as $roleId){
-                        $roleName = Db::name("role")->where('id',$roleId)->value('name as role_name');
-                        foreach($projSkillList as $skill){
-                            if($skill['role_id'] == $roleId){
-                                $roleInfo[$roleName][] = $skill;
-                            }
-                        }
-                    }
-                    $leader = $userQuery
-                    ->where('id',$projBase['leader_id'])
-                    ->find();
-                    $userProjFind = $userProjQuery->where('user_id',$userId)->where('proj_id',$id)->find();
-                    $partners = [];
-                    $resultPartners = [];
-                    if($userProjFind){
-                        $has_join = 1;
-                        $partners = $userProjQuery
-                        ->alias('a')
-                        ->field('b.id,b.username,b.qq,b.email,b.sex,b.nickname')
-                        ->where('proj_id',$id)
-                        ->join('__USER__ b','a.user_id=b.id')
-                        ->select();
-                        foreach($partners as $partner){
-                            $partner['is_leader'] = 0;
-                            if($partner['id'] == $projBase['leader_id']){
-                                $partner['is_leader'] = 1;
-                            }
-                            $resultPartners[] = $partner;
-                        }
-                    }else{
-                        $has_apply_today = bar_has_action_today($userId,$leader['id'],$id,1);
-                    }
-
-
-
-                    $this->assign([
-                        'projBase' => $projBase,
-                        'tags' => $tags,
-                        'roleInfoList' => $roleInfo,
-                        'has_apply_today' => $has_apply_today,
-                        'has_join' => $has_join,
-                        'isLeader' => $isLeader,
-                        'leader' => $leader,
-                        'partners' => $resultPartners
-                    ]);
-                    return $this->fetch();
-                }else{
-                    $this->error('项目角色信息查询失败');
+        $leader = $userQuery->where('id',$projBaseInfo['leader_id'])->find();
+        if($projBaseInfo['leader_id'] == $userId){
+            $isLeader = 1;
+            $hasJoin = 1;
+        }else{
+            $userProjFind = $userProjQuery->where('user_id',$userId)->where('proj_id',$id)->find();
+            if($userProjFind) $hasJoin = 1;
+        }
+        if($hasJoin == 1){
+            $partners = $userProjQuery
+                ->alias('a')
+                ->field('b.id,b.username,b.qq,b.email,b.sex,b.nickname')
+                ->where('proj_id',$id)
+                ->join('__USER__ b','a.user_id=b.id')
+                ->select();
+            foreach($partners as $partner){
+                $partner['is_leader'] = 0;
+                if($partner['id'] == $projBaseInfo['leader_id']){
+                    $partner['is_leader'] = 1;
                 }
-            }else{
-                $this->error('该项目不存在，请不要搞事:)');
+                $resultPartners[] = $partner;
             }
         }else{
-            $this->error('未指定项目id');
+            $has_apply_today = bar_has_action_today($userId,$leader['id'],$id,1);
         }
+
+        $this->assign([
+            'baseInfo' => $finalBaseInfo,
+            'tags' => $tags,
+            'isLeader' => $isLeader,
+            'has_apply_today' => $hasApplyToday,
+            'has_join' => $hasJoin,
+            'leader' => $leader,
+            'partners' => $resultPartners
+        ]);
+        
+        return $this->fetch("view");
     }
 
     /**
@@ -194,7 +177,6 @@ class IndexController extends BaseController
         }else if($type == 2){
             $userQuery = Db::name("user");
             $userTagQuery = Db::name("user_tag");
-            $userSkillQuery = Db::name("user_skill");
             $tagQuery = Db::name("tag");
             $userList = [];
             if($getTag){
@@ -202,11 +184,11 @@ class IndexController extends BaseController
                 $userBaseList = $userQuery
                     ->alias('a')
                     ->field('a.*')
-                    ->where('a.username|a.nickname','like','%'.$getKey.'%')
+                    ->where('a.nickname','like','%'.$getKey.'%')
                     ->where('a.status',1)
                     ->where('b.tag_id',$getTag)
                     ->join('__USER_TAG__ b','a.id=b.user_id')
-                    ->distinct(true)
+                    ->distinct('a.id')
                     ->order(['list_order'=>'desc','last_login_time'=>'desc'])
                     ->paginate(6,false,[
                         'query' => request()->param()
@@ -215,7 +197,7 @@ class IndexController extends BaseController
                 $userBaseList = $userQuery
                     ->alias('a')
                     ->field('a.*')
-                    ->where('a.username|a.nickname','like','%'.$getKey.'%')
+                    ->where('a.nickname','like','%'.$getKey.'%')
                     ->where('a.status',1)
                     ->distinct(true)
                     ->order(['list_order'=>'desc','last_login_time'=>'desc'])
@@ -223,26 +205,8 @@ class IndexController extends BaseController
                         'query' => request()->param()
                     ]);
             }
-            foreach($userBaseList as $user){
-                $user['tags'] = [];
-                $user['role'] = [];
-                $tags = $userTagQuery
-                    ->alias('a')
-                    ->field('b.name')
-                    ->where('user_id',$user['id'])
-                    ->join('__TAG__ b','a.tag_id=b.id')
-                    ->select();
+            $userList = bar_user_list_splice($userBaseList);
 
-                $user['tags'] = $tags;
-                $skills = $userSkillQuery
-                    ->where('user_id',$user['id'])
-                    ->select();
-                foreach($skills as $skill){
-                    $roleName = Db::name("role")->where('id',$skill['role_id'])->value('name');
-                    $user['role'][$roleName][$skill['name']] = $skill['level'];
-                }
-                $userList[] = $user;
-            }
             $this->assign([
                 'type' => $type,
                 'key' => $getKey,
@@ -251,6 +215,7 @@ class IndexController extends BaseController
                 'userBaseList' => $userBaseList,
                 'userList' => $userList
             ]);
+            
             return $this->fetch('index@index/partners');
         }
     }
@@ -271,7 +236,7 @@ class IndexController extends BaseController
     /**
      * 筛选按钮实现筛选项目
      */
-    public function filter()
+    public function filter_old()
     {      
         $getData = $this->request->get();
         $rid = isset($getData['role'])?$getData['role']:0;
@@ -298,6 +263,7 @@ class IndexController extends BaseController
             ->distinct('a.id')
             ->paginate(8,false,[
                 'query' => request()->param()
+                //目的是有参数时也可以通过param参数分页
             ]);
         }else if(!$cid && $rid){
             $projList = $projQuery
@@ -309,7 +275,7 @@ class IndexController extends BaseController
             ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.role_id,c.name as cate_name')
             ->distinct('a.id')
             ->paginate(8,false,[
-                'query' => request()->param()
+                'query' => request()->param() 
             ]);
         }else if($cid && $rid){
             $projList = $projQuery
@@ -327,6 +293,70 @@ class IndexController extends BaseController
                 'query' => request()->param()
             ]);
         }
+        $this->assign([
+            'cateOne' => $cateOne,
+            'firstCates' => $firstCates,
+            'roles' => $roles,
+            'cid' => $cid,
+            'rid' => $rid,
+            'projList' => $projList
+        ]);
+        return $this->fetch();
+    }
+
+    /**
+     * 项目筛选
+     */
+    public function filter(){
+        $getData = $this->request->get();
+        $rid = isset($getData['role'])?$getData['role']:0;
+        $cid = isset($getData['cate1'])?$getData['cate1']:0;
+        $cateOne = isset($getData['cate1'])?$getData['cate1']:'';
+        $projQuery = Db::name("project");
+        $cateQuery = Db::name("category");
+        $roleQuery = Db::name("role");
+        $projRoleQuery = Db::name("proj_role");
+        $firstCates = $cateQuery->where("parent_id",0)->select();
+        $roles = $roleQuery->select();
+        if(isset($getData['cate2']) && $getData['cate2']){
+            $cid = $getData['cate2'];
+        }
+        if(!$cid && !$rid){
+            return $this->redirect($this->request->root().'/');
+        }else if($cid && !$rid){
+            $projIds = $projQuery
+                ->alias('a')
+                ->where('cate_id',$cid)
+                ->whereOr('b.parent_id',$cid)
+                ->join('__CATEGORY__ b','a.cate_id=b.id')
+                ->distinct('a.id')
+                ->column('a.id');
+        }else if(!$cid && $rid){
+            $projIds = $projRoleQuery
+                ->where('role_id',$rid)
+                ->distinct('proj_id')
+                ->column('proj_id');
+        }else if($cid && $rid){
+            $projIds = $projQuery
+                ->alias('a')
+                ->where(function($query)use($cid){
+                    $query->where('a.cate_id',$cid)->whereOr('c.parent_id',$cid);
+                })
+                ->where('b.role_id',$rid)
+                ->join('__CATEGORY__ c','a.cate_id=c.id')
+                ->join('__PROJ_ROLE__ b','b.proj_id=a.id')
+                ->distinct('a.id')
+                ->column('a.id');   
+        }
+        $projList = $projQuery
+            ->alias('a')
+            ->where('a.id','in',$projIds)
+            ->join('__CATEGORY__ b','a.cate_id=b.id')
+            ->field('a.id,a.name,a.cate_id,a.intro,a.image,b.name as cate_name')
+            ->distinct('a.id')
+            ->order('id','desc')
+            ->paginate(8);
+
         $this->assign([
             'cateOne' => $cateOne,
             'firstCates' => $firstCates,

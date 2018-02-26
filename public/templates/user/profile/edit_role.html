@@ -4,15 +4,16 @@
 <h3 align="center">编辑角色信息</h3><br>
 <div class="layui-container" style="margin-bottom:20px;">
     <b>角色信息</b>
-    <div class="layui-word-aux" style="margin-left:-5px;">选择一个合适您的角色，并最多添加三个技能</div>
+    <div class="layui-word-aux" style="margin-left:-5px;">选择一个合适的角色，并最多添加三个技能</div>
     <form class="layui-form" id="form" action=# method="post" role="form">
+        {if condition="$roleInfo.role_name != ''"}
         <div id="role">
             <div class="layui-form-item">角色</div>
             <div class="layui-form-item">
                 <div class="col-md-9 col-xs-11 column">
-                <select name="role" class="form-control">
-                    {volist name="roles" id="role"}
-                    <option value="{$role.id}" {eq name="$role['id']" value="$roleId"}selected="selected"{/eq}>{$role.name}</option>
+                <select name="role[type]" class="form-control">
+                    {volist name="allRole" id="role"}
+                    <option value="{$role.id}" {eq name="$role['id']" value="$roleInfo.type"}selected="selected"{/eq}>{$role.name}</option>
                     {/volist}
                 </select>
                 </div>
@@ -21,48 +22,65 @@
                 <button type="button" id="skill_add" class="layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
                 <button type="button" id="skill_del" class="layui-btn layui-btn-warm layui-btn-xs" style="width:80px;"><b>—</b></button>
             </div>
-            {if condition="$skillList == []"}
+            {volist name="roleInfo['skill']" id="skill" key="k"}
+            {php}$l = $k - 1;{/php} 
             <div class="layui-form-item skill_item">
                 <div class="col-lg-5 col-xs-7">
-                    <input type="hidden" name="uk_id[]" value="" />
-                    <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+                    <input type="text" name="role[skill][]" class="layui-input skill" autocomplete="off" 
+                    placeholder="技能名" value="{$skill}" />
                 </div>
                 <div class="col-lg-4 col-xs-5">
-                    <select name="level[]" class="form-control level">
+                    <select name="role[level][]" class="form-control level">
+                        <option value="1" {eq name="roleInfo.level[$l]" value="1"}selected="selected"{/eq}>入门</option>
+                        <option value="2" {eq name="roleInfo.level[$l]" value="2"}selected="selected"{/eq}>熟练</option>
+                        <option value="3" {eq name="roleInfo.level[$l]" value="3"}selected="selected"{/eq}>精通</option>
+                    </select>
+                </div>
+            </div>
+            {/volist}
+            <div id="skill_end"><br /></div>
+        </div> <!-- role -->
+        {else/}
+        <div id="role">
+            <div class="layui-form-item">角色</div>
+            <div class="layui-form-item">
+                <div class="col-md-9 col-xs-11 column">
+                <select name="role[type]" class="form-control">
+                    {volist name="allRole" id="role"}
+                    <option value="{$role.id}">{$role.name}</option>
+                    {/volist}
+                </select>
+                </div>
+            </div>
+            <div class="layui-form-item">技能&特长&emsp;
+                <button type="button" id="skill_add" class="layui-btn layui-btn-normal layui-btn-xs" style="width:80px;"><i class="layui-icon">&#xe654;</i></button>
+                <button type="button" id="skill_del" class="layui-btn layui-btn-warm layui-btn-xs" style="width:80px;"><b>—</b></button>
+            </div>
+            <div class="layui-form-item skill_item">
+                <div class="col-lg-5 col-xs-7">
+                    <input type="text" name="role[skill][]" class="layui-input skill" autocomplete="off" 
+                    placeholder="技能名" />
+                </div>
+                <div class="col-lg-4 col-xs-5">
+                    <select name="role[level][]" class="form-control level">
                         <option value="1">入门</option>
                         <option value="2">熟练</option>
                         <option value="3">精通</option>
                     </select>
                 </div>
             </div>
-            {else/}
-            {volist name="skillList" id="skill"}
-            <div class="layui-form-item skill_item">
-                <div class="col-md-5 col-xs-7 column">
-                    <input type="hidden" name="uk_id[]" value="{$skill.id}" />
-                    <input name="skill[]" value="{$skill.name}" type="text" class="form-control skill" placeholder="技能名称(必填)" />
-                </div>
-                <div class="col-md-4 col-xs-5 column">
-                    <select name="level[]" class="form-control">
-                        <option value="1" {eq name="$skill.level" value='1'}selected='selected'{/eq}>入门</option>
-                        <option value="2" {eq name="$skill.level" value='2'}selected='selected'{/eq}>熟练</option>
-                        <option value="3" {eq name="$skill.level" value='3'}selected='selected'{/eq}>精通</option>
-                    </select>
-                </div>
-            </div>
-            {/volist}
-            {/if}
             <div id="skill_end"><br /></div>
         </div> <!-- role -->
+        {/if}
         <hr />
         <div id="tag">
             <div class="layui-form-item">
               <b>个人标签</b>
               <div class="layui-word-aux">术业有专攻，您最多只能选择六个标签，这将成为自动匹配的重要依据</div>
               <div class="layui-col-md12 layui-col-xs12">
-                {volist name="resultTags" id="tag"}
-                <input type="checkbox" lay-filter="tag" name="tags[]" class="m-tag"
-                title="{$tag.name}" value="{$tag.id}" {eq name="tag['checked']" value="1"}checked="checked"{/eq} />
+                {volist name="allTag" id="tag"}
+                <input type="checkbox" name="tags[]" title="{$tag.name}" value="{$tag.id}"
+                 {in name="$tag.id" value="$userTag"}checked="checked"{/in} />
                 {/volist}
               </div>
             </div>
@@ -133,11 +151,10 @@ layui.use('form',function(){
             var appendSkill = `
             <div class="layui-form-item skill_item">
                 <div class="col-lg-5 col-xs-7">
-                    <input type="hidden" name="uk_id[]" value="" />
-                    <input type="text" name="skill[]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
+                    <input type="text" name="role[skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
                 </div>
                 <div class="col-lg-4 col-xs-5">
-                    <select name="level[]" class="form-control level">
+                    <select name="role[level][]" class="form-control level">
                         <option value="1">入门</option>
                         <option value="2">熟练</option>
                         <option value="3">精通</option>

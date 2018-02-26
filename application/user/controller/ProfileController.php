@@ -19,32 +19,19 @@ class ProfileController extends UserBaseController
     {
         $user = bar_get_current_user();
         $userId = $user['id'];
-        $userSkillQuery = Db::name("user_skill");
+        $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
-        $expQuery = Db::name("exp");
         $msgQuery = Db::name("message");
+        $roleQuery = Db::name("role");
         $userProjQuery = Db::name("user_proj");
         $projQuery = Db::name("project");
         $roleInfo = [];
-        $exp = '';
         $myProj = [];
         $msgs = [];
-        $userSkillList = $userSkillQuery->where('user_id', $userId)->select();      
-        if(!empty($userSkillList)){
-            foreach($userSkillList as $skill){
-                $roleIds[] = $skill['role_id'];
-            }
-
-            $roleIds = array_unique($roleIds);
-            foreach($roleIds as $roleId){
-                $roleName = Db::name("role")->where('id',$roleId)->value('name as cate_name');                
-                foreach($userSkillList as $skill){
-                    if($skill['role_id'] == $roleId){
-                        $roleInfo[$roleName][] = $skill;
-                    }
-                }
-            }
-        } 
+        
+        $baseInfo = $userQuery->where("id",$userId)->find();
+        $roleInfo = json_decode($baseInfo['role'],true);
+        $roleInfo['role_name'] = $roleQuery->where('id',$roleInfo['type'])->value('name');
 
         $tags = $userTagQuery
             ->alias('a')
@@ -52,8 +39,6 @@ class ProfileController extends UserBaseController
             ->where(['user_id' => $userId])
             ->join('__TAG__ b','a.tag_id=b.id')
             ->select();
-        $exp = $expQuery->where('user_id',$userId)->find();
-        $myExp =$exp['exp'];
 
         $msgs = $msgQuery
             ->alias('a')
@@ -76,10 +61,9 @@ class ProfileController extends UserBaseController
             ->select();
 
         $this->assign([
-            'roleInfoList' => $roleInfo,
-            'user' => $user,
+            'roleInfo' => $roleInfo,
+            'baseInfo' => $baseInfo,
             'tags' => $tags,
-            'exp' => $myExp,
             'msgs' => $msgs,
             'sysMsgs' => $sysMsgs,
             'myProjList' => $myProjList
@@ -104,41 +88,28 @@ class ProfileController extends UserBaseController
     public function edit_role()
     {   
         $userId = bar_get_user_id();
-        $userSkillQuery = Db::name("user_skill");
+        $userQuery = Db::name("user");
         $userTagQuery = Db::name("user_tag");
-        $userExpQuery = Db::name("exp");
         $roleQuery = Db::name("role");
         $tagQuery = Db::name("tag");
-        $roles = $roleQuery->select();
-        $allTags = $tagQuery->select();
-        $roleId = '';
-        $skillList = $userSkillQuery->where('user_id',$userId)->select();
-        if(!empty($skillList)){
-            $roleId = $skillList[0]['role_id'];
-        }
-        
-        $checkTags = $userTagQuery
-            ->alias('a')
-            ->field('b.*')
-            ->where(['user_id' => $userId])
-            ->join('__TAG__ b','a.tag_id=b.id')
-            ->select();
-        foreach($allTags as $tag){
-            $tag['checked'] = 0;
-            foreach($checkTags as $checkTag){
-                if($checkTag['id'] == $tag['id']){
-                    $tag['checked'] = 1;
-                }
-            }
-            $resultTags[] = $tag;
-        }
+        $allRole = $roleQuery->select();
+        $allTag = $tagQuery->select();
+        $baseInfo = $userQuery->where('id',$userId)->field('role,exp')->find();
+        $roleInfo = $baseInfo['role'];
+        $roleInfo = json_decode($roleInfo,true);
+        $roleName = $roleQuery->where('id',$roleInfo['type'])->value('name');
+        $roleInfo['role_name'] = $roleName;
+        $exp = $baseInfo['exp'];
+        $userTagId = $userTagQuery->where('user_id',$userId)->column('tag_id');
 
-        $exp = $userExpQuery->where('user_id',$userId)->find();
-        $this->assign('exp',$exp['exp']);
-        $this->assign('roles',$roles);
-        $this->assign('roleId',$roleId);
-        $this->assign('skillList',$skillList);
-        $this->assign('resultTags',$resultTags);
+        $this->assign([
+            'allRole' => $allRole,
+            'allTag' => $allTag,
+            'roleInfo' => $roleInfo,
+            'exp' => $exp,
+            'userTag' => $userTagId
+        ]);
+        return $this->fetch();
 
         return $this->fetch();
     }
@@ -146,7 +117,7 @@ class ProfileController extends UserBaseController
     /**
      * 编辑个人资料提交修改
      */
-    public function editBase()
+    public function edit_base_handle()
     {   
         if($this->request->isPost()){
             $rules = [
@@ -154,7 +125,6 @@ class ProfileController extends UserBaseController
                 'sex' => 'number|between:0,2',
                 'mobile' => 'number|max:18',
                 'qq' => 'number|max:15',
-                'extra' => 'max:128'
             ];
             $validate = new Validate($rules);
             $validate->message([
@@ -166,13 +136,11 @@ class ProfileController extends UserBaseController
 
             $postData = $this->request->post();
             if(!$validate->check($postData)){
-                // $this->error($validate->getError());
                 $errMsg = $validate->getError();
                 return json(['status'=>1,'msg'=>$errMsg]);
             }
             $userModel = new User();
             if($userModel->doBaseEdit($postData)){
-                // $this->success("个人资料修改成功！",'user/profile/center');
                 return json(['status'=>0,'msg'=>'个人资料修改成功！']);
             }else{
                 // $this->error("没有修改新的信息");
@@ -194,11 +162,11 @@ class ProfileController extends UserBaseController
         $post = $this->request->post();
         $succ = ['status'=>0,'msg'=>'ok'];
         $err = ['status'=>1,'msg'=>'failed'];
-        if(!$post['role']){
+        if(!$post['role']['type']){
             $err['msg'] = '请选择您能够担任的角色';
             return json($err);
         }
-        if(!$post['skill'][0]){
+        if(!$post['role']['skill'][0]){
             $err['msg'] = '请填写至少一个技能';
             return json($err);
         }
@@ -209,7 +177,6 @@ class ProfileController extends UserBaseController
                 return json($err);
             }   
         }
-
         //TODO 对于简介信息的关键字和联系方式过滤
 
         $userModel = new User();

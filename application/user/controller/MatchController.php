@@ -23,7 +23,7 @@ class MatchController extends UserBaseController
             ->where('user_id',$userId)
             ->join('__PROJ_TAG__ b','a.tag_id=b.tag_id')
             ->select();
-        if($result){
+        if($result!=[]){
             foreach($result as $item){
                 $data[] = $item['proj_id'];
             }
@@ -32,6 +32,7 @@ class MatchController extends UserBaseController
             $sortData = array_count_values($data);
             arsort($sortData);
             $beforeProjIds = array_keys($sortData);
+            $projIds = [];
             foreach($beforeProjIds as $projId){
                 $hasJoin = $userProjQuery->where('user_id',$userId)->where('proj_id',$projId)->find();
                 if(!$hasJoin){
@@ -85,29 +86,8 @@ class MatchController extends UserBaseController
                 $userIds = array_keys($sortData);
                 $count = count($userIds);
                 if($count > 3) $count = 3;
-                for($i = 0;$i < $count;$i++){
-                    $user = $userQuery->where('id',$userIds[$i])->find();
-
-                    $user['tag'] = [];
-                    $user['role'] = [];
-                    $tagSelect = $userTagQuery
-                    ->alias('a')
-                    ->field('b.id,b.name')
-                    ->where(['user_id' => $user['id']])
-                    ->join('__TAG__ b','a.tag_id=b.id')
-                    ->select();
-                    foreach($tagSelect as $tag){
-                        $user['tags'][] = $tag['name'];
-                    }
-                    $skillSelect = $userSkillQuery
-                    ->where(['user_id' => $user['id']])
-                    ->select();
-                    foreach($skillSelect as $skill){
-                        $roleName = Db::name('role')->where('id',$skill['role_id'])->value('name');
-                        $user['role'][$roleName][$skill['name']] = $skill['level'];
-                    }
-                    $userList[] = $user;
-                }
+                $userBaseList = $userQuery->where('id','in',$userIds)->select();
+                $userList = bar_user_list_splice($userBaseList);
             }else{
                 $userList = [];
                 $isNull = 1;

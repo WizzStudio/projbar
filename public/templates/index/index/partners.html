@@ -4,8 +4,8 @@
 <div class="layui-word-aux">检索关键字为&nbsp;<b>{$key}</b>，标签为&nbsp;“{$tagName}”&nbsp;的结果如下：</div>
 <div class="container-fluid" style="margin:10px 0 50px 0;">
   <div class="layui-row layui-col-space12">                
-    {volist name="userList" id="user"}
-    <div class="layui-col-md4 layui-col-xs12">
+        {volist name="userList" id="user"}
+        <div class="layui-col-md4 layui-col-xs12">
         <a href={:url("index/partner/view","id=$user[id]")}>
         <div class="layui-box">
           <div class="user-box">                                         
@@ -30,18 +30,17 @@
                 {default/}black
                 {/switch}
                 style="color:#eee;
-                ;padding:4px;font-size:11px;">{$tag.name}</span>
+                ;padding:4px;font-size:11px;">{$tag}</span>
                 {/volist}
             </p>
             {else /}
-            <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;color:#eee;">暂无标签</span></p>
+            <p style="height:30px;"><span class="layui-bg-cyan" style="padding:4px;font-size:11px;color:#eee;">暂无标签</span></p>
             {/if}
     
-                {if condition="$user['role'] != []"}
-                {volist name="user['role']" id="role" key="i"}
+                {if condition="$user['role']['role_name'] != ''"}
                 <p>
                 <span class="glyphicon glyphicon-user"></span>&nbsp;    
-                {$key}
+                {$user.role.role_name}
                 </p>
                 <table class="layui-table" lay-size="sm" lay-skin="nob" style="background-color:inherit;">
                     <colgroup>
@@ -51,11 +50,12 @@
                     <thead>
                     </thead>
                     <tbody>
-                      {volist name="role" id="level"}
+                      {volist name="user.role.skill" id="skill" key="s"}
+                      {php}$l = $s - 1;{/php}
                       <tr height="10">
-                        <td>{$key}</td>
+                        <td>{$skill}</td>
                         <td>
-                            {switch name="level"}
+                            {switch name="user.role.level[$l]"}
                             {case value="1"}
                             <div class="layui-progress layui-progress-big" style="background-color:inherit;">
                                 <div class="layui-progress-bar layui-bg-orange" lay-percent="1/3"></div>
@@ -78,10 +78,8 @@
                       {/volist}
                     </tbody>
                 </table>
-    
-                {/volist}
                 {else /}
-                <p>角色：暂无角色信息</p><p style="line-height:110px;">&emsp;</p>
+                <p><span class="glyphicon glyphicon-user"></span>&nbsp;暂无角色</p><p style="line-height:110px;">&emsp;</p>
                 {/if}
           </div>
           <div class="user-view-more">
@@ -91,8 +89,8 @@
           </div>
         </div><!--layui-box-->
         </a>
-    </div>
-    {/volist}
+        </div>
+        {/volist}
   </div> 
   <div align="center">{$userBaseList->render()}</div> 
 </div>

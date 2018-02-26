@@ -3,7 +3,7 @@
 <br>
 <h3 align="center" style="border-bottom:1px solid #ccc;">发布项目</h3>
 <div class="layui-container" style="padding:20px;margin-bottom:20px;">
-<form class="layui-form" action="#" method="post" id="form">
+<form class="layui-form" action=# method="post" id="form">
     <div class="layui-form-item">
       <!-- <h4>基础信息</h4><br /> -->
       <label class="control-label">项目名称</label>
@@ -28,7 +28,7 @@
     <hr />
     <div class="layui-form-item" id="tag">
       <b>项目标签</b> 
-      <div class="layui-word-aux">您最多能选择六个标签,这将成为自动匹配的重要依据</div>      
+      <div class="layui-word-aux">请选择1~6个标签,这将成为自动匹配的重要依据</div>      
       <div class="col-md-8 col-xs-12 column" pane>
         {volist name="tags" id="tag"}
         <input type="checkbox" name="tags[]" value="{$tag.id}" title="{$tag.name}" />
@@ -36,7 +36,7 @@
       </div>
     </div>
     <b>角色需要</b>
-    <hr />    
+    <div class="layui-word-aux" style="margin:5px 0 5px 0;">至多四个角色，每个角色1~3个技能</div>      
     <div class="role">
     <div class="layui-form-item">角色1</div>
     <div class="layui-form-item">
@@ -59,14 +59,13 @@
       </div>
       <div class="col-lg-4 col-xs-5">
         <select name="role[0][level][]" class="form-control level">
-          <option value="">先填技能</option>
+          <option value="">等级</option>
         </select>
       </div>
     </div>
     <div class="skill_end"></div>
   </div><!--role-->
-  <div style="margin-bottom:10px;">
-    <div id="end"><br /><br /></div>
+  <div id="end" style="margin-bottom:10px;">
     <div class="col-md-6 col-xs-6">
       <button type="button" class="layui-btn layui-btn-normal btn-block" id="add">添加角色</button>    
     </div>
@@ -149,12 +148,13 @@ layui.use(['form','layer'],function(){
           </div>
           <div class="col-lg-4 col-xs-5">
             <select lay-verify="required" name="role[${m}][level][]" disabled=true class="form-control level">
-              <option value="">请先填写技能名</option>
+              <option value="">等级</option>
             </select>
           </div>
         </div>
         <hr/>
-      </div><!--role-->
+      </div>
+      <!--role-->
     `;
     n = n + 1;
     $("#delete").removeClass("layui-btn-disabled");
@@ -175,7 +175,7 @@ layui.use(['form','layer'],function(){
           $(this).parent().next().find("select").html(optionStr);
           form.render(); 
       }else{
-          var optionStr = `<option value="">请先填写技能名</option>`
+          var optionStr = `<option value="">等级</option>`
           $(this).parent().next().find("select").html(optionStr);
           $(this).parent().next().find("select").attr("disabled",true);
           form.render();
@@ -186,19 +186,12 @@ layui.use(['form','layer'],function(){
     $(".skill-add").unbind('click');
     $(".skill-add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
-        var appendSkill = `
-        <div class="layui-form-item">
-            <div class="col-lg-5 col-xs-7">
-                <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
-            </div>
-            <div class="col-lg-4 col-xs-5">
-                <select name="role[${m}][level][]" class="form-control level">
-                <option value="">先填技能</option>
-                </select>
-            </div>
-        </div>
-        `;
-        $(this).parent().parent().children().last().before(appendSkill);
+        var appendSkill = $(this).parent().parent().children().last().prev().clone();
+        appendSkill.find(".skill").attr("value",null);
+        appendSkill.find("option:selected").attr("selected",false);
+        appendSkillHtml = `<div class="layui-form-item">`+appendSkill.html()+`</div>`;
+
+        $(this).parent().parent().children().last().before(appendSkillHtml);
         afterNum = beforeNum + 1;
         $(this).next().removeClass("layui-btn-disabled");
         $(this).next().attr("disabled",false);
@@ -220,7 +213,7 @@ layui.use(['form','layer'],function(){
                 $(this).parent().next().find("select").html(optionStr);
                 form.render(); 
             }else{
-                var optionStr = `<option value="">请先填写技能名</option>`
+                var optionStr = `<option value="">等级</option>`
                 $(this).parent().next().find("select").html(optionStr);
                 $(this).parent().next().find("select").attr("disabled",true);
                 form.render();
@@ -282,19 +275,12 @@ layui.use(['form','layer'],function(){
     $(".skill-add").unbind('click');
     $(".skill-add").on('click',function(){
         beforeNum = $(this).parent().nextAll(".layui-form-item").length;
-        var appendSkill = `
-        <div class="layui-form-item">
-            <div class="col-lg-5 col-xs-7">
-                <input lay-verify="required" type="text" name="role[${m}][skill][]" class="layui-input skill" autocomplete="off" placeholder="技能名" />
-            </div>
-            <div class="col-lg-4 col-xs-5">
-                <select name="role[0][level][]" class="form-control level">
-                <option value="">先填技能</option>
-                </select>
-            </div>
-        </div>
-        `;
-        $(this).parent().parent().children().last().before(appendSkill);
+        var appendSkill = $(this).parent().parent().children().last().prev().clone();
+        appendSkill.find(".skill").attr("value",null);
+        appendSkill.find("option:selected").attr("selected",false);
+        appendSkillHtml = `<div class="layui-form-item">`+appendSkill.html()+`</div>`;
+        
+        $(this).parent().parent().children().last().before(appendSkillHtml);
         afterNum = beforeNum + 1;
         $(this).next().removeClass("layui-btn-disabled");
         $(this).next().attr("disabled",false);

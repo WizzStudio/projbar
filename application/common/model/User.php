@@ -112,7 +112,6 @@ class User extends Model
         $data['nickname'] = $user['nickname'];
         $data['qq'] = $user['qq'];
         $data['sex'] = $user['sex'];
-        $data['extra'] = $user['extra'];
         $userQuery = Db::name("user");
         if($userQuery->where('id', $userId)->update($data)) {
             $userInfo = $userQuery->where('id', $userId)->find();
@@ -130,43 +129,14 @@ class User extends Model
     {
         $userId = bar_get_user_id();
         $userQuery = Db::name("user");
-        $userSkillQuery = Db::name("user_skill");
         $tagQuery = Db::name("tag");
-        $expQuery = Db::name("exp");
         $userTagQuery = Db::name("user_tag");
         
         //角色和技能信息添加/删除
-        $roleId = $data['role'];
-        //删除
-        $OldSkills = $userSkillQuery->where('user_id',$userId)->field('id')->select();
-        if($OldSkills){
-            $OldSkillArray = [];
-            foreach($OldSkills as $OldSkill){
-                $OldSkillArray[] = $OldSkill['id'];
-            }
-            $result = array_diff($OldSkillArray,$data['uk_id']);
-            if($result != []){
-                foreach($result as $deleteId){
-                    $userSkillQuery->where('id',$deleteId)->delete();
-                }
-            }
-        }
-
-        foreach($data['skill'] as $i=>$skill){
-            $ukId = $data['uk_id'][$i];
-            if($skill == ""){
-                if($ukId){
-                    $userSkillQuery->where('id',$ukId)->delete();
-                }
-            }else{
-                $level = $data['level'][$i];
-                if($ukId){
-                    $userSkillQuery->where('id',$ukId)->update(['name'=>$skill,'level'=>$level]);
-                }else{
-                    $userSkillQuery->insert(['user_id'=>$userId,'role_id'=>$roleId,'name'=>$skill,'level'=>$level]);
-                }
-            }
-        }
+        $roleId = $data['role']['type'];
+        $roleInfo = json_encode($data['role']);
+        $exp = $data['exp'];
+        $userQuery->where('id',$userId)->update(['role'=>$roleInfo,'exp'=>$exp]);
         //标签信息添加
         if(isset($data['tags'])){
             $tagDelete = $userTagQuery->where('user_id',$userId)->delete();
@@ -174,24 +144,13 @@ class User extends Model
                 $result = $userTagQuery->insert(['user_id'=>$userId,'tag_id'=>$tag]);
             }
         }
-        //经历信息添加
-        if($data['exp']){
-            $exp = $data['exp'];
-            $expFind = $expQuery->where('user_id',$userId)->find();
-            if($expFind){
-                $expResult = $expQuery->where('user_id',$userId)->update(['exp'=>$exp]);
-            }else{
-                $expResult = $expQuery->insert(['user_id'=>$userId,'exp'=>$exp]);
-            }
-        }
-        //优先等级确定
-        $userSkillFind = $userSkillQuery->where('user_id',$userId)->value('id');
+
+        //优先等级确定 
         $userTagFind = $userTagQuery->where('user_id',$userId)->value('id');
-        $expFind = $expQuery->where('user_id',$userId)->value('id');
         $listOrder = 0;
-        if($userSkillFind)$listOrder += 1;
+        if($roleInfo)$listOrder += 1;
         if($userTagFind)$listOrder += 1;
-        if($expFind)$listOrder+=1;
+        if($exp)$listOrder+=1;
         $listOrderResult = $userQuery->where('id',$userId)->update(['list_order'=>$listOrder,'update_time'=>time()]);
         return 0;
     }

@@ -3,6 +3,7 @@
 <h3 align="center" style="padding:10px;">为您推荐项目</h1>
     <div class="container-fluid" style="margin-bottom:50px;">
         <div class="row">
+            {if condition="$projList != []"}
             {volist name="projList" id="proj"}
             <div class="col-md-6 col-sm-12" style="padding:0 2px 0 2px;">
                 <!-- content below -->
@@ -31,6 +32,9 @@
                 <!-- content above -->
             </div>
             {/volist}
+            {else/}
+            <h3 align="center">不好意思，暂时没有找到</h3>
+            {/if}
     </div>
 </div>
 {/block}
