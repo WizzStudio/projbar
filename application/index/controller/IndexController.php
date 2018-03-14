@@ -97,7 +97,7 @@ class IndexController extends BaseController
                 $resultPartners[] = $partner;
             }
         }else{
-            $has_apply_today = bar_has_action_today($userId,$leader['id'],$id,1);
+            $hasApplyToday = bar_has_action_today($userId,$leader['id'],$id,1);
         }
 
         $this->assign([
